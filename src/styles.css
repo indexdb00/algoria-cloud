@@ -49,54 +49,23 @@
   --color-brand-muted: var(--brand-muted);
   --color-brand-accent: var(--brand-accent);
   --color-brand-surface: var(--brand-surface);
+  --color-brand-border: var(--brand-border);
+  --color-neon: var(--neon);
+  --color-neon-soft: var(--neon-soft);
 }
 
 :root {
   --radius: 0.625rem;
 
-  /* Continental Modernism palette */
-  --brand-bg: oklch(0.992 0.002 90);
-  --brand-text: oklch(0.18 0.005 280);
-  --brand-muted: oklch(0.55 0.006 270);
-  --brand-accent: oklch(0.23 0.005 280);
-  --brand-surface: oklch(0.965 0.003 90);
-
-  --background: var(--brand-bg);
-  --foreground: var(--brand-text);
-  --card: var(--brand-bg);
-  --card-foreground: var(--brand-text);
-  --popover: var(--brand-bg);
-  --popover-foreground: var(--brand-text);
-  --primary: var(--brand-accent);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: var(--brand-surface);
-  --secondary-foreground: var(--brand-text);
-  --muted: var(--brand-surface);
-  --muted-foreground: var(--brand-muted);
-  --accent: var(--brand-surface);
-  --accent-foreground: var(--brand-text);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.003 270);
-  --input: oklch(0.92 0.003 270);
-  --ring: oklch(0.45 0.005 280);
-
-  --sidebar: var(--brand-bg);
-  --sidebar-foreground: var(--brand-text);
-  --sidebar-primary: var(--brand-accent);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: var(--brand-surface);
-  --sidebar-accent-foreground: var(--brand-text);
-  --sidebar-border: oklch(0.92 0.003 270);
-  --sidebar-ring: oklch(0.45 0.005 280);
-}
-
-.dark {
-  --brand-bg: oklch(0.16 0.005 280);
-  --brand-text: oklch(0.97 0.003 90);
-  --brand-muted: oklch(0.65 0.006 270);
-  --brand-accent: oklch(0.97 0.003 90);
-  --brand-surface: oklch(0.22 0.005 280);
+  /* Dark + neon green */
+  --brand-bg: oklch(0.16 0.012 160);
+  --brand-text: oklch(0.97 0.01 150);
+  --brand-muted: oklch(0.62 0.02 160);
+  --brand-surface: oklch(0.21 0.015 160);
+  --brand-border: oklch(0.30 0.04 150);
+  --neon: oklch(0.88 0.27 145);
+  --neon-soft: oklch(0.55 0.20 145);
+  --brand-accent: var(--neon);
 
   --background: var(--brand-bg);
   --foreground: var(--brand-text);
@@ -104,17 +73,28 @@
   --card-foreground: var(--brand-text);
   --popover: var(--brand-surface);
   --popover-foreground: var(--brand-text);
-  --primary: var(--brand-accent);
-  --primary-foreground: oklch(0.18 0.005 280);
+  --primary: var(--neon);
+  --primary-foreground: oklch(0.14 0.01 160);
   --secondary: var(--brand-surface);
   --secondary-foreground: var(--brand-text);
   --muted: var(--brand-surface);
   --muted-foreground: var(--brand-muted);
   --accent: var(--brand-surface);
   --accent-foreground: var(--brand-text);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.7 0.005 280);
+  --destructive: oklch(0.62 0.24 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: var(--brand-border);
+  --input: var(--brand-border);
+  --ring: var(--neon);
+
+  --sidebar: var(--brand-bg);
+  --sidebar-foreground: var(--brand-text);
+  --sidebar-primary: var(--neon);
+  --sidebar-primary-foreground: oklch(0.14 0.01 160);
+  --sidebar-accent: var(--brand-surface);
+  --sidebar-accent-foreground: var(--brand-text);
+  --sidebar-border: var(--brand-border);
+  --sidebar-ring: var(--neon);
 }
 
 @layer base {
@@ -125,6 +105,48 @@
     color: var(--color-foreground);
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(900px 500px at 90% -10%, color-mix(in oklab, var(--neon) 14%, transparent), transparent 60%),
+      radial-gradient(700px 400px at -10% 110%, color-mix(in oklab, var(--neon) 9%, transparent), transparent 60%);
+    background-attachment: fixed;
   }
   h1, h2, h3, h4 { font-family: var(--font-heading); letter-spacing: -0.02em; }
+}
+
+@layer components {
+  .btn-neon {
+    background: color-mix(in oklab, var(--neon) 12%, transparent);
+    color: var(--neon);
+    border: 1px solid color-mix(in oklab, var(--neon) 55%, transparent);
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--neon) 18%, transparent),
+                0 8px 30px -8px color-mix(in oklab, var(--neon) 40%, transparent);
+    transition: all .2s ease;
+  }
+  .btn-neon:hover {
+    background: color-mix(in oklab, var(--neon) 22%, transparent);
+    border-color: var(--neon);
+    box-shadow: 0 0 0 1px var(--neon),
+                0 12px 40px -8px color-mix(in oklab, var(--neon) 55%, transparent);
+  }
+  .btn-neon-solid {
+    background: var(--neon);
+    color: oklch(0.14 0.01 160);
+    border: 1px solid var(--neon);
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 30px -8px color-mix(in oklab, var(--neon) 70%, transparent);
+  }
+  .btn-neon-solid:hover { filter: brightness(1.05); }
+  .btn-dark {
+    background: var(--brand-surface);
+    color: var(--brand-text);
+    border: 1px solid var(--brand-border);
+    border-radius: 0.5rem;
+    transition: all .2s ease;
+  }
+  .btn-dark:hover {
+    border-color: color-mix(in oklab, var(--neon) 60%, transparent);
+    color: var(--neon);
+  }
+  .ring-neon { box-shadow: 0 0 0 1px color-mix(in oklab, var(--neon) 50%, transparent); }
 }

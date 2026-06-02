@@ -40,7 +40,7 @@ export function SiteFooter() {
             </div>
           </div>
         </div>
-        <div className="mt-24 pt-8 border-t border-black/5 flex flex-col md:flex-row justify-between gap-4">
+        <div className="mt-24 pt-8 border-t border-brand-border flex flex-col md:flex-row justify-between gap-4">
           <span className="text-[10px] text-brand-muted">{t("footer.rights")}</span>
           <div className="flex gap-6">
             <span className="text-[10px] text-brand-muted hover:text-brand-text cursor-pointer transition-colors">{t("footer.privacy")}</span>
