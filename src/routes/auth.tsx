@@ -58,7 +58,7 @@ function AuthPage() {
 
   return (
     <div className="min-h-screen bg-brand-bg flex flex-col">
-      <header className="border-b border-black/5">
+      <header className="border-b border-brand-border">
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
           <Link to="/" className="font-heading text-xl font-semibold tracking-tight">Aurevia</Link>
           <LanguageSwitcher />

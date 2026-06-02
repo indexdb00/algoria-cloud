@@ -46,7 +46,7 @@ function Landing() {
               </Link>
               <a
                 href="#case"
-                className="text-sm bg-secondary text-brand-text py-2 px-4 ring-1 ring-black/5 rounded-md hover:bg-muted transition-colors"
+                className="text-sm bg-secondary text-brand-text py-2 px-4 ring-1 ring-brand-border rounded-md hover:bg-muted transition-colors"
               >
                 {t("hero.secondary")}
               </a>
@@ -63,7 +63,7 @@ function Landing() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
             {agents.map(({ Icon, name, desc }) => (
-              <div key={name} className="p-6 bg-brand-bg ring-1 ring-black/5 rounded-2xl flex flex-col justify-between h-64">
+              <div key={name} className="p-6 bg-brand-bg ring-1 ring-brand-border rounded-2xl flex flex-col justify-between h-64">
                 <div>
                   <div className="size-8 bg-brand-surface rounded-lg flex items-center justify-center mb-4">
                     <Icon className="size-4 text-brand-text" />
@@ -113,10 +113,10 @@ function Landing() {
       </section>
 
       {/* Case study */}
-      <section id="case" className="py-24 border-t border-black/5">
+      <section id="case" className="py-24 border-t border-brand-border">
         <div className="mx-auto max-w-7xl px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-            <div className="w-full aspect-[4/3] bg-brand-surface outline outline-1 -outline-offset-1 outline-black/5 rounded-xl grid place-items-center">
+            <div className="w-full aspect-[4/3] bg-brand-surface outline outline-1 -outline-offset-1 outline-brand-border rounded-xl grid place-items-center">
               <span className="text-[10px] font-medium uppercase tracking-widest text-brand-muted">Værløse · DACH</span>
             </div>
             <div>
@@ -139,7 +139,7 @@ function Landing() {
       </section>
 
       {/* Integrations */}
-      <section className="py-12 border-t border-b border-black/5">
+      <section className="py-12 border-t border-b border-brand-border">
         <div className="mx-auto max-w-7xl px-6 flex flex-wrap items-center justify-between gap-8 opacity-50">
           <span className="text-sm font-medium tracking-tight">Google Ads</span>
           <span className="text-sm font-medium tracking-tight">Meta Business</span>
@@ -162,7 +162,7 @@ function PricingCard({
       "p-8 rounded-2xl flex flex-col " +
       (featured
         ? "bg-brand-accent text-white ring-1 ring-brand-accent"
-        : "bg-brand-bg ring-1 ring-black/5")
+        : "bg-brand-bg ring-1 ring-brand-border")
     }>
       <span className={"text-[10px] font-medium uppercase tracking-[0.2em] mb-4 " + (featured ? "text-white/60" : "text-brand-muted")}>
         {tier}
@@ -181,7 +181,7 @@ function PricingCard({
       </ul>
       <button className={
         "w-full text-sm py-2 px-4 rounded-md " +
-        (featured ? "bg-brand-bg text-brand-text hover:opacity-90" : "bg-secondary text-brand-text ring-1 ring-black/5 hover:bg-muted")
+        (featured ? "bg-brand-bg text-brand-text hover:opacity-90" : "bg-secondary text-brand-text ring-1 ring-brand-border hover:bg-muted")
       }>
         {cta}
       </button>

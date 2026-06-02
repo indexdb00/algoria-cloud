@@ -42,12 +42,12 @@ function DashboardOverview() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-        <div className="p-6 ring-1 ring-black/5 rounded-2xl bg-brand-bg">
+        <div className="p-6 ring-1 ring-brand-border rounded-2xl bg-brand-bg">
           <div className="text-[10px] uppercase tracking-widest text-brand-muted mb-2">{t("dash.balance")}</div>
           <div className="font-heading text-4xl font-medium tracking-tight">{balance ?? "—"}</div>
           <div className="text-xs text-brand-muted mt-1">{t("dash.credits.unit")}</div>
         </div>
-        <div className="p-6 ring-1 ring-black/5 rounded-2xl bg-brand-surface md:col-span-2">
+        <div className="p-6 ring-1 ring-brand-border rounded-2xl bg-brand-surface md:col-span-2">
           <div className="text-[10px] uppercase tracking-widest text-brand-muted mb-2">{t("agents.title")}</div>
           <p className="text-sm text-brand-muted leading-relaxed">{t("hero.subtitle")}</p>
         </div>
@@ -61,7 +61,7 @@ function DashboardOverview() {
             <Link
               key={a.slug}
               to={`/dashboard/agents/${a.slug}`}
-              className="group p-6 ring-1 ring-black/5 rounded-2xl bg-brand-bg hover:bg-brand-surface transition-colors flex flex-col h-56 justify-between"
+              className="group p-6 ring-1 ring-brand-border rounded-2xl bg-brand-bg hover:bg-brand-surface transition-colors flex flex-col h-56 justify-between"
             >
               <div>
                 <div className="size-8 bg-brand-surface group-hover:bg-brand-bg rounded-lg flex items-center justify-center mb-4 transition-colors">

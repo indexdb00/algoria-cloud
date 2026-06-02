@@ -75,7 +75,7 @@ function AgentChat() {
 
   return (
     <div className="flex flex-col h-screen">
-      <header className="h-16 border-b border-black/5 px-8 flex items-center gap-3 shrink-0">
+      <header className="h-16 border-b border-brand-border px-8 flex items-center gap-3 shrink-0">
         <div className="size-8 bg-brand-surface rounded-lg flex items-center justify-center">
           <Icon className="size-4 text-brand-text" />
         </div>
@@ -105,7 +105,7 @@ function AgentChat() {
         </div>
       </div>
 
-      <form onSubmit={onSend} className="border-t border-black/5 px-8 py-4 shrink-0">
+      <form onSubmit={onSend} className="border-t border-brand-border px-8 py-4 shrink-0">
         <div className="max-w-3xl mx-auto flex items-end gap-3">
           <textarea
             value={input}
@@ -118,7 +118,7 @@ function AgentChat() {
             }}
             rows={1}
             placeholder={t("dash.messagePlaceholder")}
-            className="flex-1 bg-brand-surface ring-1 ring-black/5 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-brand-accent transition-shadow min-h-[48px] max-h-40"
+            className="flex-1 bg-brand-surface ring-1 ring-brand-border rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-brand-accent transition-shadow min-h-[48px] max-h-40"
           />
           <button
             type="submit"
@@ -143,7 +143,7 @@ function Bubble({ role, content }: Msg) {
           "max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap leading-relaxed " +
           (isUser
             ? "bg-brand-accent text-white"
-            : "bg-brand-surface text-brand-text ring-1 ring-black/5")
+            : "bg-brand-surface text-brand-text ring-1 ring-brand-border")
         }
       >
         {content}
