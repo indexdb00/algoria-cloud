@@ -13,42 +13,42 @@ const INTEGRATIONS = [
     name: "Meta Ads",
     desc: "Facebook + Instagram campaigns, audiences, retargeting and creative testing piloted by the Ads Agent.",
     scopes: ["ads_management", "business_management", "pages_read_engagement"],
-    accent: "from-[#1877F2]/30",
+    
   },
   {
     id: "google-ads",
     name: "Google Ads",
     desc: "Search, Performance Max & YouTube. Bid optimization and keyword expansion run autonomously every hour.",
     scopes: ["adwords", "analytics.readonly"],
-    accent: "from-[#FBBC04]/30",
+    
   },
   {
     id: "bidmachine",
     name: "BidMachine",
     desc: "Programmatic in-app and CTV inventory. RTB optimization with cross-network deduplication.",
     scopes: ["bidmachine.read", "bidmachine.write"],
-    accent: "from-neon/30",
+    
   },
   {
     id: "tiktok-ads",
     name: "TikTok Ads",
     desc: "Spark Ads, Shop ads & UGC creative cycles managed by the Reach Agent.",
     scopes: ["tiktok_ads.read", "tiktok_ads.write"],
-    accent: "from-fuchsia-500/30",
+    
   },
   {
     id: "google-analytics",
     name: "Google Analytics 4",
     desc: "Attribution and conversion data piped into every agent for closed-loop optimization.",
     scopes: ["analytics.readonly"],
-    accent: "from-[#E37400]/30",
+    
   },
   {
     id: "linkedin-ads",
     name: "LinkedIn Ads",
     desc: "B2B account-based campaigns with intent scoring for the Leads Agent.",
     scopes: ["rw_ads", "r_ads_reporting"],
-    accent: "from-[#0A66C2]/30",
+    
   },
 ];
 
@@ -67,11 +67,9 @@ function IntegrationsPage() {
         {INTEGRATIONS.map((i) => (
           <div
             key={i.id}
-            className={
-              "relative overflow-hidden p-6 rounded-2xl bg-brand-surface ring-1 ring-brand-border " +
-              "before:absolute before:inset-0 before:bg-gradient-to-br before:" + i.accent + " before:to-transparent before:opacity-30 before:pointer-events-none"
-            }
+            className="relative overflow-hidden p-6 rounded-2xl bg-brand-surface ring-1 ring-brand-border hover:ring-neon/60 transition-all"
           >
+            <div className="absolute -top-20 -right-20 size-48 rounded-full bg-neon/10 blur-3xl pointer-events-none" />
             <div className="relative flex items-start justify-between gap-4 mb-3">
               <div className="flex items-center gap-3">
                 <div className="size-10 rounded-xl bg-brand-bg ring-1 ring-brand-border flex items-center justify-center">
