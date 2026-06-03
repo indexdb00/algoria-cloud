@@ -14,10 +14,10 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
-import { Route as AuthenticatedDashboardLandingRouteImport } from './routes/_authenticated/dashboard.landing'
 import { Route as AuthenticatedDashboardIntegrationsRouteImport } from './routes/_authenticated/dashboard.integrations'
 import { Route as AuthenticatedDashboardFunnelRouteImport } from './routes/_authenticated/dashboard.funnel'
 import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
+import { Route as AuthenticatedDashboardAcademyRouteImport } from './routes/_authenticated/dashboard.academy'
 import { Route as AuthenticatedDashboardAgentsSlugRouteImport } from './routes/_authenticated/dashboard.agents.$slug'
 
 const AuthRoute = AuthRouteImport.update({
@@ -45,12 +45,6 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
-const AuthenticatedDashboardLandingRoute =
-  AuthenticatedDashboardLandingRouteImport.update({
-    id: '/landing',
-    path: '/landing',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
 const AuthenticatedDashboardIntegrationsRoute =
   AuthenticatedDashboardIntegrationsRouteImport.update({
     id: '/integrations',
@@ -69,6 +63,12 @@ const AuthenticatedDashboardBillingRoute =
     path: '/billing',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAcademyRoute =
+  AuthenticatedDashboardAcademyRouteImport.update({
+    id: '/academy',
+    path: '/academy',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
 const AuthenticatedDashboardAgentsSlugRoute =
   AuthenticatedDashboardAgentsSlugRouteImport.update({
     id: '/agents/$slug',
@@ -80,20 +80,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/dashboard/academy': typeof AuthenticatedDashboardAcademyRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/funnel': typeof AuthenticatedDashboardFunnelRoute
   '/dashboard/integrations': typeof AuthenticatedDashboardIntegrationsRoute
-  '/dashboard/landing': typeof AuthenticatedDashboardLandingRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard/academy': typeof AuthenticatedDashboardAcademyRoute
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/funnel': typeof AuthenticatedDashboardFunnelRoute
   '/dashboard/integrations': typeof AuthenticatedDashboardIntegrationsRoute
-  '/dashboard/landing': typeof AuthenticatedDashboardLandingRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
 }
@@ -103,10 +103,10 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
+  '/_authenticated/dashboard/academy': typeof AuthenticatedDashboardAcademyRoute
   '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/_authenticated/dashboard/funnel': typeof AuthenticatedDashboardFunnelRoute
   '/_authenticated/dashboard/integrations': typeof AuthenticatedDashboardIntegrationsRoute
-  '/_authenticated/dashboard/landing': typeof AuthenticatedDashboardLandingRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
 }
@@ -116,20 +116,20 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/dashboard/academy'
     | '/dashboard/billing'
     | '/dashboard/funnel'
     | '/dashboard/integrations'
-    | '/dashboard/landing'
     | '/dashboard/'
     | '/dashboard/agents/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/dashboard/academy'
     | '/dashboard/billing'
     | '/dashboard/funnel'
     | '/dashboard/integrations'
-    | '/dashboard/landing'
     | '/dashboard'
     | '/dashboard/agents/$slug'
   id:
@@ -138,10 +138,10 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/academy'
     | '/_authenticated/dashboard/billing'
     | '/_authenticated/dashboard/funnel'
     | '/_authenticated/dashboard/integrations'
-    | '/_authenticated/dashboard/landing'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/agents/$slug'
   fileRoutesById: FileRoutesById
@@ -189,13 +189,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/landing': {
-      id: '/_authenticated/dashboard/landing'
-      path: '/landing'
-      fullPath: '/dashboard/landing'
-      preLoaderRoute: typeof AuthenticatedDashboardLandingRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
     '/_authenticated/dashboard/integrations': {
       id: '/_authenticated/dashboard/integrations'
       path: '/integrations'
@@ -217,6 +210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardBillingRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/academy': {
+      id: '/_authenticated/dashboard/academy'
+      path: '/academy'
+      fullPath: '/dashboard/academy'
+      preLoaderRoute: typeof AuthenticatedDashboardAcademyRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
     '/_authenticated/dashboard/agents/$slug': {
       id: '/_authenticated/dashboard/agents/$slug'
       path: '/agents/$slug'
@@ -228,21 +228,21 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardRouteChildren {
+  AuthenticatedDashboardAcademyRoute: typeof AuthenticatedDashboardAcademyRoute
   AuthenticatedDashboardBillingRoute: typeof AuthenticatedDashboardBillingRoute
   AuthenticatedDashboardFunnelRoute: typeof AuthenticatedDashboardFunnelRoute
   AuthenticatedDashboardIntegrationsRoute: typeof AuthenticatedDashboardIntegrationsRoute
-  AuthenticatedDashboardLandingRoute: typeof AuthenticatedDashboardLandingRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardAgentsSlugRoute: typeof AuthenticatedDashboardAgentsSlugRoute
 }
 
 const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
+    AuthenticatedDashboardAcademyRoute: AuthenticatedDashboardAcademyRoute,
     AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
     AuthenticatedDashboardFunnelRoute: AuthenticatedDashboardFunnelRoute,
     AuthenticatedDashboardIntegrationsRoute:
       AuthenticatedDashboardIntegrationsRoute,
-    AuthenticatedDashboardLandingRoute: AuthenticatedDashboardLandingRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
     AuthenticatedDashboardAgentsSlugRoute:
       AuthenticatedDashboardAgentsSlugRoute,
