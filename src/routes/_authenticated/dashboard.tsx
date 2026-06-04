@@ -72,7 +72,7 @@ function DashboardLayout() {
       </div>
       <nav className="flex-1 px-3 py-6 space-y-6 overflow-y-auto">
         <SidebarItem to="/dashboard" active={pathname === "/dashboard"} icon={LayoutGrid} label={t("dash.overview")} />
-        <SidebarItem to="/dashboard/academy" active={pathname === "/dashboard/academy"} icon={GraduationCap} label="Academy" />
+        <SidebarItem to="/dashboard/academy" active={pathname === "/dashboard/academy"} icon={GraduationCap} label={t("dash.academy")} />
 
         <Section title={t("dash.agents")}>
           {agents.map((a) => {
@@ -82,10 +82,10 @@ function DashboardLayout() {
           })}
         </Section>
 
-        <Section title="Growth">
-          <SidebarItem to="/dashboard/funnel" active={pathname === "/dashboard/funnel"} icon={GitBranch} label="Funnels" />
-          <SidebarItem to="/dashboard/integrations" active={pathname === "/dashboard/integrations"} icon={Plug} label="Integrations" />
-          <SidebarItem to="/dashboard/billing" active={pathname === "/dashboard/billing"} icon={CreditCard} label="Billing" />
+        <Section title={t("dash.growth")}>
+          <SidebarItem to="/dashboard/funnel" active={pathname === "/dashboard/funnel"} icon={GitBranch} label={t("dash.funnels")} />
+          <SidebarItem to="/dashboard/integrations" active={pathname === "/dashboard/integrations"} icon={Plug} label={t("dash.integrations")} />
+          <SidebarItem to="/dashboard/billing" active={pathname === "/dashboard/billing"} icon={CreditCard} label={t("dash.billing")} />
         </Section>
       </nav>
       <div className="px-3 py-4 border-t border-brand-border space-y-3">
