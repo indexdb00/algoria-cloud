@@ -8,9 +8,9 @@ export const Route = createFileRoute("/_authenticated/dashboard/billing")({
 });
 
 const PACKS = [
-  { id: "starter", credits: 500, price: "€49", per: "€0.098 / credit", features: ["2 active agents", "Weekly report sync"] },
-  { id: "growth", credits: 2000, price: "€149", per: "€0.075 / credit", featured: true, features: ["All 5 agents", "Daily updates", "Priority routing"] },
-  { id: "scale", credits: 10000, price: "€599", per: "€0.060 / credit", features: ["Custom agents", "Dedicated success engineer", "SSO"] },
+  { id: "starter", credits: 500, price: "€19", per: "€0.038 / credit", features: ["2 active agents", "Weekly performance reports", "Email support"] },
+  { id: "growth", credits: 2500, price: "€59", per: "€0.024 / credit", featured: true, features: ["All 5 agents", "Daily performance pulse", "All 6 integrations", "Priority routing"] },
+  { id: "scale", credits: 12000, price: "€199", per: "€0.017 / credit", features: ["Custom agents", "Dedicated success engineer", "SSO + data residency"] },
 ];
 
 function BillingPage() {

@@ -2,10 +2,15 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+const LANG_NAMES: Record<string, string> = {
+  en: "English", pt: "Portuguese (pt-PT/pt-BR)", es: "Spanish", fr: "French", de: "German", it: "Italian",
+};
+
 const sendSchema = z.object({
   conversationId: z.string().uuid().optional(),
   agentSlug: z.string().min(1).max(64),
   message: z.string().min(1).max(8000),
+  language: z.enum(["en", "pt", "es", "fr", "de", "it"]).optional(),
 });
 
 export const sendAgentMessage = createServerFn({ method: "POST" })
@@ -66,8 +71,10 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
     });
 
     // Call Lovable AI
+    const langName = LANG_NAMES[data.language ?? "en"] ?? "English";
+    const langDirective = `IMPORTANT: Always reply in ${langName}, regardless of the language of the user's message. Use natural, idiomatic ${langName}. Keep brand names, KPIs (ROAS, CPL, CAC, CTR) and technical platform names (Meta Ads, Google Ads, TikTok Ads, BidMachine, GA4, Business Suite) untranslated. Format with concise markdown: short paragraphs, bullet lists, and a final "Next actions" checklist when relevant.`;
     const messages = [
-      { role: "system", content: agent.system_prompt },
+      { role: "system", content: agent.system_prompt + "\n\n" + langDirective },
       ...(history ?? []).map((m) => ({ role: m.role, content: m.content })),
       { role: "user", content: data.message },
     ];
