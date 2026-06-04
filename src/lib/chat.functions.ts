@@ -2,10 +2,15 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
+const LANG_NAMES: Record<string, string> = {
+  en: "English", pt: "Portuguese (pt-PT/pt-BR)", es: "Spanish", fr: "French", de: "German", it: "Italian",
+};
+
 const sendSchema = z.object({
   conversationId: z.string().uuid().optional(),
   agentSlug: z.string().min(1).max(64),
   message: z.string().min(1).max(8000),
+  language: z.enum(["en", "pt", "es", "fr", "de", "it"]).optional(),
 });
 
 export const sendAgentMessage = createServerFn({ method: "POST" })
