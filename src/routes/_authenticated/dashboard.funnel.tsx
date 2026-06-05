@@ -1,164 +1,225 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Plus, GitBranch, Trash2, Pencil, Check, X, FolderOpen } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useI18n } from "@/lib/i18n";
+import {
+  GitBranch, Sparkles, Target, Users, Euro, TrendingUp, Megaphone,
+  Search, Music2, Globe, BarChart3, Layers, MessageSquare, ArrowRight,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/funnel")({
   head: () => ({ meta: [{ title: "Funnels — Aurevia" }] }),
   component: Funnels,
 });
 
-type Funnel = {
+type ParsedCampaign = {
   id: string;
   name: string;
-  description: string;
-  stages: string[];
-  createdAt: number;
+  platform: string;
+  objective: string;
+  audience: string;
+  budget: string;
+  creative: string;
+  kpi: string;
+  nextActions: string[];
+  createdAt: string;
 };
 
-const STORE_KEY = "aurevia.funnels.v1";
-const DEFAULT_STAGES = ["Awareness", "Consideration", "Conversion", "Retention"];
+const PLATFORM_META: Record<string, { color: string; icon: typeof Megaphone; bg: string }> = {
+  "Meta Ads":          { color: "#1877F2", icon: Megaphone, bg: "from-[#1877F2] to-[#0a3d8c]" },
+  "Google Ads":        { color: "#FBBC04", icon: Search,    bg: "from-[#FBBC04] to-[#a17a00]" },
+  "TikTok Ads":        { color: "#FF0050", icon: Music2,    bg: "from-[#FF0050] to-[#7a0026]" },
+  "BidMachine":        { color: "#7C3AED", icon: Layers,    bg: "from-[#7C3AED] to-[#3b1d80]" },
+  "Business Suite":    { color: "#0866FF", icon: Megaphone, bg: "from-[#0866FF] to-[#053080]" },
+  "GA4":               { color: "#E37400", icon: BarChart3, bg: "from-[#E37400] to-[#7a3e00]" },
+};
+
+function detectPlatform(text: string): string {
+  const m = text.match(/PLATFORM:\s*([^\n]+)/i);
+  if (m) {
+    const v = m[1].trim();
+    for (const key of Object.keys(PLATFORM_META)) {
+      if (v.toLowerCase().includes(key.toLowerCase())) return key;
+    }
+  }
+  for (const key of Object.keys(PLATFORM_META)) {
+    if (text.toLowerCase().includes(key.toLowerCase())) return key;
+  }
+  return "Meta Ads";
+}
+
+function field(text: string, name: string): string {
+  const re = new RegExp(`${name}:\\s*([^\\n]+)`, "i");
+  return text.match(re)?.[1]?.trim() ?? "";
+}
+
+function parseCampaigns(content: string, createdAt: string, idBase: string): ParsedCampaign[] {
+  const out: ParsedCampaign[] = [];
+  // split by CAMPAIGN: occurrences
+  const parts = content.split(/(?=CAMPAIGN:)/g);
+  parts.forEach((chunk, i) => {
+    if (!/CAMPAIGN:/i.test(chunk)) return;
+    const name = field(chunk, "CAMPAIGN") || "Untitled campaign";
+    const platform = detectPlatform(chunk);
+    const objective = field(chunk, "OBJECTIVE") || "—";
+    const audience = field(chunk, "AUDIENCE") || "—";
+    const budget = field(chunk, "BUDGET") || "—";
+    const creative = field(chunk, "CREATIVE") || "—";
+    const kpi = field(chunk, "KPI") || "—";
+    const naMatch = chunk.match(/NEXT ACTIONS:\s*([\s\S]+?)(?:\n\n|$)/i);
+    const nextActions = naMatch
+      ? naMatch[1].split("\n").map((l) => l.replace(/^[-*•]\s*/, "").trim()).filter(Boolean).slice(0, 5)
+      : [];
+    out.push({ id: `${idBase}-${i}`, name, platform, objective, audience, budget, creative, kpi, nextActions, createdAt });
+  });
+  return out;
+}
 
 function Funnels() {
-  const [funnels, setFunnels] = useState<Funnel[]>([]);
-  const [editing, setEditing] = useState<string | null>(null);
-  const [draftName, setDraftName] = useState("");
-  const [draftDesc, setDraftDesc] = useState("");
+  const { t } = useI18n();
+  const [campaigns, setCampaigns] = useState<ParsedCampaign[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      if (raw) setFunnels(JSON.parse(raw));
-    } catch { /* noop */ }
+    (async () => {
+      const { data: convs } = await supabase
+        .from("conversations")
+        .select("id")
+        .eq("agent_slug", "aurevia")
+        .order("updated_at", { ascending: false })
+        .limit(5);
+      if (!convs || convs.length === 0) { setLoading(false); return; }
+      const ids = convs.map((c) => c.id);
+      const { data: msgs } = await supabase
+        .from("messages")
+        .select("id,content,created_at")
+        .in("conversation_id", ids)
+        .eq("role", "assistant")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      const parsed: ParsedCampaign[] = [];
+      (msgs ?? []).forEach((m) => {
+        parsed.push(...parseCampaigns(m.content, m.created_at, m.id));
+      });
+      setCampaigns(parsed);
+      setLoading(false);
+    })();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem(STORE_KEY, JSON.stringify(funnels));
-  }, [funnels]);
-
-  function create() {
-    const f: Funnel = {
-      id: crypto.randomUUID(),
-      name: "Untitled funnel",
-      description: "",
-      stages: [...DEFAULT_STAGES],
-      createdAt: Date.now(),
-    };
-    setFunnels((p) => [f, ...p]);
-    setEditing(f.id);
-    setDraftName(f.name);
-    setDraftDesc("");
-  }
-
-  function remove(id: string) {
-    setFunnels((p) => p.filter((f) => f.id !== id));
-  }
-
-  function startEdit(f: Funnel) {
-    setEditing(f.id);
-    setDraftName(f.name);
-    setDraftDesc(f.description);
-  }
-
-  function saveEdit(id: string) {
-    setFunnels((p) => p.map((f) => f.id === id ? { ...f, name: draftName || "Untitled funnel", description: draftDesc } : f));
-    setEditing(null);
-  }
+  const grouped = useMemo(() => {
+    const g: Record<string, ParsedCampaign[]> = {};
+    campaigns.forEach((c) => {
+      (g[c.platform] ||= []).push(c);
+    });
+    return g;
+  }, [campaigns]);
 
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="border-b border-brand-border px-6 md:px-10 py-6 flex items-center justify-between gap-4">
+      <header className="border-b border-brand-border px-5 md:px-10 py-6 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <div className="text-[10px] uppercase tracking-widest text-neon mb-1">Funnels</div>
-          <h1 className="font-heading text-2xl md:text-3xl font-medium tracking-tight">Your funnel boards</h1>
-          <p className="text-xs md:text-sm text-brand-muted mt-1 max-w-xl">
-            Create a board per project. Name each funnel and let your agents fill the stages with assets, audiences and creatives.
-          </p>
+          <div className="text-[10px] uppercase tracking-widest text-neon mb-1.5">{t("funnel.tag")}</div>
+          <h1 className="font-heading text-2xl md:text-3xl font-medium tracking-tight">{t("funnel.title")}</h1>
+          <p className="text-xs md:text-sm text-brand-muted mt-1.5 max-w-2xl">{t("funnel.subtitle")}</p>
         </div>
-        <button onClick={create} className="btn-neon-solid text-sm px-3 py-2 inline-flex items-center gap-1.5 shrink-0">
-          <Plus className="size-4" /> <span className="hidden sm:inline">New funnel</span>
-        </button>
+        <Link to="/dashboard/chat" className="btn-neon-solid text-xs md:text-sm px-4 py-2 inline-flex items-center gap-2 rounded-xl shrink-0">
+          <Sparkles className="size-4" /> {t("funnel.cta")}
+        </Link>
       </header>
 
-      <div className="flex-1 px-6 md:px-10 py-8">
-        {funnels.length === 0 ? (
-          <div className="border border-dashed border-brand-border rounded-2xl py-20 px-6 text-center max-w-2xl mx-auto">
-            <div className="size-12 mx-auto rounded-xl bg-brand-surface ring-1 ring-brand-border flex items-center justify-center mb-4">
-              <FolderOpen className="size-5 text-neon" />
+      <div className="flex-1 px-5 md:px-10 py-8">
+        {loading ? (
+          <div className="text-center py-20 text-brand-muted text-sm">{t("funnel.loading")}</div>
+        ) : campaigns.length === 0 ? (
+          <div className="border border-dashed border-brand-border rounded-2xl py-16 px-6 text-center max-w-2xl mx-auto">
+            <div className="size-14 mx-auto rounded-2xl icon-3d flex items-center justify-center mb-5">
+              <GitBranch className="size-6 text-[oklch(0.16_0.01_160)]" />
             </div>
-            <h2 className="font-heading text-xl font-medium mb-2">No funnels yet</h2>
-            <p className="text-sm text-brand-muted max-w-md mx-auto mb-6">
-              This space stays empty until you create your first board. Each funnel is private and persists across sessions.
-            </p>
-            <button onClick={create} className="btn-neon text-sm px-4 py-2 inline-flex items-center gap-2">
-              <Plus className="size-4" /> Create your first funnel
-            </button>
+            <h2 className="font-heading text-xl font-medium mb-2">{t("funnel.empty.title")}</h2>
+            <p className="text-sm text-brand-muted max-w-md mx-auto mb-6">{t("funnel.empty.desc")}</p>
+            <Link to="/dashboard/chat" className="btn-neon text-sm px-4 py-2 inline-flex items-center gap-2 rounded-xl">
+              <MessageSquare className="size-4" /> {t("funnel.empty.cta")}
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {funnels.map((f) => (
-              <article
-                key={f.id}
-                className="group p-5 rounded-2xl bg-brand-surface ring-1 ring-brand-border hover:ring-neon/40 transition-all"
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <div className="size-9 rounded-lg bg-brand-bg ring-1 ring-brand-border flex items-center justify-center shrink-0">
-                    <GitBranch className="size-4 text-neon" />
-                  </div>
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
-                    {editing === f.id ? (
-                      <>
-                        <button onClick={() => saveEdit(f.id)} className="btn-neon p-1.5"><Check className="size-3.5" /></button>
-                        <button onClick={() => setEditing(null)} className="btn-dark p-1.5"><X className="size-3.5" /></button>
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => startEdit(f)} className="btn-dark p-1.5"><Pencil className="size-3.5" /></button>
-                        <button onClick={() => remove(f.id)} className="btn-dark p-1.5 hover:!text-red-400"><Trash2 className="size-3.5" /></button>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {editing === f.id ? (
-                  <div className="space-y-2 mb-4">
-                    <input
-                      autoFocus
-                      value={draftName}
-                      onChange={(e) => setDraftName(e.target.value)}
-                      placeholder="Funnel name"
-                      className="w-full bg-brand-bg ring-1 ring-brand-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-neon"
-                    />
-                    <textarea
-                      value={draftDesc}
-                      onChange={(e) => setDraftDesc(e.target.value)}
-                      placeholder="What is this funnel for?"
-                      rows={2}
-                      className="w-full bg-brand-bg ring-1 ring-brand-border rounded-md px-3 py-2 text-xs text-brand-muted focus:outline-none focus:ring-neon resize-none"
-                    />
-                  </div>
-                ) : (
-                  <div className="mb-4">
-                    <h3 className="font-medium text-sm mb-1">{f.name}</h3>
-                    <p className="text-xs text-brand-muted line-clamp-2 min-h-[2rem]">
-                      {f.description || "No description yet."}
-                    </p>
-                  </div>
-                )}
-
-                <div className="space-y-1.5">
-                  {f.stages.map((s, i) => (
-                    <div key={i} className="flex items-center gap-2 text-[11px]">
-                      <span className="size-1.5 rounded-full bg-neon/70 shadow-[0_0_6px_var(--neon)]" />
-                      <span className="text-brand-muted">{s}</span>
-                      <span className="ml-auto text-[10px] uppercase tracking-widest text-brand-muted/60">empty</span>
+          <div className="space-y-10">
+            {Object.entries(grouped).map(([platform, items]) => {
+              const meta = PLATFORM_META[platform];
+              const Icon = meta?.icon ?? Globe;
+              return (
+                <section key={platform}>
+                  {/* Platform node */}
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className={`size-12 rounded-2xl bg-gradient-to-br ${meta?.bg ?? "from-neon to-emerald-700"} flex items-center justify-center shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)] ring-1 ring-white/10`}>
+                      <Icon className="size-5 text-white drop-shadow" />
                     </div>
-                  ))}
-                </div>
-              </article>
-            ))}
+                    <div>
+                      <div className="font-heading text-lg font-medium tracking-tight">{platform}</div>
+                      <div className="text-[10px] uppercase tracking-widest text-brand-muted">{items.length} {t("funnel.flows")}</div>
+                    </div>
+                    <div className="hidden md:flex flex-1 items-center gap-1 ml-3">
+                      <div className="h-px flex-1 bg-gradient-to-r from-neon/40 to-transparent" />
+                      <ArrowRight className="size-3 text-neon/60" />
+                    </div>
+                  </div>
+
+                  {/* Campaign flow cards */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {items.map((c) => (
+                      <article key={c.id} className="relative p-5 rounded-2xl bg-brand-surface ring-1 ring-brand-border hover:ring-neon/40 transition-all overflow-hidden">
+                        <div className={`absolute -top-12 -right-12 size-32 rounded-full blur-3xl opacity-25 bg-gradient-to-br ${meta?.bg ?? "from-neon to-emerald-700"}`} />
+                        <div className="relative flex items-start justify-between gap-2 mb-4">
+                          <div>
+                            <div className="text-[10px] uppercase tracking-widest text-neon mb-1">{c.objective}</div>
+                            <h3 className="font-medium text-sm leading-snug">{c.name}</h3>
+                          </div>
+                          <div className="text-[10px] text-brand-muted shrink-0">
+                            {new Date(c.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+
+                        <div className="relative grid grid-cols-2 gap-2.5 mb-3">
+                          <Stat icon={Users} label={t("funnel.audience")} value={c.audience} />
+                          <Stat icon={Euro} label={t("funnel.budget")} value={c.budget} />
+                          <Stat icon={Sparkles} label={t("funnel.creative")} value={c.creative} />
+                          <Stat icon={TrendingUp} label={t("funnel.kpi")} value={c.kpi} />
+                        </div>
+
+                        {c.nextActions.length > 0 && (
+                          <div className="relative pt-3 border-t border-brand-border">
+                            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-brand-muted mb-2">
+                              <Target className="size-3 text-neon" /> {t("funnel.next")}
+                            </div>
+                            <ul className="space-y-1">
+                              {c.nextActions.map((a, i) => (
+                                <li key={i} className="flex items-start gap-2 text-[11px] text-brand-text">
+                                  <span className="size-1 mt-1.5 rounded-full bg-neon shadow-[0_0_4px_var(--neon)] shrink-0" />
+                                  <span>{a}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function Stat({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: string }) {
+  return (
+    <div className="p-2.5 rounded-lg bg-brand-bg/60 ring-1 ring-brand-border">
+      <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-widest text-brand-muted mb-1">
+        <Icon className="size-2.5 text-neon" /> {label}
+      </div>
+      <div className="text-[11px] text-brand-text line-clamp-2 leading-snug">{value}</div>
     </div>
   );
 }
