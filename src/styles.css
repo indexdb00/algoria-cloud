@@ -149,4 +149,19 @@
     color: var(--neon);
   }
   .ring-neon { box-shadow: 0 0 0 1px color-mix(in oklab, var(--neon) 50%, transparent); }
+
+  /* 3D-style neon tile (hero icons, stat tiles, mobile nav active state) */
+  .icon-3d {
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--neon) 95%, white 5%),
+      color-mix(in oklab, var(--neon) 60%, oklch(0.30 0.10 145) 40%));
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.45),
+      inset 0 -2px 4px color-mix(in oklab, var(--neon) 25%, transparent),
+      0 8px 22px -8px color-mix(in oklab, var(--neon) 70%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--neon) 30%, transparent);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .icon-3d:hover { transform: translateY(-1px); }
 }
+
