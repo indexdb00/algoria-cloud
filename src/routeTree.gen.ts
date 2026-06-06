@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
+import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardIntegrationsRouteImport } from './routes/_authenticated/dashboard.integrations'
 import { Route as AuthenticatedDashboardFunnelRouteImport } from './routes/_authenticated/dashboard.funnel'
 import { Route as AuthenticatedDashboardChatRouteImport } from './routes/_authenticated/dashboard.chat'
@@ -44,6 +45,12 @@ const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedDashboardRoute,
+  } as any)
+const AuthenticatedDashboardProfileRoute =
+  AuthenticatedDashboardProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
 const AuthenticatedDashboardIntegrationsRoute =
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/chat': typeof AuthenticatedDashboardChatRoute
   '/dashboard/funnel': typeof AuthenticatedDashboardFunnelRoute
   '/dashboard/integrations': typeof AuthenticatedDashboardIntegrationsRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
 }
@@ -103,6 +111,7 @@ export interface FileRoutesByTo {
   '/dashboard/chat': typeof AuthenticatedDashboardChatRoute
   '/dashboard/funnel': typeof AuthenticatedDashboardFunnelRoute
   '/dashboard/integrations': typeof AuthenticatedDashboardIntegrationsRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
 }
@@ -117,6 +126,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/chat': typeof AuthenticatedDashboardChatRoute
   '/_authenticated/dashboard/funnel': typeof AuthenticatedDashboardFunnelRoute
   '/_authenticated/dashboard/integrations': typeof AuthenticatedDashboardIntegrationsRoute
+  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
 }
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/dashboard/chat'
     | '/dashboard/funnel'
     | '/dashboard/integrations'
+    | '/dashboard/profile'
     | '/dashboard/'
     | '/dashboard/agents/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/dashboard/chat'
     | '/dashboard/funnel'
     | '/dashboard/integrations'
+    | '/dashboard/profile'
     | '/dashboard'
     | '/dashboard/agents/$slug'
   id:
@@ -155,6 +167,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/chat'
     | '/_authenticated/dashboard/funnel'
     | '/_authenticated/dashboard/integrations'
+    | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/'
     | '/_authenticated/dashboard/agents/$slug'
   fileRoutesById: FileRoutesById
@@ -200,6 +213,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/profile': {
+      id: '/_authenticated/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/integrations': {
@@ -253,6 +273,7 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardChatRoute: typeof AuthenticatedDashboardChatRoute
   AuthenticatedDashboardFunnelRoute: typeof AuthenticatedDashboardFunnelRoute
   AuthenticatedDashboardIntegrationsRoute: typeof AuthenticatedDashboardIntegrationsRoute
+  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedDashboardAgentsSlugRoute: typeof AuthenticatedDashboardAgentsSlugRoute
 }
@@ -265,6 +286,7 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
     AuthenticatedDashboardFunnelRoute: AuthenticatedDashboardFunnelRoute,
     AuthenticatedDashboardIntegrationsRoute:
       AuthenticatedDashboardIntegrationsRoute,
+    AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
     AuthenticatedDashboardAgentsSlugRoute:
       AuthenticatedDashboardAgentsSlugRoute,

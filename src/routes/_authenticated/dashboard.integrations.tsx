@@ -1,77 +1,130 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Check, ExternalLink } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect, useState } from "react";
+import { Check, X, KeyRound, Plug2 } from "lucide-react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
+import { connectIntegration, disconnectIntegration } from "@/lib/integrations.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard/integrations")({
   head: () => ({ meta: [{ title: "Integrations — Aurevia" }] }),
   component: IntegrationsPage,
 });
 
-const INTEGRATIONS = [
+type Field = { key: string; label: string; placeholder: string; type?: "text" | "password" };
+
+type Integration = {
+  id: string;
+  name: string;
+  color: string;
+  initials: string;
+  desc: Record<string, string>;
+  scopes: readonly string[];
+  fields: Field[];
+};
+
+const INTEGRATIONS: readonly Integration[] = [
   {
-    id: "meta-ads",
-    name: "Meta Ads",
-    color: "#1877F2",
-    initials: "M",
-    desc: { en: "Facebook + Instagram campaigns, audiences and retargeting, piloted by the Ads Agent.", pt: "Campanhas Facebook + Instagram, audiências e retargeting, pilotadas pelo Agente de Ads.", es: "Campañas Facebook + Instagram, audiencias y retargeting, pilotadas por el Agente Ads.", fr: "Campagnes Facebook + Instagram, audiences et retargeting, pilotées par l'Agent Ads.", de: "Facebook + Instagram Kampagnen, Audiences und Retargeting, gesteuert vom Ads-Agenten.", it: "Campagne Facebook + Instagram, audience e retargeting, pilotate dall'Agente Ads." },
+    id: "meta-ads", name: "Meta Ads", color: "#1877F2", initials: "M",
+    desc: { en: "Facebook + Instagram campaigns and retargeting.", pt: "Campanhas Facebook + Instagram e retargeting.", es: "Campañas Facebook + Instagram y retargeting.", fr: "Campagnes Facebook + Instagram et retargeting.", de: "Facebook + Instagram Kampagnen und Retargeting.", it: "Campagne Facebook + Instagram e retargeting." },
     scopes: ["ads_management", "business_management"],
+    fields: [
+      { key: "ad_account_id", label: "Ad Account ID", placeholder: "act_1234567890" },
+      { key: "access_token", label: "Access Token", placeholder: "EAAB…", type: "password" },
+    ],
   },
   {
-    id: "business-suite",
-    name: "Meta Business Suite",
-    color: "#0866FF",
-    initials: "B",
-    desc: { en: "Page inbox, scheduled posts and unified Meta asset library.", pt: "Caixa da página, posts agendados e biblioteca de ativos Meta unificada.", es: "Bandeja de página, posts programados y biblioteca de activos Meta.", fr: "Boîte de réception page, posts planifiés et bibliothèque d'actifs Meta.", de: "Page-Inbox, geplante Posts und einheitliche Meta-Asset-Bibliothek.", it: "Inbox pagina, post programmati e libreria asset Meta unificata." },
+    id: "business-suite", name: "Meta Business Suite", color: "#0866FF", initials: "B",
+    desc: { en: "Page inbox and scheduled posts.", pt: "Caixa da página e posts agendados.", es: "Bandeja de página y posts programados.", fr: "Boîte de réception page et posts planifiés.", de: "Page-Inbox und geplante Posts.", it: "Inbox pagina e post programmati." },
     scopes: ["pages_messaging", "pages_manage_posts"],
+    fields: [
+      { key: "page_id", label: "Page ID", placeholder: "1010100000" },
+      { key: "page_access_token", label: "Page Access Token", placeholder: "EAAB…", type: "password" },
+    ],
   },
   {
-    id: "google-ads",
-    name: "Google Ads",
-    color: "#FBBC04",
-    initials: "G",
-    desc: { en: "Search, Performance Max & YouTube. Bid optimization and keyword expansion every hour.", pt: "Search, Performance Max e YouTube. Otimização de lances e keywords a cada hora.", es: "Search, Performance Max y YouTube. Optimización de pujas y keywords cada hora.", fr: "Search, Performance Max & YouTube. Optimisation des enchères toutes les heures.", de: "Search, Performance Max & YouTube. Gebotsoptimierung und Keyword-Expansion stündlich.", it: "Search, Performance Max e YouTube. Ottimizzazione offerte e keyword ogni ora." },
+    id: "google-ads", name: "Google Ads", color: "#FBBC04", initials: "G",
+    desc: { en: "Search, Performance Max & YouTube.", pt: "Search, Performance Max e YouTube.", es: "Search, Performance Max y YouTube.", fr: "Search, Performance Max & YouTube.", de: "Search, Performance Max & YouTube.", it: "Search, Performance Max e YouTube." },
     scopes: ["adwords"],
+    fields: [
+      { key: "customer_id", label: "Customer ID", placeholder: "123-456-7890" },
+      { key: "developer_token", label: "Developer Token", placeholder: "ya29…", type: "password" },
+      { key: "refresh_token", label: "Refresh Token", placeholder: "1//0g…", type: "password" },
+    ],
   },
   {
-    id: "google-analytics",
-    name: "Google Analytics 4",
-    color: "#E37400",
-    initials: "A",
-    desc: { en: "Attribution and conversion data piped into every agent for closed-loop optimization.", pt: "Atribuição e conversões alimentadas em cada agente para otimização fechada.", es: "Atribución y conversiones para optimización en circuito cerrado.", fr: "Données d'attribution et de conversion injectées dans chaque agent.", de: "Attribution und Conversion-Daten für jeden Agenten zur Closed-Loop-Optimierung.", it: "Dati di attribuzione e conversione iniettati in ogni agente." },
+    id: "google-analytics", name: "Google Analytics 4", color: "#E37400", initials: "A",
+    desc: { en: "Attribution and conversion data.", pt: "Atribuição e conversões.", es: "Atribución y conversiones.", fr: "Données d'attribution et de conversion.", de: "Attribution und Conversion-Daten.", it: "Dati di attribuzione e conversione." },
     scopes: ["analytics.readonly"],
+    fields: [
+      { key: "property_id", label: "Property ID", placeholder: "123456789" },
+      { key: "service_account_json", label: "Service Account JSON", placeholder: '{"type":"service_account",…}', type: "password" },
+    ],
   },
   {
-    id: "tiktok-ads",
-    name: "TikTok Ads",
-    color: "#FF0050",
-    initials: "T",
-    desc: { en: "Spark Ads, Shop ads and UGC creative cycles managed by the Reach Agent.", pt: "Spark Ads, anúncios Shop e ciclos UGC geridos pelo Agente de Alcance.", es: "Spark Ads, anuncios Shop y ciclos UGC gestionados por el Agente Alcance.", fr: "Spark Ads, annonces Shop et cycles UGC gérés par l'Agent Portée.", de: "Spark Ads, Shop-Anzeigen und UGC-Zyklen, verwaltet vom Reach-Agenten.", it: "Spark Ads, annunci Shop e cicli UGC gestiti dall'Agente Reach." },
+    id: "tiktok-ads", name: "TikTok Ads", color: "#FF0050", initials: "T",
+    desc: { en: "Spark Ads, Shop ads and UGC cycles.", pt: "Spark Ads, anúncios Shop e ciclos UGC.", es: "Spark Ads, anuncios Shop y ciclos UGC.", fr: "Spark Ads, annonces Shop et cycles UGC.", de: "Spark Ads, Shop-Anzeigen und UGC-Zyklen.", it: "Spark Ads, annunci Shop e cicli UGC." },
     scopes: ["tiktok_ads.read", "tiktok_ads.write"],
+    fields: [
+      { key: "advertiser_id", label: "Advertiser ID", placeholder: "7000000000000000000" },
+      { key: "access_token", label: "Access Token", placeholder: "TT-…", type: "password" },
+    ],
   },
   {
-    id: "bidmachine",
-    name: "BidMachine",
-    color: "#7C3AED",
-    initials: "B",
-    desc: { en: "Programmatic in-app and CTV inventory. RTB optimization with cross-network deduplication.", pt: "Inventário programático in-app e CTV. Otimização RTB com deduplicação cross-network.", es: "Inventario programático in-app y CTV. Optimización RTB con deduplicación.", fr: "Inventaire programmatique in-app et CTV. Optimisation RTB.", de: "Programmatisches In-App- und CTV-Inventar. RTB-Optimierung mit Cross-Network-Deduplizierung.", it: "Inventario programmatico in-app e CTV. Ottimizzazione RTB cross-network." },
+    id: "bidmachine", name: "BidMachine", color: "#7C3AED", initials: "B",
+    desc: { en: "Programmatic in-app and CTV inventory.", pt: "Inventário programático in-app e CTV.", es: "Inventario programático in-app y CTV.", fr: "Inventaire programmatique in-app et CTV.", de: "Programmatisches In-App- und CTV-Inventar.", it: "Inventario programmatico in-app e CTV." },
     scopes: ["bidmachine.read", "bidmachine.write"],
+    fields: [
+      { key: "seller_id", label: "Seller ID", placeholder: "bm_seller_123" },
+      { key: "api_key", label: "API Key", placeholder: "bm_live_…", type: "password" },
+    ],
   },
-] as const;
+];
 
 function IntegrationsPage() {
   const { t, lang } = useI18n();
+  const connectFn = useServerFn(connectIntegration);
+  const disconnectFn = useServerFn(disconnectIntegration);
   const [connected, setConnected] = useState<Record<string, boolean>>({});
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [values, setValues] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
 
-  function toggle(id: string, name: string) {
-    if (connected[id]) {
-      setConnected((c) => ({ ...c, [id]: false }));
-      toast.success(`${name} disconnected`);
-    } else {
-      setConnected((c) => ({ ...c, [id]: true }));
-      toast.success(`${name} ${t("int.connected").toLowerCase()}`);
-    }
+  useEffect(() => {
+    supabase.from("user_integrations").select("integration_id").then(({ data }) => {
+      if (!data) return;
+      const map: Record<string, boolean> = {};
+      data.forEach((r) => { map[r.integration_id] = true; });
+      setConnected(map);
+    });
+  }, []);
+
+  const current = INTEGRATIONS.find((i) => i.id === openId) ?? null;
+
+  function openConnect(i: Integration) {
+    setOpenId(i.id);
+    setValues({});
+  }
+
+  async function submit() {
+    if (!current) return;
+    const missing = current.fields.find((f) => !(values[f.key] ?? "").trim());
+    if (missing) { toast.error(`${missing.label} ${t("int.form.required")}`); return; }
+    setSubmitting(true);
+    try {
+      const res = await connectFn({ data: { integrationId: current.id, name: current.name, credentials: values } });
+      if (res?.error) { toast.error(res.error); return; }
+      setConnected((c) => ({ ...c, [current.id]: true }));
+      toast.success(`${current.name} · ${t("int.form.costNote")}`);
+      setOpenId(null);
+    } finally { setSubmitting(false); }
+  }
+
+  async function disconnect(id: string, name: string) {
+    await disconnectFn({ data: { integrationId: id } });
+    setConnected((c) => ({ ...c, [id]: false }));
+    toast.success(`${name} ${t("int.disconnected")}`);
   }
 
   return (
@@ -80,31 +133,23 @@ function IntegrationsPage() {
         <div className="text-[10px] uppercase tracking-widest text-neon mb-3">Connections</div>
         <h1 className="font-heading text-3xl md:text-4xl font-medium tracking-tight">{t("int.title")}</h1>
         <p className="text-sm text-brand-muted mt-3 max-w-2xl">{t("int.subtitle")}</p>
+        <div className="mt-3 inline-flex items-center gap-2 text-[11px] text-neon">
+          <KeyRound className="size-3" />
+          {t("int.form.costNote")}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {INTEGRATIONS.map((i) => {
           const isConnected = !!connected[i.id];
           return (
-            <div
-              key={i.id}
-              className={
-                "relative overflow-hidden p-6 rounded-2xl bg-brand-surface ring-1 transition-all " +
-                (isConnected ? "ring-neon/60 shadow-[0_0_30px_-12px_var(--neon)]" : "ring-brand-border hover:ring-neon/40")
-              }
-            >
-              <div
-                className="absolute -top-20 -right-20 size-48 rounded-full blur-3xl pointer-events-none opacity-30"
-                style={{ background: i.color }}
-              />
+            <div key={i.id}
+              className={"relative overflow-hidden p-6 rounded-2xl bg-brand-surface ring-1 transition-all " +
+                (isConnected ? "ring-neon/60 shadow-[0_0_30px_-12px_var(--neon)]" : "ring-brand-border hover:ring-neon/40")}>
+              <div className="absolute -top-20 -right-20 size-48 rounded-full blur-3xl pointer-events-none opacity-30" style={{ background: i.color }} />
               <div className="relative flex items-start justify-between gap-4 mb-3">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="size-11 rounded-xl ring-1 ring-brand-border flex items-center justify-center font-semibold text-sm text-white shrink-0"
-                    style={{ background: i.color }}
-                  >
-                    {i.initials}
-                  </div>
+                  <div className="size-11 rounded-xl ring-1 ring-brand-border flex items-center justify-center font-semibold text-sm text-white shrink-0" style={{ background: i.color }}>{i.initials}</div>
                   <div>
                     <div className="font-medium text-sm">{i.name}</div>
                     <div className="text-[10px] uppercase tracking-widest flex items-center gap-1.5 mt-0.5">
@@ -115,23 +160,22 @@ function IntegrationsPage() {
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => toggle(i.id, i.name)}
-                  className={(isConnected ? "btn-dark" : "btn-neon") + " text-xs px-3 py-1.5 inline-flex items-center gap-1.5 shrink-0"}
-                >
-                  {isConnected ? "Disconnect" : t("int.connect")}
-                  {!isConnected && <ExternalLink className="size-3" />}
-                  {isConnected && <Check className="size-3" />}
-                </button>
+                {isConnected ? (
+                  <button onClick={() => disconnect(i.id, i.name)} className="btn-dark text-xs px-3 py-1.5 inline-flex items-center gap-1.5 shrink-0">
+                    <Check className="size-3 text-neon" />{t("int.disconnect")}
+                  </button>
+                ) : (
+                  <button onClick={() => openConnect(i)} className="btn-neon text-xs px-3 py-1.5 inline-flex items-center gap-1.5 shrink-0">
+                    <Plug2 className="size-3" />{t("int.connect")}
+                  </button>
+                )}
               </div>
               <p className="relative text-xs text-brand-muted leading-relaxed mb-4">
                 {i.desc[lang] ?? i.desc.en}
               </p>
               <div className="relative flex flex-wrap gap-1.5">
                 {i.scopes.map((s) => (
-                  <span key={s} className="text-[10px] px-2 py-0.5 rounded-md bg-brand-bg ring-1 ring-brand-border text-brand-muted">
-                    {s}
-                  </span>
+                  <span key={s} className="text-[10px] px-2 py-0.5 rounded-md bg-brand-bg ring-1 ring-brand-border text-brand-muted">{s}</span>
                 ))}
               </div>
             </div>
@@ -139,12 +183,46 @@ function IntegrationsPage() {
         })}
       </div>
 
-      <div className="mt-10 p-6 rounded-2xl bg-brand-surface ring-1 ring-brand-border flex items-start gap-3">
-        <Check className="size-4 text-neon mt-0.5 shrink-0" />
-        <div className="text-xs text-brand-muted leading-relaxed">
-          Tokens are stored encrypted in your Aurevia workspace. Every API call is scoped, rate-limited and audit-logged.
+      {/* Connect form modal */}
+      {current && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => !submitting && setOpenId(null)}>
+          <div className="w-full max-w-md bg-brand-surface ring-1 ring-brand-border rounded-2xl p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl ring-1 ring-brand-border flex items-center justify-center font-semibold text-sm text-white" style={{ background: current.color }}>{current.initials}</div>
+                <div>
+                  <div className="font-medium">{t("int.form.title")} {current.name}</div>
+                  <div className="text-[10px] uppercase tracking-widest text-neon">{t("int.form.costNote")}</div>
+                </div>
+              </div>
+              <button onClick={() => !submitting && setOpenId(null)} className="text-brand-muted hover:text-brand-text"><X className="size-4" /></button>
+            </div>
+            <p className="text-xs text-brand-muted mt-3 mb-5">{t("int.form.subtitle")}</p>
+            <div className="space-y-3">
+              {current.fields.map((f) => (
+                <label key={f.key} className="block">
+                  <span className="text-[10px] uppercase tracking-widest text-brand-muted mb-1 block">{f.label}</span>
+                  <input
+                    type={f.type ?? "text"}
+                    autoComplete="off"
+                    value={values[f.key] ?? ""}
+                    onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+                    placeholder={f.placeholder}
+                    className="input-base"
+                  />
+                </label>
+              ))}
+            </div>
+            <div className="mt-6 flex items-center justify-end gap-2">
+              <button onClick={() => setOpenId(null)} disabled={submitting} className="btn-dark text-xs px-3 py-2">{t("int.form.cancel")}</button>
+              <button onClick={submit} disabled={submitting} className="btn-neon-solid text-xs px-4 py-2 inline-flex items-center gap-1.5">
+                <Plug2 className="size-3" />
+                {submitting ? "…" : t("int.form.submit")}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

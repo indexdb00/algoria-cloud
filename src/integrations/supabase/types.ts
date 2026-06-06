@@ -158,25 +158,70 @@ export type Database = {
       }
       profiles: {
         Row: {
+          birth_date: string | null
+          city: string | null
+          company: string | null
+          country: string | null
           created_at: string
           display_name: string | null
           id: string
           language: string
+          state: string | null
           updated_at: string
         }
         Insert: {
+          birth_date?: string | null
+          city?: string | null
+          company?: string | null
+          country?: string | null
           created_at?: string
           display_name?: string | null
           id: string
           language?: string
+          state?: string | null
           updated_at?: string
         }
         Update: {
+          birth_date?: string | null
+          city?: string | null
+          company?: string | null
+          country?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
           language?: string
+          state?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      user_integrations: {
+        Row: {
+          connected_at: string
+          credentials: Json
+          id: string
+          integration_id: string
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connected_at?: string
+          credentials?: Json
+          id?: string
+          integration_id: string
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connected_at?: string
+          credentials?: Json
+          id?: string
+          integration_id?: string
+          name?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
