@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import iconAsset from "@/assets/aurevia-icon.png.asset.json";
 
 export function SiteNav() {
   const { t } = useI18n();
@@ -9,8 +10,8 @@ export function SiteNav() {
     <nav className="sticky top-0 z-50 border-b border-brand-border bg-brand-bg/75 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-10">
-          <Link to="/" className="font-heading text-xl font-semibold tracking-tight flex items-center gap-2">
-            <span className="size-2 rounded-full bg-neon shadow-[0_0_12px_var(--neon)]" />
+          <Link to="/" className="font-heading text-xl font-semibold tracking-tight flex items-center gap-2.5">
+            <img src={iconAsset.url} alt="Aurevia" className="size-7 rounded-lg shadow-[0_0_18px_-4px_var(--neon)]" />
             Aurevia
           </Link>
           <div className="hidden md:flex gap-8">
