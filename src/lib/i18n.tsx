@@ -221,7 +221,33 @@ const en: Dict = {
   "over.perfTitle": "Connect a platform to see live performance",
   "over.perfDesc": "Once you connect Meta Ads, Google Ads, TikTok or GA4, this dashboard shows real spend, clicks, conversions and ROAS pulled directly from each integration.",
   "over.connectNow": "Connect now",
+  // Cookies
+  "cookies.title": "We use cookies",
+  "cookies.desc": "Aurevia uses essential cookies to keep you signed in and anonymous analytics to improve the product. GDPR/LGPD compliant — no third-party tracking.",
+  "cookies.accept": "Accept all",
+  "cookies.reject": "Essential only",
+  "cookies.learn": "Privacy policy",
+  // Chat showcase
+  "showcase.tag": "Live demo",
+  "showcase.title": "Watch the agents think.",
+  "showcase.desc": "Type a goal, drop an ad creative or paste a CSV — Aurevia drafts the campaign, audience, budget split and policy check in seconds.",
+  // Credits & plans expanded
+  "credits.tag": "Credits",
+  "credits.title": "Predictable, transparent pricing.",
+  "credits.free.title": "Free tier",
+  "credits.free.desc": "100 welcome credits on signup, then 50 free credits every month — forever.",
+  "credits.cost.title": "What 1 credit buys",
+  "credits.cost.desc": "1 prompt with Aurevia v1.0. Thinking v1.1 spends 2× per message. Aurevia Plus matches Thinking quality at half the cost — paid plans only.",
+  "credits.rollover.title": "Never expire",
+  "credits.rollover.desc": "Monthly credits on paid plans roll forward while your plan stays active. Cancel anytime, keep what you bought.",
+  "plan.free": "Free",
+  "plan.free.desc": "Test Aurevia end-to-end.",
+  "plan.free.f1": "100 welcome credits + 50/month",
+  "plan.free.f2": "Aurevia v1.0 + Thinking v1.1",
+  "plan.free.f3": "1 integration (Meta or Google)",
 };
+
+
 
 
 const pt: Dict = {

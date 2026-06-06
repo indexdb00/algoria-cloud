@@ -3,11 +3,13 @@ import { useState } from "react";
 import {
   Megaphone, Users, Globe, Square, FileText, Check, ArrowUpRight, Sparkles,
   Activity, Zap, ShieldCheck, GraduationCap, GitBranch, Plug,
-  TrendingUp, Quote, Plus, Minus,
+  TrendingUp, Quote, Plus, Minus, Coins, Gift, Infinity as InfinityIcon,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { CookieBanner } from "@/components/site/CookieBanner";
+import { TypewriterChat } from "@/components/site/TypewriterChat";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -103,6 +105,34 @@ function Landing() {
               <Stat icon={Zap} label={t("trust.prompt")} />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Live chat showcase — typewriter animation */}
+      <section className="relative py-16 md:py-20 border-t border-brand-border">
+        <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-[1.05fr,1fr] gap-10 md:gap-14 items-center">
+          <div>
+            <span className="text-[11px] uppercase tracking-widest text-neon inline-flex items-center gap-1.5">
+              <Sparkles className="size-3" /> {t("showcase.tag")}
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl font-medium tracking-tight text-balance mt-3 mb-4">
+              {t("showcase.title")}
+            </h2>
+            <p className="text-sm text-brand-muted max-w-md leading-relaxed mb-6">{t("showcase.desc")}</p>
+            <ul className="space-y-2 text-sm text-brand-text/90">
+              <li className="flex items-center gap-2"><Check className="size-4 text-neon" /> Image, voice, CSV — multi-modal inputs.</li>
+              <li className="flex items-center gap-2"><Check className="size-4 text-neon" /> Aspect-ratio & ad-policy gate before any spend.</li>
+              <li className="flex items-center gap-2"><Check className="size-4 text-neon" /> Pick Aurevia v1.0, Thinking v1.1 or Plus per prompt.</li>
+            </ul>
+          </div>
+          <TypewriterChat
+            prompts={[
+              "Launch a Meta Ads campaign for my SaaS demo, €40/day, DACH, 9:16 creative.",
+              "Score my last 50 leads by intent — call list please.",
+              "Why did ROAS drop on TikTok yesterday?",
+              "Draft a 3-week reach push for Spain + Italy, budget €1,800.",
+            ]}
+          />
         </div>
       </section>
 
@@ -227,6 +257,23 @@ function Landing() {
         </div>
       </section>
 
+      {/* Credits explainer */}
+      <section id="credits" className="py-20 md:py-24 border-b border-brand-border bg-brand-surface/30">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="text-center mb-12 max-w-2xl mx-auto">
+            <span className="text-[11px] uppercase tracking-widest text-neon inline-flex items-center gap-1.5">
+              <Coins className="size-3" /> {t("credits.tag")}
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl font-medium tracking-tight text-balance mt-3">{t("credits.title")}</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CreditCardBlock Icon={Gift} title={t("credits.free.title")} desc={t("credits.free.desc")} />
+            <CreditCardBlock Icon={Sparkles} title={t("credits.cost.title")} desc={t("credits.cost.desc")} />
+            <CreditCardBlock Icon={InfinityIcon} title={t("credits.rollover.title")} desc={t("credits.rollover.desc")} />
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="py-20 md:py-24 border-b border-brand-border">
         <div className="mx-auto max-w-7xl px-6">
@@ -235,7 +282,15 @@ function Landing() {
             <h2 className="font-heading text-3xl md:text-4xl font-medium tracking-tight text-balance mt-3 mb-4">{t("pricing.title")}</h2>
             <p className="text-brand-muted max-w-[54ch] mx-auto text-pretty text-sm">{t("pricing.subtitle")}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <PricingCard
+              tier={t("plan.free")}
+              price="€0"
+              credits="100 + 50/mo"
+              unit=""
+              features={[t("plan.free.f1"), t("plan.free.f2"), t("plan.free.f3")]}
+              cta={t("hero.cta")}
+            />
             <PricingCard
               tier={t("pricing.starter")}
               price="€19"
@@ -330,6 +385,19 @@ function Landing() {
       </section>
 
       <SiteFooter />
+      <CookieBanner />
+    </div>
+  );
+}
+
+function CreditCardBlock({ Icon, title, desc }: { Icon: typeof Megaphone; title: string; desc: string }) {
+  return (
+    <div className="p-6 rounded-2xl ring-1 ring-brand-border bg-brand-bg hover:ring-neon/40 transition-all">
+      <div className="size-10 rounded-xl icon-3d flex items-center justify-center mb-4">
+        <Icon className="size-4 text-[oklch(0.16_0.01_160)]" />
+      </div>
+      <h3 className="font-heading text-base font-medium tracking-tight mb-1.5">{title}</h3>
+      <p className="text-sm text-brand-muted leading-relaxed">{desc}</p>
     </div>
   );
 }
