@@ -385,6 +385,19 @@ function Landing() {
       </section>
 
       <SiteFooter />
+      <CookieBanner />
+    </div>
+  );
+}
+
+function CreditCardBlock({ Icon, title, desc }: { Icon: typeof Megaphone; title: string; desc: string }) {
+  return (
+    <div className="p-6 rounded-2xl ring-1 ring-brand-border bg-brand-bg hover:ring-neon/40 transition-all">
+      <div className="size-10 rounded-xl icon-3d flex items-center justify-center mb-4">
+        <Icon className="size-4 text-[oklch(0.16_0.01_160)]" />
+      </div>
+      <h3 className="font-heading text-base font-medium tracking-tight mb-1.5">{title}</h3>
+      <p className="text-sm text-brand-muted leading-relaxed">{desc}</p>
     </div>
   );
 }
