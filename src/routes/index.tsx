@@ -257,6 +257,23 @@ function Landing() {
         </div>
       </section>
 
+      {/* Credits explainer */}
+      <section id="credits" className="py-20 md:py-24 border-b border-brand-border bg-brand-surface/30">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="text-center mb-12 max-w-2xl mx-auto">
+            <span className="text-[11px] uppercase tracking-widest text-neon inline-flex items-center gap-1.5">
+              <Coins className="size-3" /> {t("credits.tag")}
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl font-medium tracking-tight text-balance mt-3">{t("credits.title")}</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CreditCardBlock Icon={Gift} title={t("credits.free.title")} desc={t("credits.free.desc")} />
+            <CreditCardBlock Icon={Sparkles} title={t("credits.cost.title")} desc={t("credits.cost.desc")} />
+            <CreditCardBlock Icon={InfinityIcon} title={t("credits.rollover.title")} desc={t("credits.rollover.desc")} />
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="py-20 md:py-24 border-b border-brand-border">
         <div className="mx-auto max-w-7xl px-6">
@@ -265,7 +282,15 @@ function Landing() {
             <h2 className="font-heading text-3xl md:text-4xl font-medium tracking-tight text-balance mt-3 mb-4">{t("pricing.title")}</h2>
             <p className="text-brand-muted max-w-[54ch] mx-auto text-pretty text-sm">{t("pricing.subtitle")}</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <PricingCard
+              tier={t("plan.free")}
+              price="€0"
+              credits="100 + 50/mo"
+              unit=""
+              features={[t("plan.free.f1"), t("plan.free.f2"), t("plan.free.f3")]}
+              cta={t("hero.cta")}
+            />
             <PricingCard
               tier={t("pricing.starter")}
               price="€19"
