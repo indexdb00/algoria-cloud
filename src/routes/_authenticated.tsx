@@ -29,5 +29,10 @@ function AuthenticatedLayout() {
     );
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <LgpdModal />
+    </>
+  );
 }
