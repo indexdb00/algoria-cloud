@@ -3,11 +3,13 @@ import { useState } from "react";
 import {
   Megaphone, Users, Globe, Square, FileText, Check, ArrowUpRight, Sparkles,
   Activity, Zap, ShieldCheck, GraduationCap, GitBranch, Plug,
-  TrendingUp, Quote, Plus, Minus,
+  TrendingUp, Quote, Plus, Minus, Coins, Gift, Infinity as InfinityIcon,
 } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
+import { CookieBanner } from "@/components/site/CookieBanner";
+import { TypewriterChat } from "@/components/site/TypewriterChat";
 
 export const Route = createFileRoute("/")({
   head: () => ({
