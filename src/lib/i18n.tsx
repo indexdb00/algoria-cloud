@@ -681,7 +681,77 @@ const it: Dict = {
   "aca.slide": "Slide", "aca.of": "di",
 };
 
-const translations: Record<LangCode, Dict> = { en, pt, es, fr, de, it };
+// Localized overrides for the new menu/profile/integrations strings
+const _overrides: Partial<Record<LangCode, Dict>> = {
+  es: {
+    "nav.menu": "Menú", "dash.profile": "Perfil",
+    "profile.title": "Tu perfil",
+    "profile.subtitle": "Los datos verificados ayudan a Aurevia a mantener tu workspace seguro.",
+    "profile.security.title": "Por qué te pedimos esto",
+    "profile.security.body": "Recogemos estos datos por seguridad de la plataforma y para evitar fraudes, secuestro de cuentas publicitarias y suplantación de identidad. Tus datos se cifran, se alojan en la UE, nunca se venden y sólo se usan para verificarte y proteger tus campañas — conforme al RGPD/LGPD.",
+    "profile.field.name": "Nombre completo", "profile.field.dob": "Fecha de nacimiento",
+    "profile.field.company": "Empresa / Marca", "profile.field.country": "País",
+    "profile.field.state": "Estado / Región", "profile.field.city": "Ciudad",
+    "profile.save": "Guardar perfil", "profile.saved": "Perfil guardado",
+    "int.form.title": "Conectar", "int.form.subtitle": "Pega las credenciales emitidas por la plataforma. Se guardan cifradas.",
+    "int.form.required": "es obligatorio", "int.form.cancel": "Cancelar",
+    "int.form.submit": "Conectar — 5 créditos", "int.form.costNote": "Cada conexión consume 5 créditos",
+    "int.disconnect": "Desconectar", "int.disconnected": "desconectado",
+  },
+  fr: {
+    "nav.menu": "Menu", "dash.profile": "Profil",
+    "profile.title": "Votre profil",
+    "profile.subtitle": "Des données vérifiées aident Aurevia à garder votre workspace sûr.",
+    "profile.security.title": "Pourquoi nous le demandons",
+    "profile.security.body": "Nous collectons ces données pour la sécurité de la plateforme et pour prévenir la fraude, le détournement de comptes publicitaires et l'usurpation d'identité. Vos données sont chiffrées, hébergées dans l'UE, jamais vendues et utilisées uniquement pour vous vérifier et protéger vos campagnes — conformément au RGPD/LGPD.",
+    "profile.field.name": "Nom complet", "profile.field.dob": "Date de naissance",
+    "profile.field.company": "Entreprise / Marque", "profile.field.country": "Pays",
+    "profile.field.state": "Région", "profile.field.city": "Ville",
+    "profile.save": "Enregistrer", "profile.saved": "Profil enregistré",
+    "int.form.title": "Connecter", "int.form.subtitle": "Collez les identifiants émis par la plateforme. Stockés chiffrés.",
+    "int.form.required": "est requis", "int.form.cancel": "Annuler",
+    "int.form.submit": "Connecter — 5 crédits", "int.form.costNote": "Chaque connexion consomme 5 crédits",
+    "int.disconnect": "Déconnecter", "int.disconnected": "déconnecté",
+  },
+  de: {
+    "nav.menu": "Menü", "dash.profile": "Profil",
+    "profile.title": "Ihr Profil",
+    "profile.subtitle": "Verifizierte Daten helfen Aurevia, Ihren Workspace sicher zu halten.",
+    "profile.security.title": "Warum wir das fragen",
+    "profile.security.body": "Wir erheben diese Daten zur Plattformsicherheit und zur Verhinderung von Betrug, Werbekonto-Übernahme und Identitätsmissbrauch. Ihre Daten werden verschlüsselt, in der EU gespeichert, niemals verkauft und nur zur Verifizierung und zum Schutz Ihrer Kampagnen verwendet — gemäß DSGVO/LGPD.",
+    "profile.field.name": "Vollständiger Name", "profile.field.dob": "Geburtsdatum",
+    "profile.field.company": "Firma / Marke", "profile.field.country": "Land",
+    "profile.field.state": "Bundesland / Region", "profile.field.city": "Stadt",
+    "profile.save": "Profil speichern", "profile.saved": "Profil gespeichert",
+    "int.form.title": "Verbinden", "int.form.subtitle": "Fügen Sie die von der Plattform ausgestellten Zugangsdaten ein. Verschlüsselt gespeichert.",
+    "int.form.required": "ist erforderlich", "int.form.cancel": "Abbrechen",
+    "int.form.submit": "Verbinden — 5 Credits", "int.form.costNote": "Jede Verbindung verbraucht 5 Credits",
+    "int.disconnect": "Trennen", "int.disconnected": "getrennt",
+  },
+  it: {
+    "nav.menu": "Menu", "dash.profile": "Profilo",
+    "profile.title": "Il tuo profilo",
+    "profile.subtitle": "I dati verificati aiutano Aurevia a mantenere il tuo workspace sicuro.",
+    "profile.security.title": "Perché lo chiediamo",
+    "profile.security.body": "Raccogliamo questi dati per la sicurezza della piattaforma e per prevenire frodi, furto di account pubblicitari e usurpazione di identità. I tuoi dati sono cifrati, ospitati nell'UE, mai venduti e usati solo per verificarti e proteggere le tue campagne — in linea con GDPR/LGPD.",
+    "profile.field.name": "Nome completo", "profile.field.dob": "Data di nascita",
+    "profile.field.company": "Azienda / Brand", "profile.field.country": "Paese",
+    "profile.field.state": "Regione", "profile.field.city": "Città",
+    "profile.save": "Salva profilo", "profile.saved": "Profilo salvato",
+    "int.form.title": "Connetti", "int.form.subtitle": "Incolla le credenziali rilasciate dalla piattaforma. Salvate cifrate.",
+    "int.form.required": "è obbligatorio", "int.form.cancel": "Annulla",
+    "int.form.submit": "Connetti — 5 crediti", "int.form.costNote": "Ogni connessione consuma 5 crediti",
+    "int.disconnect": "Disconnetti", "int.disconnected": "disconnesso",
+  },
+};
+
+const translations: Record<LangCode, Dict> = {
+  en, pt,
+  es: { ...es, ..._overrides.es! },
+  fr: { ...fr, ..._overrides.fr! },
+  de: { ...de, ..._overrides.de! },
+  it: { ...it, ..._overrides.it! },
+};
 
 interface I18nCtx {
   lang: LangCode;
