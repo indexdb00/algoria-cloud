@@ -108,6 +108,34 @@ function Landing() {
         </div>
       </section>
 
+      {/* Live chat showcase — typewriter animation */}
+      <section className="relative py-16 md:py-20 border-t border-brand-border">
+        <div className="mx-auto max-w-7xl px-6 grid md:grid-cols-[1.05fr,1fr] gap-10 md:gap-14 items-center">
+          <div>
+            <span className="text-[11px] uppercase tracking-widest text-neon inline-flex items-center gap-1.5">
+              <Sparkles className="size-3" /> {t("showcase.tag")}
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl font-medium tracking-tight text-balance mt-3 mb-4">
+              {t("showcase.title")}
+            </h2>
+            <p className="text-sm text-brand-muted max-w-md leading-relaxed mb-6">{t("showcase.desc")}</p>
+            <ul className="space-y-2 text-sm text-brand-text/90">
+              <li className="flex items-center gap-2"><Check className="size-4 text-neon" /> Image, voice, CSV — multi-modal inputs.</li>
+              <li className="flex items-center gap-2"><Check className="size-4 text-neon" /> Aspect-ratio & ad-policy gate before any spend.</li>
+              <li className="flex items-center gap-2"><Check className="size-4 text-neon" /> Pick Aurevia v1.0, Thinking v1.1 or Plus per prompt.</li>
+            </ul>
+          </div>
+          <TypewriterChat
+            prompts={[
+              "Launch a Meta Ads campaign for my SaaS demo, €40/day, DACH, 9:16 creative.",
+              "Score my last 50 leads by intent — call list please.",
+              "Why did ROAS drop on TikTok yesterday?",
+              "Draft a 3-week reach push for Spain + Italy, budget €1,800.",
+            ]}
+          />
+        </div>
+      </section>
+
       {/* How it works */}
       <section className="py-20 border-t border-brand-border">
         <div className="mx-auto max-w-7xl px-6">
