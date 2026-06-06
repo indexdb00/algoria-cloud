@@ -245,6 +245,9 @@ const en: Dict = {
   "plan.free.f1": "100 welcome credits + 50/month",
   "plan.free.f2": "Aurevia v1.0 + Thinking v1.1",
   "plan.free.f3": "1 integration (Meta or Google)",
+};
+
+
 
 
 const pt: Dict = {
