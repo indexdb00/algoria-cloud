@@ -163,5 +163,22 @@
     transition: transform .2s ease, box-shadow .2s ease;
   }
   .icon-3d:hover { transform: translateY(-1px); }
+
+  .input-base {
+    width: 100%;
+    background: var(--brand-bg);
+    color: var(--brand-text);
+    border: 1px solid var(--brand-border);
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.875rem;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .input-base:focus {
+    outline: none;
+    border-color: color-mix(in oklab, var(--neon) 60%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--neon) 18%, transparent);
+  }
+  .input-base::placeholder { color: color-mix(in oklab, var(--brand-muted) 80%, transparent); }
 }
 
