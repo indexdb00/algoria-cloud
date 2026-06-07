@@ -114,14 +114,15 @@ function DashboardLayout() {
   }
 
   const links: { to: string; label: string }[] = [
-    { to: "/dashboard", label: t("dash.overview") },
     { to: "/dashboard/chat", label: t("dash.chat") },
     { to: "/dashboard/funnel", label: t("dash.funnels") },
+    { to: "/dashboard/consumo", label: t("dash.consumo") },
+    { to: "/dashboard/whatsapp", label: "WhatsApp" },
     { to: "/dashboard/integrations", label: t("dash.integrations") },
     { to: "/dashboard/billing", label: t("dash.billing") },
   ];
 
-  const isActive = (to: string) => to === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(to);
+  const isActive = (to: string) => pathname.startsWith(to);
   const avatar = abstractAvatarDataUrl(userId || email || "aurevia");
 
   return (
