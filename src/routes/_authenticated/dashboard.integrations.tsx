@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { connectIntegration, disconnectIntegration } from "@/lib/integrations.functions";
+import { Tutorial } from "@/components/Tutorial";
 
 export const Route = createFileRoute("/_authenticated/dashboard/integrations")({
   head: () => ({ meta: [{ title: "Integrations — Aurevia" }] }),
@@ -129,6 +130,15 @@ function IntegrationsPage() {
 
   return (
     <div className="px-6 md:px-10 py-10 md:py-14 max-w-6xl">
+      <Tutorial
+        id="integrations-v2"
+        title="Integrations tour"
+        steps={[
+          { title: "Pick a platform", body: "Each card is a real ad network we manage for you. Click Connect to open the credential form — nothing happens until you save." },
+          { title: "Fill your credentials", body: "Paste the API keys / tokens from the platform's developer dashboard. Aurevia encrypts them at rest and never exposes them in chat." },
+          { title: "Pay 5 credits to wire it up", body: "Saving deducts 5 credits and unlocks that integration inside the chat and funnel — the agent can then launch real campaigns on it." },
+        ]}
+      />
       <div className="mb-10">
         <div className="text-[10px] uppercase tracking-widest text-neon mb-3">Connections</div>
         <h1 className="font-heading text-3xl md:text-4xl font-medium tracking-tight">{t("int.title")}</h1>
