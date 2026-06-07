@@ -37,7 +37,8 @@ function AdminChat() {
         },
       });
       if (res?.conversationId) setConvId(res.conversationId);
-      setMessages((m) => [...m, { role: "assistant", content: res?.reply ?? res?.error ?? "(no reply)" }]);
+      const r = res as { reply?: string; error?: string | null };
+      setMessages((m) => [...m, { role: "assistant", content: r?.reply || r?.error || "(no reply)" }]);
     } finally { setBusy(false); }
   }
 
