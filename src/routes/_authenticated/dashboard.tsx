@@ -50,6 +50,7 @@ function DashboardLayout() {
     };
     load();
     loadConvs();
+    checkAdmin().then((r) => setAdmin(!!r?.admin)).catch(() => setAdmin(false));
     const channel = supabase
       .channel("credits-watch")
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "credits" }, (p) => {
