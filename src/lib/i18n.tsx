@@ -267,6 +267,41 @@ const en: Dict = {
   "int.form.costNote": "Each connection consumes 5 credits",
   "int.disconnect": "Disconnect",
   "int.disconnected": "disconnected",
+  // Greetings (time-of-day)
+  "greet.morning": "Good morning",
+  "greet.afternoon": "Good afternoon",
+  "greet.evening": "Good evening",
+  "greet.night": "Working late",
+  // Sidebar history
+  "history.recent": "Recent",
+  "history.empty": "No conversations yet. Start a new chat.",
+  "history.untitled": "Untitled chat",
+  "chat.perMessage": "message",
+  // Profile (simplified)
+  "profile.field.username": "Username",
+  "profile.field.bio": "Biography",
+  "profile.regen": "Generate a new abstract avatar",
+  "profile.bio.placeholder": "A line or two about you, your brand or your role.",
+  "profile.storage.tag": "Storage",
+  "profile.storage.title": "Conversation storage",
+  "profile.storage.note": "Free workspaces keep the most recent threads. Upgrade for unlimited history.",
+  // Tutorials
+  "tut.chat.title": "Meet your chat",
+  "tut.chat.s1.title": "One chat, every channel",
+  "tut.chat.s1.body": "Describe what you want — launch a Meta Ads campaign, score leads, audit your brand. Aurevia routes it.",
+  "tut.chat.s2.title": "Attach + voice + camera",
+  "tut.chat.s2.body": "Use the icons below the input to attach creatives, snap a photo or dictate. Aurevia checks aspect ratios and ad policy automatically.",
+  "tut.chat.s3.title": "Pick a model",
+  "tut.chat.s3.body": "v1.0 is fast and cheap. Thinking v1.1 costs 2× for deeper reasoning. Plus matches Thinking quality at 1× — paid plans only.",
+  "tut.chat.s4.title": "Conversations live in the sidebar",
+  "tut.chat.s4.body": "Each chat is saved on the left. Click to reopen, hover the trash to delete. New chat = fresh slate.",
+  "tut.profile.title": "Your profile",
+  "tut.profile.s1.title": "Username + avatar",
+  "tut.profile.s1.body": "Pick a username; we generate a unique abstract avatar for every user. Click Regenerate for a different one.",
+  "tut.profile.s2.title": "Biography",
+  "tut.profile.s2.body": "Tell Aurevia who you are. The agent uses this to personalize tone and recommendations.",
+  "tut.profile.s3.title": "Storage tier",
+  "tut.profile.s3.body": "Free workspaces keep the most recent conversations. Paid plans keep everything, forever.",
 };
 
 
