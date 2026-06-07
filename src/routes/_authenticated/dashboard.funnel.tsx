@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
+import { Tutorial } from "@/components/Tutorial";
 import {
   GitBranch, Sparkles, Target, Users, Euro, TrendingUp, Megaphone,
   Search, Music2, Globe, BarChart3, Layers, MessageSquare, ArrowRight,
@@ -116,6 +117,15 @@ function Funnels() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <Tutorial
+        id="funnel-v2"
+        title="The Funnels view"
+        steps={[
+          { title: "Your chat as a flowchart", body: "Every campaign you describe to Aurevia in chat appears here grouped by platform — Meta, Google, TikTok, BidMachine, GA4." },
+          { title: "What each card shows", body: "Audience, budget, creative format and KPI target — plus the next actions Aurevia recommends to ship it." },
+          { title: "How to create more flows", body: "Go back to chat and ask Aurevia to launch a campaign with the CAMPAIGN block. It will appear here automatically." },
+        ]}
+      />
       <header className="border-b border-brand-border px-5 md:px-10 py-6 flex items-start justify-between gap-4 flex-wrap">
         <div>
           <div className="text-[10px] uppercase tracking-widest text-neon mb-1.5">{t("funnel.tag")}</div>

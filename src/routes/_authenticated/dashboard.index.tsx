@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  Sparkles, GitBranch, Plug, GraduationCap, MessageSquare, Coins,
+  Sparkles, GitBranch, Plug, MessageSquare, Coins,
   Activity, ArrowRight, Zap, BarChart3,
 } from "lucide-react";
+import { Tutorial } from "@/components/Tutorial";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   component: DashboardOverview,
@@ -37,10 +38,9 @@ function DashboardOverview() {
   }, []);
 
   const shortcuts = [
-    { to: "/dashboard/chat", icon: MessageSquare, label: t("dash.chat"), grad: "from-emerald-400 to-emerald-700", desc: t("dash.chat.desc") },
-    { to: "/dashboard/funnel", icon: GitBranch, label: t("dash.funnels"), grad: "from-sky-400 to-indigo-700", desc: t("dash.funnels.desc") },
-    { to: "/dashboard/integrations", icon: Plug, label: t("dash.integrations"), grad: "from-violet-400 to-purple-700", desc: t("dash.integrations.desc") },
-    { to: "/dashboard/academy", icon: GraduationCap, label: t("dash.academy"), grad: "from-amber-300 to-orange-600", desc: t("dash.academy.desc") },
+    { to: "/dashboard/chat", icon: MessageSquare, label: t("dash.chat"), grad: "from-sky-400 to-blue-700", desc: t("dash.chat.desc") },
+    { to: "/dashboard/funnel", icon: GitBranch, label: t("dash.funnels"), grad: "from-blue-400 to-indigo-700", desc: t("dash.funnels.desc") },
+    { to: "/dashboard/integrations", icon: Plug, label: t("dash.integrations"), grad: "from-violet-400 to-blue-700", desc: t("dash.integrations.desc") },
   ];
 
   const stats = [
@@ -52,6 +52,16 @@ function DashboardOverview() {
 
   return (
     <div className="px-5 md:px-10 py-8 md:py-14 max-w-6xl">
+      <Tutorial
+        id="overview-v2"
+        title="Welcome to Aurevia"
+        steps={[
+          { title: "This is your command deck", body: "Real activity from your workspace — conversations, prompts sent, credits spent and remaining. Everything updates live." },
+          { title: "Open the chat to launch campaigns", body: "Aurevia turns a prompt into a real Meta / Google / TikTok campaign. Start there to get value in 1 minute." },
+          { title: "Funnels = your chat as a flowchart", body: "Every campaign you describe in chat appears in the Funnels view, grouped by platform with audience, budget and KPIs." },
+          { title: "Integrations unlock real launches", body: "Connect Meta, Google, TikTok, BidMachine or GA4 once (5 credits) and the agent can act on your behalf." },
+        ]}
+      />
       <div className="mb-8 md:mb-10 flex items-end justify-between flex-wrap gap-4">
         <div>
           <div className="text-[10px] uppercase tracking-widest text-brand-muted mb-2">{t("dash.welcome")}</div>
