@@ -14,18 +14,18 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard.index'
-import { Route as AuthenticatedDashboardWhatsappRouteImport } from './routes/_authenticated/dashboard.whatsapp'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard.profile'
 import { Route as AuthenticatedDashboardIntegrationsRouteImport } from './routes/_authenticated/dashboard.integrations'
 import { Route as AuthenticatedDashboardFunnelRouteImport } from './routes/_authenticated/dashboard.funnel'
-import { Route as AuthenticatedDashboardConsumoRouteImport } from './routes/_authenticated/dashboard.consumo'
 import { Route as AuthenticatedDashboardChatRouteImport } from './routes/_authenticated/dashboard.chat'
 import { Route as AuthenticatedDashboardBillingRouteImport } from './routes/_authenticated/dashboard.billing'
+import { Route as AuthenticatedDashboardConsumoRouteImport } from './routes/_authenticated/dashboard.consumo'
+import { Route as AuthenticatedDashboardWhatsappRouteImport } from './routes/_authenticated/dashboard.whatsapp'
 import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authenticated/dashboard.admin'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
-import { Route as AuthenticatedDashboardAgentsSlugRouteImport } from './routes/_authenticated/dashboard.agents.$slug'
-import { Route as AuthenticatedDashboardAdminPaymentsRouteImport } from './routes/_authenticated/dashboard.admin.payments'
 import { Route as AuthenticatedDashboardAdminChatRouteImport } from './routes/_authenticated/dashboard.admin.chat'
+import { Route as AuthenticatedDashboardAdminPaymentsRouteImport } from './routes/_authenticated/dashboard.admin.payments'
+import { Route as AuthenticatedDashboardAgentsSlugRouteImport } from './routes/_authenticated/dashboard.agents.$slug'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -46,84 +46,71 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedDashboardIndexRoute =
-  AuthenticatedDashboardIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardWhatsappRoute =
-  AuthenticatedDashboardWhatsappRouteImport.update({
-    id: '/whatsapp',
-    path: '/whatsapp',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardProfileRoute =
-  AuthenticatedDashboardProfileRouteImport.update({
-    id: '/profile',
-    path: '/profile',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardIntegrationsRoute =
-  AuthenticatedDashboardIntegrationsRouteImport.update({
-    id: '/integrations',
-    path: '/integrations',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardFunnelRoute =
-  AuthenticatedDashboardFunnelRouteImport.update({
-    id: '/funnel',
-    path: '/funnel',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardConsumoRoute =
-  AuthenticatedDashboardConsumoRouteImport.update({
-    id: '/consumo',
-    path: '/consumo',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardChatRoute =
-  AuthenticatedDashboardChatRouteImport.update({
-    id: '/chat',
-    path: '/chat',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardBillingRoute =
-  AuthenticatedDashboardBillingRouteImport.update({
-    id: '/billing',
-    path: '/billing',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAdminRoute =
-  AuthenticatedDashboardAdminRouteImport.update({
-    id: '/admin',
-    path: '/admin',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAdminIndexRoute =
-  AuthenticatedDashboardAdminIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => AuthenticatedDashboardAdminRoute,
-  } as any)
-const AuthenticatedDashboardAgentsSlugRoute =
-  AuthenticatedDashboardAgentsSlugRouteImport.update({
-    id: '/agents/$slug',
-    path: '/agents/$slug',
-    getParentRoute: () => AuthenticatedDashboardRoute,
-  } as any)
-const AuthenticatedDashboardAdminPaymentsRoute =
-  AuthenticatedDashboardAdminPaymentsRouteImport.update({
-    id: '/payments',
-    path: '/payments',
-    getParentRoute: () => AuthenticatedDashboardAdminRoute,
-  } as any)
-const AuthenticatedDashboardAdminChatRoute =
-  AuthenticatedDashboardAdminChatRouteImport.update({
-    id: '/chat',
-    path: '/chat',
-    getParentRoute: () => AuthenticatedDashboardAdminRoute,
-  } as any)
+const AuthenticatedDashboardIndexRoute = AuthenticatedDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardProfileRoute = AuthenticatedDashboardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardIntegrationsRoute = AuthenticatedDashboardIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardFunnelRoute = AuthenticatedDashboardFunnelRouteImport.update({
+  id: '/funnel',
+  path: '/funnel',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardChatRoute = AuthenticatedDashboardChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardBillingRoute = AuthenticatedDashboardBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardConsumoRoute = AuthenticatedDashboardConsumoRouteImport.update({
+  id: '/consumo',
+  path: '/consumo',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardWhatsappRoute = AuthenticatedDashboardWhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardAdminRoute = AuthenticatedDashboardAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
+const AuthenticatedDashboardAdminIndexRoute = AuthenticatedDashboardAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedDashboardAdminRoute,
+} as any)
+const AuthenticatedDashboardAdminChatRoute = AuthenticatedDashboardAdminChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AuthenticatedDashboardAdminRoute,
+} as any)
+const AuthenticatedDashboardAdminPaymentsRoute = AuthenticatedDashboardAdminPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AuthenticatedDashboardAdminRoute,
+} as any)
+const AuthenticatedDashboardAgentsSlugRoute = AuthenticatedDashboardAgentsSlugRouteImport.update({
+  id: '/agents/$slug',
+  path: '/agents/$slug',
+  getParentRoute: () => AuthenticatedDashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -138,10 +125,10 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/whatsapp': typeof AuthenticatedDashboardWhatsappRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
-  '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -154,10 +141,10 @@ export interface FileRoutesByTo {
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/whatsapp': typeof AuthenticatedDashboardWhatsappRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
-  '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -174,10 +161,10 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/whatsapp': typeof AuthenticatedDashboardWhatsappRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/_authenticated/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/_authenticated/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/_authenticated/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
-  '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -194,10 +181,10 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/whatsapp'
     | '/dashboard/'
+    | '/dashboard/admin/'
     | '/dashboard/admin/chat'
     | '/dashboard/admin/payments'
     | '/dashboard/agents/$slug'
-    | '/dashboard/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -210,10 +197,10 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/whatsapp'
     | '/dashboard'
+    | '/dashboard/admin'
     | '/dashboard/admin/chat'
     | '/dashboard/admin/payments'
     | '/dashboard/agents/$slug'
-    | '/dashboard/admin'
   id:
     | '__root__'
     | '/'
@@ -229,10 +216,10 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/whatsapp'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/dashboard/admin/'
     | '/_authenticated/dashboard/admin/chat'
     | '/_authenticated/dashboard/admin/payments'
     | '/_authenticated/dashboard/agents/$slug'
-    | '/_authenticated/dashboard/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -278,13 +265,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/whatsapp': {
-      id: '/_authenticated/dashboard/whatsapp'
-      path: '/whatsapp'
-      fullPath: '/dashboard/whatsapp'
-      preLoaderRoute: typeof AuthenticatedDashboardWhatsappRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
     '/_authenticated/dashboard/profile': {
       id: '/_authenticated/dashboard/profile'
       path: '/profile'
@@ -306,13 +286,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardFunnelRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
-    '/_authenticated/dashboard/consumo': {
-      id: '/_authenticated/dashboard/consumo'
-      path: '/consumo'
-      fullPath: '/dashboard/consumo'
-      preLoaderRoute: typeof AuthenticatedDashboardConsumoRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
-    }
     '/_authenticated/dashboard/chat': {
       id: '/_authenticated/dashboard/chat'
       path: '/chat'
@@ -325,6 +298,20 @@ declare module '@tanstack/react-router' {
       path: '/billing'
       fullPath: '/dashboard/billing'
       preLoaderRoute: typeof AuthenticatedDashboardBillingRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/consumo': {
+      id: '/_authenticated/dashboard/consumo'
+      path: '/consumo'
+      fullPath: '/dashboard/consumo'
+      preLoaderRoute: typeof AuthenticatedDashboardConsumoRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
+    }
+    '/_authenticated/dashboard/whatsapp': {
+      id: '/_authenticated/dashboard/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/dashboard/whatsapp'
+      preLoaderRoute: typeof AuthenticatedDashboardWhatsappRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
     '/_authenticated/dashboard/admin': {
@@ -341,12 +328,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
-    '/_authenticated/dashboard/agents/$slug': {
-      id: '/_authenticated/dashboard/agents/$slug'
-      path: '/agents/$slug'
-      fullPath: '/dashboard/agents/$slug'
-      preLoaderRoute: typeof AuthenticatedDashboardAgentsSlugRouteImport
-      parentRoute: typeof AuthenticatedDashboardRoute
+    '/_authenticated/dashboard/admin/chat': {
+      id: '/_authenticated/dashboard/admin/chat'
+      path: '/chat'
+      fullPath: '/dashboard/admin/chat'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminChatRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
     '/_authenticated/dashboard/admin/payments': {
       id: '/_authenticated/dashboard/admin/payments'
@@ -355,30 +342,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminPaymentsRouteImport
       parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
-    '/_authenticated/dashboard/admin/chat': {
-      id: '/_authenticated/dashboard/admin/chat'
-      path: '/chat'
-      fullPath: '/dashboard/admin/chat'
-      preLoaderRoute: typeof AuthenticatedDashboardAdminChatRouteImport
-      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    '/_authenticated/dashboard/agents/$slug': {
+      id: '/_authenticated/dashboard/agents/$slug'
+      path: '/agents/$slug'
+      fullPath: '/dashboard/agents/$slug'
+      preLoaderRoute: typeof AuthenticatedDashboardAgentsSlugRouteImport
+      parentRoute: typeof AuthenticatedDashboardRoute
     }
   }
 }
 
 interface AuthenticatedDashboardAdminRouteChildren {
+  AuthenticatedDashboardAdminIndexRoute: typeof AuthenticatedDashboardAdminIndexRoute
   AuthenticatedDashboardAdminChatRoute: typeof AuthenticatedDashboardAdminChatRoute
   AuthenticatedDashboardAdminPaymentsRoute: typeof AuthenticatedDashboardAdminPaymentsRoute
-  AuthenticatedDashboardAdminIndexRoute: typeof AuthenticatedDashboardAdminIndexRoute
 }
 
-const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRouteChildren =
-  {
-    AuthenticatedDashboardAdminChatRoute: AuthenticatedDashboardAdminChatRoute,
-    AuthenticatedDashboardAdminPaymentsRoute:
-      AuthenticatedDashboardAdminPaymentsRoute,
-    AuthenticatedDashboardAdminIndexRoute:
-      AuthenticatedDashboardAdminIndexRoute,
-  }
+const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRouteChildren = {
+  AuthenticatedDashboardAdminIndexRoute: AuthenticatedDashboardAdminIndexRoute,
+  AuthenticatedDashboardAdminChatRoute: AuthenticatedDashboardAdminChatRoute,
+  AuthenticatedDashboardAdminPaymentsRoute: AuthenticatedDashboardAdminPaymentsRoute,
+}
 
 const AuthenticatedDashboardAdminRouteWithChildren =
   AuthenticatedDashboardAdminRoute._addFileChildren(
@@ -398,22 +382,18 @@ interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAgentsSlugRoute: typeof AuthenticatedDashboardAgentsSlugRoute
 }
 
-const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
-  {
-    AuthenticatedDashboardAdminRoute:
-      AuthenticatedDashboardAdminRouteWithChildren,
-    AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
-    AuthenticatedDashboardChatRoute: AuthenticatedDashboardChatRoute,
-    AuthenticatedDashboardConsumoRoute: AuthenticatedDashboardConsumoRoute,
-    AuthenticatedDashboardFunnelRoute: AuthenticatedDashboardFunnelRoute,
-    AuthenticatedDashboardIntegrationsRoute:
-      AuthenticatedDashboardIntegrationsRoute,
-    AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
-    AuthenticatedDashboardWhatsappRoute: AuthenticatedDashboardWhatsappRoute,
-    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
-    AuthenticatedDashboardAgentsSlugRoute:
-      AuthenticatedDashboardAgentsSlugRoute,
-  }
+const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren = {
+  AuthenticatedDashboardAdminRoute: AuthenticatedDashboardAdminRouteWithChildren,
+  AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
+  AuthenticatedDashboardChatRoute: AuthenticatedDashboardChatRoute,
+  AuthenticatedDashboardConsumoRoute: AuthenticatedDashboardConsumoRoute,
+  AuthenticatedDashboardFunnelRoute: AuthenticatedDashboardFunnelRoute,
+  AuthenticatedDashboardIntegrationsRoute: AuthenticatedDashboardIntegrationsRoute,
+  AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
+  AuthenticatedDashboardWhatsappRoute: AuthenticatedDashboardWhatsappRoute,
+  AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedDashboardAgentsSlugRoute: AuthenticatedDashboardAgentsSlugRoute,
+}
 
 const AuthenticatedDashboardRouteWithChildren =
   AuthenticatedDashboardRoute._addFileChildren(
