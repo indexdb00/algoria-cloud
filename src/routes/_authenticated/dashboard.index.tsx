@@ -52,6 +52,16 @@ function DashboardOverview() {
 
   return (
     <div className="px-5 md:px-10 py-8 md:py-14 max-w-6xl">
+      <Tutorial
+        id="overview-v2"
+        title="Welcome to Aurevia"
+        steps={[
+          { title: "This is your command deck", body: "Real activity from your workspace — conversations, prompts sent, credits spent and remaining. Everything updates live." },
+          { title: "Open the chat to launch campaigns", body: "Aurevia turns a prompt into a real Meta / Google / TikTok campaign. Start there to get value in 1 minute." },
+          { title: "Funnels = your chat as a flowchart", body: "Every campaign you describe in chat appears in the Funnels view, grouped by platform with audience, budget and KPIs." },
+          { title: "Integrations unlock real launches", body: "Connect Meta, Google, TikTok, BidMachine or GA4 once (5 credits) and the agent can act on your behalf." },
+        ]}
+      />
       <div className="mb-8 md:mb-10 flex items-end justify-between flex-wrap gap-4">
         <div>
           <div className="text-[10px] uppercase tracking-widest text-brand-muted mb-2">{t("dash.welcome")}</div>
