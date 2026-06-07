@@ -3,49 +3,47 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
-import { ShieldCheck, User as UserIcon, Building2, Calendar, MapPin, Save } from "lucide-react";
+import { abstractAvatarDataUrl } from "@/lib/avatar";
+import { Tutorial } from "@/components/Tutorial";
+import { Save, RefreshCw, Database, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
   head: () => ({ meta: [{ title: "Profile — Aurevia" }] }),
   component: ProfilePage,
 });
 
-type Form = {
-  display_name: string;
-  birth_date: string;
-  company: string;
-  country: string;
-  state: string;
-  city: string;
-};
+const BIO_KEY = "aurevia.bio";
+const AVATAR_SEED_KEY = "aurevia.avatarSeed";
 
-const EMPTY: Form = { display_name: "", birth_date: "", company: "", country: "", state: "", city: "" };
+type Form = { display_name: string; bio: string };
+
+const PLAN_STORAGE = {
+  free: { label: "Free", limit: "30 days history · max 20 conversations" },
+  growth: { label: "Growth", limit: "12 months history · unlimited conversations" },
+  scale: { label: "Scale", limit: "Unlimited history · unlimited conversations" },
+} as const;
 
 function ProfilePage() {
   const { t } = useI18n();
   const [email, setEmail] = useState("");
-  const [form, setForm] = useState<Form>(EMPTY);
+  const [userId, setUserId] = useState("");
+  const [form, setForm] = useState<Form>({ display_name: "", bio: "" });
+  const [avatarSeed, setAvatarSeed] = useState<string>("aurevia");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [plan] = useState<keyof typeof PLAN_STORAGE>("free");
 
   useEffect(() => {
     (async () => {
       const { data: u } = await supabase.auth.getUser();
+      const uid = u.user?.id ?? "";
       setEmail(u.user?.email ?? "");
-      const { data } = await supabase
-        .from("profiles")
-        .select("display_name,birth_date,company,country,state,city")
-        .maybeSingle();
-      if (data) {
-        setForm({
-          display_name: data.display_name ?? "",
-          birth_date: data.birth_date ?? "",
-          company: data.company ?? "",
-          country: data.country ?? "",
-          state: data.state ?? "",
-          city: data.city ?? "",
-        });
-      }
+      setUserId(uid);
+      const { data } = await supabase.from("profiles").select("display_name").maybeSingle();
+      const bio = (typeof window !== "undefined" && localStorage.getItem(BIO_KEY)) || "";
+      const seed = (typeof window !== "undefined" && localStorage.getItem(AVATAR_SEED_KEY)) || uid;
+      setForm({ display_name: data?.display_name ?? "", bio });
+      setAvatarSeed(seed);
       setLoading(false);
     })();
   }, []);
@@ -54,72 +52,94 @@ function ProfilePage() {
     setSaving(true);
     const { data: u } = await supabase.auth.getUser();
     if (!u.user) { setSaving(false); return; }
-    const payload = {
-      id: u.user.id,
-      display_name: form.display_name || null,
-      birth_date: form.birth_date || null,
-      company: form.company || null,
-      country: form.country || null,
-      state: form.state || null,
-      city: form.city || null,
-    };
-    const { error } = await supabase.from("profiles").upsert(payload, { onConflict: "id" });
+    const { error } = await supabase.from("profiles").upsert(
+      { id: u.user.id, display_name: form.display_name || null },
+      { onConflict: "id" },
+    );
+    try { localStorage.setItem(BIO_KEY, form.bio); localStorage.setItem(AVATAR_SEED_KEY, avatarSeed); } catch { /* ignore */ }
     setSaving(false);
     if (error) toast.error(error.message);
     else toast.success(t("profile.saved"));
   }
 
+  function randomizeAvatar() {
+    const s = Math.random().toString(36).slice(2) + Date.now();
+    setAvatarSeed(s);
+  }
+
+  const planInfo = PLAN_STORAGE[plan];
+  const avatar = abstractAvatarDataUrl(avatarSeed, 160);
+
   return (
-    <div className="px-6 md:px-10 py-10 md:py-14 max-w-3xl">
+    <div className="px-6 md:px-10 py-10 md:py-14 max-w-2xl">
+      <Tutorial
+        id="profile-v2"
+        title={t("tut.profile.title")}
+        steps={[
+          { title: t("tut.profile.s1.title"), body: t("tut.profile.s1.body") },
+          { title: t("tut.profile.s2.title"), body: t("tut.profile.s2.body") },
+          { title: t("tut.profile.s3.title"), body: t("tut.profile.s3.body") },
+        ]}
+      />
+
       <div className="mb-8">
         <div className="text-[10px] uppercase tracking-widest text-neon mb-3">{t("dash.profile")}</div>
         <h1 className="font-heading text-3xl md:text-4xl font-medium tracking-tight">{t("profile.title")}</h1>
         <p className="text-sm text-brand-muted mt-3 max-w-xl">{t("profile.subtitle")}</p>
       </div>
 
-      {/* Security balloon */}
-      <div className="relative mb-8 rounded-2xl bg-brand-surface ring-1 ring-neon/40 p-5 flex gap-3 shadow-[0_0_30px_-12px_var(--neon)]">
-        <div className="size-9 rounded-xl icon-3d flex items-center justify-center shrink-0">
-          <ShieldCheck className="size-4 text-[oklch(0.16_0.01_160)]" />
-        </div>
-        <div className="text-xs leading-relaxed text-brand-text">
-          <div className="font-medium text-neon mb-1">{t("profile.security.title")}</div>
-          <p className="text-brand-muted">{t("profile.security.body")}</p>
-        </div>
-        <span className="absolute -top-2 left-7 size-3 rotate-45 bg-brand-surface ring-1 ring-neon/40" />
-      </div>
-
       {loading ? (
-        <div className="text-xs text-brand-muted">{t("funnel.loading")}</div>
+        <div className="text-xs text-brand-muted">…</div>
       ) : (
-        <div className="space-y-5">
-          <Field icon={<UserIcon className="size-3.5" />} label={t("profile.field.name")}>
-            <input value={form.display_name} onChange={(e) => setForm({ ...form, display_name: e.target.value })} className="input-base" />
-          </Field>
-
-          <Field icon={<Calendar className="size-3.5" />} label={t("profile.field.dob")}>
-            <input type="date" value={form.birth_date} onChange={(e) => setForm({ ...form, birth_date: e.target.value })} className="input-base" />
-          </Field>
-
-          <Field icon={<Building2 className="size-3.5" />} label={t("profile.field.company")}>
-            <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="input-base" placeholder="Aurevia Intelligence" />
-          </Field>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Field icon={<MapPin className="size-3.5" />} label={t("profile.field.country")}>
-              <input value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })} className="input-base" placeholder="Portugal" />
-            </Field>
-            <Field icon={<MapPin className="size-3.5" />} label={t("profile.field.state")}>
-              <input value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} className="input-base" placeholder="Lisboa" />
-            </Field>
-            <Field icon={<MapPin className="size-3.5" />} label={t("profile.field.city")}>
-              <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} className="input-base" placeholder="Lisbon" />
-            </Field>
+        <div className="space-y-6">
+          {/* Avatar + name */}
+          <div className="flex items-center gap-5 p-5 rounded-2xl bg-brand-surface ring-1 ring-brand-border">
+            <img src={avatar} alt="" className="size-20 rounded-2xl ring-1 ring-brand-border" />
+            <div className="flex-1 min-w-0">
+              <label className="block">
+                <span className="text-[10px] uppercase tracking-widest text-brand-muted mb-1.5 block">{t("profile.field.username")}</span>
+                <input value={form.display_name} onChange={(e) => setForm({ ...form, display_name: e.target.value })} className="input-base" placeholder="aurevia_user" />
+              </label>
+              <button onClick={randomizeAvatar} className="mt-2 text-[11px] inline-flex items-center gap-1.5 text-brand-muted hover:text-neon">
+                <RefreshCw className="size-3" /> {t("profile.regen")}
+              </button>
+            </div>
           </div>
 
-          <div className="pt-2 flex items-center justify-between gap-3">
-            <span className="text-[11px] text-brand-muted truncate">{email}</span>
-            <button onClick={save} disabled={saving} className="btn-neon-solid text-sm py-2 px-4 inline-flex items-center gap-2 disabled:opacity-60">
+          <label className="block">
+            <span className="text-[10px] uppercase tracking-widest text-brand-muted mb-1.5 block">{t("profile.field.bio")}</span>
+            <textarea
+              value={form.bio}
+              onChange={(e) => setForm({ ...form, bio: e.target.value })}
+              className="input-base min-h-[110px]"
+              placeholder={t("profile.bio.placeholder")}
+              maxLength={500}
+            />
+            <span className="text-[10px] text-brand-muted mt-1 block">{form.bio.length}/500</span>
+          </label>
+
+          {/* Storage / plan */}
+          <div className="p-5 rounded-2xl bg-brand-surface ring-1 ring-brand-border">
+            <div className="flex items-start gap-3">
+              <div className="size-9 rounded-xl icon-3d flex items-center justify-center shrink-0">
+                <Database className="size-4" style={{ color: "var(--primary-foreground)" }} />
+              </div>
+              <div className="flex-1">
+                <div className="text-[10px] uppercase tracking-widest text-neon">{t("profile.storage.tag")}</div>
+                <div className="font-medium mt-0.5">{t("profile.storage.title")} · {planInfo.label}</div>
+                <p className="text-xs text-brand-muted mt-1">{planInfo.limit}</p>
+                <p className="text-[11px] text-brand-muted mt-2">{t("profile.storage.note")}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-[11px] text-brand-muted flex items-center gap-2">
+            <ShieldCheck className="size-3 text-neon" />
+            {email}
+          </div>
+
+          <div className="pt-2 flex justify-end">
+            <button onClick={save} disabled={saving} className="btn-neon-solid text-sm py-2.5 px-5 inline-flex items-center gap-2 disabled:opacity-60">
               <Save className="size-3.5" />
               {saving ? "…" : t("profile.save")}
             </button>
@@ -127,17 +147,5 @@ function ProfilePage() {
         </div>
       )}
     </div>
-  );
-}
-
-function Field({ label, icon, children }: { label: string; icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="text-[10px] uppercase tracking-widest text-brand-muted flex items-center gap-1.5 mb-1.5">
-        <span className="text-neon">{icon}</span>
-        {label}
-      </span>
-      {children}
-    </label>
   );
 }
