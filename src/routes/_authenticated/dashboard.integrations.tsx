@@ -81,6 +81,16 @@ const INTEGRATIONS: readonly Integration[] = [
       { key: "api_key", label: "API Key", placeholder: "bm_live_…", type: "password" },
     ],
   },
+  {
+    id: "whatsapp", name: "WhatsApp Business", color: "#25D366", initials: "W",
+    desc: { en: "Capture and qualify leads via WhatsApp.", pt: "Capture e qualifique leads pelo WhatsApp.", es: "Captura y califica leads vía WhatsApp.", fr: "Capturez et qualifiez les leads via WhatsApp.", de: "Leads über WhatsApp erfassen und qualifizieren.", it: "Cattura e qualifica lead via WhatsApp." },
+    scopes: ["whatsapp_business_messaging"],
+    fields: [
+      { key: "phone_number_id", label: "Phone Number ID", placeholder: "1067xxxxx" },
+      { key: "access_token", label: "Access Token", placeholder: "EAAB…", type: "password" },
+      { key: "webhook_verify_token", label: "Webhook Verify Token", placeholder: "my-verify-token" },
+    ],
+  },
 ];
 
 function IntegrationsPage() {
