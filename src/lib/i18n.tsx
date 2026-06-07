@@ -526,6 +526,21 @@ const pt: Dict = {
   "int.form.costNote": "Cada conexão consome 5 créditos",
   "int.disconnect": "Desconectar",
   "int.disconnected": "desconectado",
+  "greet.morning": "Bom dia",
+  "greet.afternoon": "Boa tarde",
+  "greet.evening": "Boa noite",
+  "greet.night": "A trabalhar até tarde",
+  "history.recent": "Recentes",
+  "history.empty": "Sem conversas ainda. Inicie um novo chat.",
+  "history.untitled": "Conversa sem título",
+  "chat.perMessage": "mensagem",
+  "profile.field.username": "Nome de utilizador",
+  "profile.field.bio": "Biografia",
+  "profile.regen": "Gerar novo avatar abstrato",
+  "profile.bio.placeholder": "Uma linha ou duas sobre si, a sua marca ou função.",
+  "profile.storage.tag": "Armazenamento",
+  "profile.storage.title": "Armazenamento de conversas",
+  "profile.storage.note": "Workspaces gratuitos guardam as conversas mais recentes. Faça upgrade para histórico ilimitado.",
 };
 
 
