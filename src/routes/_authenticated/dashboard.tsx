@@ -8,9 +8,11 @@ import { BrandMark } from "@/components/BrandMark";
 import { abstractAvatarDataUrl } from "@/lib/avatar";
 import {
   LogOut, Coins, Menu, X, ChevronUp, Plus, MessageSquare,
-  Trash2, MoreHorizontal, Settings,
+  Trash2, Settings, ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { isAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Aurevia" }] }),
