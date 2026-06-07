@@ -195,6 +195,14 @@ function DashboardLayout() {
               {n.label}
             </Link>
           ))}
+          {admin && (
+            <Link
+              to="/dashboard/admin"
+              className={"row-soft block text-sm px-3 py-2 mt-1 inline-flex items-center gap-2 " + (isActive("/dashboard/admin") ? "is-active font-medium" : "text-amber-400/90 hover:text-amber-300")}
+            >
+              <ShieldCheck className="size-3.5" /> Admin
+            </Link>
+          )}
         </nav>
 
         {/* Conversation history */}
