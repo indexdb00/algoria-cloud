@@ -33,6 +33,8 @@ function DashboardLayout() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [convs, setConvs] = useState<Conv[]>([]);
   const [activeConv, setActiveConv] = useState<string | null>(null);
+  const [admin, setAdmin] = useState(false);
+  const checkAdmin = useServerFn(isAdmin);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
