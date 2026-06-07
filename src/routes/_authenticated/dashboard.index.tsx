@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  Sparkles, GitBranch, Plug, GraduationCap, MessageSquare, Coins,
+  Sparkles, GitBranch, Plug, MessageSquare, Coins,
   Activity, ArrowRight, Zap, BarChart3,
 } from "lucide-react";
+import { Tutorial } from "@/components/Tutorial";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   component: DashboardOverview,
@@ -37,10 +38,9 @@ function DashboardOverview() {
   }, []);
 
   const shortcuts = [
-    { to: "/dashboard/chat", icon: MessageSquare, label: t("dash.chat"), grad: "from-emerald-400 to-emerald-700", desc: t("dash.chat.desc") },
-    { to: "/dashboard/funnel", icon: GitBranch, label: t("dash.funnels"), grad: "from-sky-400 to-indigo-700", desc: t("dash.funnels.desc") },
-    { to: "/dashboard/integrations", icon: Plug, label: t("dash.integrations"), grad: "from-violet-400 to-purple-700", desc: t("dash.integrations.desc") },
-    { to: "/dashboard/academy", icon: GraduationCap, label: t("dash.academy"), grad: "from-amber-300 to-orange-600", desc: t("dash.academy.desc") },
+    { to: "/dashboard/chat", icon: MessageSquare, label: t("dash.chat"), grad: "from-sky-400 to-blue-700", desc: t("dash.chat.desc") },
+    { to: "/dashboard/funnel", icon: GitBranch, label: t("dash.funnels"), grad: "from-blue-400 to-indigo-700", desc: t("dash.funnels.desc") },
+    { to: "/dashboard/integrations", icon: Plug, label: t("dash.integrations"), grad: "from-violet-400 to-blue-700", desc: t("dash.integrations.desc") },
   ];
 
   const stats = [
