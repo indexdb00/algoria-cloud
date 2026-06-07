@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { LgpdModal } from "@/components/LgpdModal";
+import { SplashLoader } from "@/components/SplashLoader";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
@@ -10,14 +11,24 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       if (!session) navigate({ to: "/auth" });
     });
     supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) navigate({ to: "/auth" });
-      else setReady(true);
+      if (!data.session) {
+        navigate({ to: "/auth" });
+      } else {
+        setReady(true);
+        try {
+          if (!sessionStorage.getItem("aurevia.splash.seen")) {
+            setShowSplash(true);
+            sessionStorage.setItem("aurevia.splash.seen", "1");
+          }
+        } catch { /* ignore */ }
+      }
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
@@ -32,6 +43,7 @@ function AuthenticatedLayout() {
 
   return (
     <>
+      {showSplash && <SplashLoader onDone={() => setShowSplash(false)} />}
       <Outlet />
       <LgpdModal />
     </>

@@ -8,9 +8,11 @@ import { BrandMark } from "@/components/BrandMark";
 import { abstractAvatarDataUrl } from "@/lib/avatar";
 import {
   LogOut, Coins, Menu, X, ChevronUp, Plus, MessageSquare,
-  Trash2, MoreHorizontal, Settings,
+  Trash2, Settings, ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { isAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Aurevia" }] }),
@@ -31,6 +33,8 @@ function DashboardLayout() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [convs, setConvs] = useState<Conv[]>([]);
   const [activeConv, setActiveConv] = useState<string | null>(null);
+  const [admin, setAdmin] = useState(false);
+  const checkAdmin = useServerFn(isAdmin);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -46,6 +50,7 @@ function DashboardLayout() {
     };
     load();
     loadConvs();
+    checkAdmin().then((r) => setAdmin(!!r?.admin)).catch(() => setAdmin(false));
     const channel = supabase
       .channel("credits-watch")
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "credits" }, (p) => {
@@ -109,14 +114,15 @@ function DashboardLayout() {
   }
 
   const links: { to: string; label: string }[] = [
-    { to: "/dashboard", label: t("dash.overview") },
     { to: "/dashboard/chat", label: t("dash.chat") },
     { to: "/dashboard/funnel", label: t("dash.funnels") },
+    { to: "/dashboard/consumo", label: t("dash.consumo") },
+    { to: "/dashboard/whatsapp", label: "WhatsApp" },
     { to: "/dashboard/integrations", label: t("dash.integrations") },
     { to: "/dashboard/billing", label: t("dash.billing") },
   ];
 
-  const isActive = (to: string) => to === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(to);
+  const isActive = (to: string) => pathname.startsWith(to);
   const avatar = abstractAvatarDataUrl(userId || email || "aurevia");
 
   return (
@@ -189,6 +195,14 @@ function DashboardLayout() {
               {n.label}
             </Link>
           ))}
+          {admin && (
+            <Link
+              to="/dashboard/admin"
+              className={"row-soft block text-sm px-3 py-2 mt-1 inline-flex items-center gap-2 " + (isActive("/dashboard/admin") ? "is-active font-medium" : "text-amber-400/90 hover:text-amber-300")}
+            >
+              <ShieldCheck className="size-3.5" /> Admin
+            </Link>
+          )}
         </nav>
 
         {/* Conversation history */}

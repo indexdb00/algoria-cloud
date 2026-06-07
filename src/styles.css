@@ -203,3 +203,38 @@ html.theme-light {
   .fade-up { animation: fadeUp .35s ease both; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 }
+
+@layer components {
+  /* Splash loader animations */
+  .splash-bar-track {
+    width: 220px;
+    height: 3px;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--brand-border) 80%, transparent);
+    overflow: hidden;
+    position: relative;
+  }
+  .splash-bar-fill {
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #38bdf8, #6366f1, #38bdf8);
+    background-size: 200% 100%;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+    animation: splashSlide 1.4s ease-in-out infinite, splashShimmer 2.2s linear infinite;
+  }
+  @keyframes splashSlide {
+    0%   { left: -45%; }
+    100% { left: 105%; }
+  }
+  @keyframes splashShimmer {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+  .splash-float { animation: splashFloat 2s ease-in-out infinite; }
+  @keyframes splashFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+}
