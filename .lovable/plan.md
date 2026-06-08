@@ -1,94 +1,65 @@
-## Scope
+# Plano de implementação
 
-Large multi-area update. Shipping in one pass, all i18n-aware (EN/PT/ES/FR/DE/IT). Only frontend + 1 small DB migration (admin role + whatsapp integration metadata). Stripe is wired as UI scaffolding — live checkout requires enabling Lovable Payments after approval.
+Email admin confirmado: **index.db00@gmail.com** (será inserido em `user_roles` como `admin`).
 
----
+## 1. Landing → Chat-first (estilo Lovable)
+- Substituir `src/routes/index.tsx`: remover a landing page atual. Nova home = grande input de chat centralizado ("O que você quer criar hoje?"), header minimalista no topo direito com **Login** / **Cadastrar** + seletor de idioma.
+- Ao digitar e enviar (ou clicar em "testar"), abre modal/redirect para `/auth` preservando o prompt (`sessionStorage`), e após login envia automaticamente no chat real.
+- Manter `SiteFooter` discreto com links de Termos/LGPD/Cookies.
 
-### 1. Post-login splash screen
-- New `src/components/SplashLoader.tsx` — fullscreen, Aurevia mark + wordmark side-by-side, animated blue gradient progress bar (CSS keyframes, ~1.4s), then fades out.
-- Triggered in `_authenticated.tsx` on first mount per session (sessionStorage flag), before children render.
+## 2. Créditos & Planos (base Lovable)
+- Cadastro: **50 créditos de boas-vindas + 5 diários** (cron/trigger ao login). Atualizar `handle_new_user` (50) e criar função `grant_daily_credits()` chamada no primeiro login do dia.
+- Planos (Stripe):
+  - **Starter** — $5/€5 → 100 créditos/mês
+  - **Pro** — $20/€20 → 500 créditos/mês
+  - **Business** — $50/€50 → 1500 créditos/mês
+  - **Enterprise** — sob consulta
+- Atualizar `dashboard.billing.tsx` com nova grade + PIX automático (BR).
 
-### 2. Chat becomes the default landing
-- `/dashboard` now redirects to `/dashboard/chat` (update `dashboard.index.tsx` → move overview content to `dashboard.consumo.tsx`, make index a `<Navigate>` to chat).
-- Sidebar order: **Chat → Funnels → Consumo → Integrations → Billing → Profile** (admin appended when role matches).
+## 3. Autenticação
+- Adicionar **Google** (via `supabase--configure_social_auth`) e **Apple/iCloud** na página `/auth`.
+- Botões "Continuar com Google" e "Continuar com Apple" acima do form email/senha.
 
-### 3. "Consumo" page (rename of Overview, 3rd item)
-- New route `dashboard.consumo.tsx`. Pulls real data only:
-  - chats (conversations count), prompts (user messages), credits used/left, successful campaigns (assistant messages containing `CAMPAIGN` block parsed from messages), reach/clicks/conversions (sum from `user_integrations.credentials.metrics` placeholders → shows "—" until real ad-platform sync, no fake numbers).
-- Neon charts via `recharts` (already installed) with custom gradient strokes + glow filters using `--neon` token. Three cards: line (daily prompts last 14d), area (credits spent last 14d), bar (campaigns per platform).
-- Delete old `dashboard.index.tsx` content (replaced by redirect).
+## 4. Stripe (planos)
+- Rodar `payments--recommend_payment_provider` → `payments--enable_stripe_payments`.
+- Criar produtos via `batch_create_product` após enable.
 
-### 4. WhatsApp integration page
-- New route `dashboard.whatsapp.tsx` — landing for WhatsApp Business lead capture. Form to connect (Phone Number ID + Access Token + Webhook verify token), uses the same `connectIntegration` server fn (5 credits). Adds "whatsapp" to integration catalog in `dashboard.integrations.tsx`.
-- Empty leads table with "Connect WhatsApp to start collecting leads" empty state; reads from new `whatsapp_leads` table when present.
-- Sidebar link with WhatsApp icon (lucide `MessageCircle`).
+## 5. Admin overhaul
+- **Perfil admin**: nova aba `/dashboard/admin/profile` para alterar nome, email (`supabase.auth.updateUser`), senha.
+- **Claude na chat admin**: trocar modelo em `dashboard.admin.chat.tsx` para `anthropic/claude-sonnet-4.5` via Lovable AI Gateway (já suportado).
+- **Suporte (tickets)**: nova aba `/dashboard/admin/support` com lista de tickets, abrir conversa, ver dados do usuário + campanhas.
 
-### 5. Funnels redesign
-- `dashboard.funnel.tsx`: glassmorphism cards per platform with gradient borders, animated connecting SVG lines between stages (Audience → Creative → Budget → KPI), hover lift, neon accent on active node. Mobile: vertical stack with dotted connector. Keep existing data source (parsed from chat).
+## 6. Sistema de Suporte (usuário ↔ admin)
+- Nova tabela `support_tickets` (protocolo auto-gerado tipo `AUR-2026-000123`, status, assunto) e `support_messages` (chat).
+- Botão **"Suporte / Ajuda"** no menu do perfil (sidebar footer) → rota `/dashboard/support` com lista dos tickets do usuário + botão "Novo chamado".
+- Página `/dashboard/support/$id`: chat com admin, exibe número de protocolo no topo.
+- Admin em `/dashboard/admin/support`: lista todos os tickets (status, usuário, último update), clica → vê conversa + painel lateral com dados do user (perfil) e campanhas (conversations recentes).
 
-### 6. Admin area
-- DB migration: `app_role` enum + `user_roles` table + `has_role()` security-definer function (per platform rules). Seed current user as admin via SQL prompt to user (handled in migration description).
-- Route group `src/routes/_authenticated/admin.tsx` (layout) gated by `has_role(uid,'admin')` server fn.
-  - `admin.index.tsx` — KPIs: total users, MRR (from Stripe once connected), active subs, churn.
-  - `admin.users.tsx` — list profiles + credits + plan + actions (grant credits, suspend).
-  - `admin.payments.tsx` — Stripe dashboard mirror: subs, invoices, refund actions (calls Stripe via server fn).
-  - `admin.chat.tsx` — unlimited admin AI chat (bypass credit check when `has_role(uid,'admin')` in `chat.functions.ts`). System prompt focused on platform health + ToS compliance auditing (queries recent messages flagged for policy keywords).
-- Sidebar shows "Admin" section only when `has_role` true.
+## 7. Consumo com cursor
+- Em `dashboard.consumo.tsx`, adicionar overlay de **cursor customizado** (círculo neon que segue o mouse + trail) ativo só nessa página, e tooltip dos gráficos seguindo o cursor.
 
-### 7. Stripe + PIX
-- Recommend enabling Lovable Payments (Stripe) — will run `recommend_payment_provider` after plan approval. Plans: Free / Starter €19 / Growth €59 / Scale €199 (already in `dashboard.billing.tsx`).
-- Brazilian PIX automatic: Stripe Checkout supports `payment_method_types: ['card','pix']` for BRL subscriptions. Billing page detects user country (from `profiles.country`) = "BR" and shows "Pagar com PIX (automático)" toggle. Server fn will pass PIX when ready post-Stripe-enable.
+## 8. Histórico de mensagens
+- Já existe sidebar com conversas. Garantir que ao clicar numa conversa antiga, `dashboard.chat.tsx` carrega todas mensagens via `messages` table (já implementado — revisar e corrigir scroll/ordem se necessário).
 
-### 8. Tutorial polish
-- Update `src/components/Tutorial.tsx`:
-  - Header shows BrandMark + "Aurevia" in `font-heading` (Fraunces) at large size.
-  - Body uses Fraunces for titles, Inter for body, generous line-height, subtle gradient backdrop.
-  - Step indicator becomes thin neon progress bar instead of dots.
-  - Buttons get gradient + glow.
+## 9. Tutorial i18n
+- `Tutorial.tsx` já usa `useI18n()`. Garantir que TODAS as strings dos steps passem por `t()` e adicionar chaves faltantes em todos 6 idiomas.
 
-### 9. i18n
-- Add keys for: splash ("Loading your workspace…"), consumo (page title, metric labels, "Last 14 days"), whatsapp (page + form), admin (sections), pix label. Translate into 6 languages.
-
----
-
-## Technical Details
-
-**Migration (one call):**
+## 10. Migração DB
 ```sql
-CREATE TYPE app_role AS ENUM ('admin','moderator','user');
-CREATE TABLE public.user_roles (
-  id uuid PK default gen_random_uuid(),
-  user_id uuid REFERENCES auth.users ON DELETE CASCADE NOT NULL,
-  role app_role NOT NULL,
-  created_at timestamptz default now(),
-  UNIQUE(user_id, role)
-);
-GRANT SELECT ON public.user_roles TO authenticated;
-GRANT ALL ON public.user_roles TO service_role;
-ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
-CREATE POLICY ur_self_read ON public.user_roles FOR SELECT TO authenticated USING (auth.uid()=user_id);
-CREATE FUNCTION public.has_role(_uid uuid,_role app_role) RETURNS boolean
-  LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS
-  $$ SELECT EXISTS(SELECT 1 FROM public.user_roles WHERE user_id=_uid AND role=_role) $$;
-
-CREATE TABLE public.whatsapp_leads (
-  id uuid PK default gen_random_uuid(),
-  user_id uuid NOT NULL,
-  phone text NOT NULL,
-  name text, message text, status text default 'new',
-  created_at timestamptz default now()
-);
-GRANT SELECT,INSERT,UPDATE,DELETE ON public.whatsapp_leads TO authenticated;
-GRANT ALL ON public.whatsapp_leads TO service_role;
-ALTER TABLE public.whatsapp_leads ENABLE ROW LEVEL SECURITY;
-CREATE POLICY wl_self ON public.whatsapp_leads FOR ALL TO authenticated
-  USING (auth.uid()=user_id) WITH CHECK (auth.uid()=user_id);
+-- support_tickets + support_messages com RLS
+-- user vê os seus; admin (has_role) vê todos
+-- protocolo gerado por sequence + trigger
+-- grant_daily_credits() function
+-- atualizar handle_new_user para 50 créditos
+-- inserir admin role para index.db00@gmail.com
 ```
-User will be asked to insert themselves as admin via a follow-up `supabase--insert` (needs their user id / email).
 
-**Files created (~10):** SplashLoader, dashboard.consumo, dashboard.whatsapp, admin.tsx layout + 4 admin pages, admin.functions.ts, whatsapp.functions.ts.
-**Files edited (~8):** dashboard.tsx (sidebar + admin gate), dashboard.index.tsx (redirect), dashboard.funnel.tsx (redesign), dashboard.integrations.tsx (+whatsapp), dashboard.billing.tsx (PIX toggle), Tutorial.tsx, _authenticated.tsx (splash), i18n.tsx (keys), chat.functions.ts (admin unlimited).
+## Arquivos (≈18)
+**Criar**: `src/routes/support.*`, `dashboard.support.*`, `dashboard.admin.profile.tsx`, `dashboard.admin.support.tsx`, `src/components/ConsumoCursor.tsx`, `src/lib/support.functions.ts`.
+**Editar**: `index.tsx` (nova home chat), `auth.tsx` (Google/Apple), `dashboard.billing.tsx` (novos planos), `dashboard.admin.chat.tsx` (Claude), `dashboard.admin.tsx` (nova tab), `dashboard.tsx` (botão suporte), `Tutorial.tsx`, `i18n.tsx`.
+**Migração**: 1 SQL com tabelas, funções, role admin.
 
-**Stripe note:** Plan UI ships now. After you approve, I'll run `recommend_payment_provider` → `enable_stripe_payments` so live checkout + PIX activates. Until then the "Buy" buttons remain stub toasts.
+## Custo
+Trabalho extenso (~12+ arquivos + migração + Stripe + OAuth). Cobrarei **5 créditos** conforme solicitado.
 
-**Admin bootstrap:** After migration runs, tell me which email should be the admin and I'll insert the role row.
+Posso prosseguir?
