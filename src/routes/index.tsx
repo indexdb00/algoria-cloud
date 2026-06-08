@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const PROMPT_KEY = "aurevia.pendingPrompt";
+
 
 function Home() {
   const { t } = useI18n();
