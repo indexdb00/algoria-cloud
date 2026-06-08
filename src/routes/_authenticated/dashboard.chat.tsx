@@ -126,6 +126,14 @@ function UnifiedChat() {
         if (msgs) { setMessages(msgs as Msg[]); setEphemeralStart(0); }
       } else {
         setMessages([]); setConversationId(null); setEphemeralStart(0);
+        // Auto-send pending prompt from landing page
+        try {
+          const pending = sessionStorage.getItem("aurevia.pendingPrompt");
+          if (pending) {
+            sessionStorage.removeItem("aurevia.pendingPrompt");
+            setTimeout(() => { void submit(pending); }, 200);
+          }
+        } catch { /* ignore */ }
       }
     })();
 
