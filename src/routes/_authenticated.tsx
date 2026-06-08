@@ -22,6 +22,8 @@ function AuthenticatedLayout() {
         navigate({ to: "/auth" });
       } else {
         setReady(true);
+        // Grant 5 daily credits (idempotent — server enforces 24h gate)
+        supabase.rpc("grant_daily_credits").then(() => {}).catch(() => {});
         try {
           if (!sessionStorage.getItem("aurevia.splash.seen")) {
             setShowSplash(true);
