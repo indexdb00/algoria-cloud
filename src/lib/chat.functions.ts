@@ -156,18 +156,24 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
       content: reply,
     });
 
-    // Deduct credits + log + bump conversation
-    await supabase
-      .from("credits")
-      .update({ balance: balance - cost, updated_at: new Date().toISOString() })
-      .eq("user_id", userId);
-    await supabase
-      .from("credit_transactions")
-      .insert({ user_id: userId, amount: -cost, reason: `agent:${agent.slug}:${variant}` });
+    // Deduct credits + log + bump conversation (skip for admin Claude variant)
+    let newBalance: number | null = null;
+    if (variant !== "claude" && cost > 0) {
+      const { data: cr } = await supabase.from("credits").select("balance").eq("user_id", userId).single();
+      const currentBalance = cr?.balance ?? 0;
+      newBalance = currentBalance - cost;
+      await supabase
+        .from("credits")
+        .update({ balance: newBalance, updated_at: new Date().toISOString() })
+        .eq("user_id", userId);
+      await supabase
+        .from("credit_transactions")
+        .insert({ user_id: userId, amount: -cost, reason: `agent:${agent.slug}:${variant}` });
+    }
     await supabase
       .from("conversations")
       .update({ updated_at: new Date().toISOString() })
       .eq("id", conversationId);
 
-    return { error: null, reply, conversationId, newBalance: balance - cost, costApplied: cost, variant: variantSpec.label };
+    return { error: null, reply, conversationId, newBalance, costApplied: cost, variant: variantSpec.label };
   });
