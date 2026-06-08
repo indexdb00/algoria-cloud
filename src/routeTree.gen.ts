@@ -27,6 +27,7 @@ import { Route as AuthenticatedDashboardSupportIndexRouteImport } from './routes
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardSupportIdRouteImport } from './routes/_authenticated/dashboard.support.$id'
 import { Route as AuthenticatedDashboardAgentsSlugRouteImport } from './routes/_authenticated/dashboard.agents.$slug'
+import { Route as AuthenticatedDashboardAdminSupportRouteImport } from './routes/_authenticated/dashboard.admin.support'
 import { Route as AuthenticatedDashboardAdminProfileRouteImport } from './routes/_authenticated/dashboard.admin.profile'
 import { Route as AuthenticatedDashboardAdminPaymentsRouteImport } from './routes/_authenticated/dashboard.admin.payments'
 import { Route as AuthenticatedDashboardAdminChatRouteImport } from './routes/_authenticated/dashboard.admin.chat'
@@ -134,6 +135,12 @@ const AuthenticatedDashboardAgentsSlugRoute =
     path: '/agents/$slug',
     getParentRoute: () => AuthenticatedDashboardRoute,
   } as any)
+const AuthenticatedDashboardAdminSupportRoute =
+  AuthenticatedDashboardAdminSupportRouteImport.update({
+    id: '/support',
+    path: '/support',
+    getParentRoute: () => AuthenticatedDashboardAdminRoute,
+  } as any)
 const AuthenticatedDashboardAdminProfileRoute =
   AuthenticatedDashboardAdminProfileRouteImport.update({
     id: '/profile',
@@ -170,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/dashboard/admin/profile': typeof AuthenticatedDashboardAdminProfileRoute
+  '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
   '/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
@@ -189,6 +197,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/dashboard/admin/profile': typeof AuthenticatedDashboardAdminProfileRoute
+  '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRoute
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
   '/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
@@ -213,6 +222,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/_authenticated/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/_authenticated/dashboard/admin/profile': typeof AuthenticatedDashboardAdminProfileRoute
+  '/_authenticated/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRoute
   '/_authenticated/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
   '/_authenticated/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/chat'
     | '/dashboard/admin/payments'
     | '/dashboard/admin/profile'
+    | '/dashboard/admin/support'
     | '/dashboard/agents/$slug'
     | '/dashboard/support/$id'
     | '/dashboard/admin/'
@@ -256,6 +267,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/chat'
     | '/dashboard/admin/payments'
     | '/dashboard/admin/profile'
+    | '/dashboard/admin/support'
     | '/dashboard/agents/$slug'
     | '/dashboard/support/$id'
     | '/dashboard/admin'
@@ -279,6 +291,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/chat'
     | '/_authenticated/dashboard/admin/payments'
     | '/_authenticated/dashboard/admin/profile'
+    | '/_authenticated/dashboard/admin/support'
     | '/_authenticated/dashboard/agents/$slug'
     | '/_authenticated/dashboard/support/$id'
     | '/_authenticated/dashboard/admin/'
@@ -419,6 +432,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAgentsSlugRouteImport
       parentRoute: typeof AuthenticatedDashboardRoute
     }
+    '/_authenticated/dashboard/admin/support': {
+      id: '/_authenticated/dashboard/admin/support'
+      path: '/support'
+      fullPath: '/dashboard/admin/support'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminSupportRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminRoute
+    }
     '/_authenticated/dashboard/admin/profile': {
       id: '/_authenticated/dashboard/admin/profile'
       path: '/profile'
@@ -447,6 +467,7 @@ interface AuthenticatedDashboardAdminRouteChildren {
   AuthenticatedDashboardAdminChatRoute: typeof AuthenticatedDashboardAdminChatRoute
   AuthenticatedDashboardAdminPaymentsRoute: typeof AuthenticatedDashboardAdminPaymentsRoute
   AuthenticatedDashboardAdminProfileRoute: typeof AuthenticatedDashboardAdminProfileRoute
+  AuthenticatedDashboardAdminSupportRoute: typeof AuthenticatedDashboardAdminSupportRoute
   AuthenticatedDashboardAdminIndexRoute: typeof AuthenticatedDashboardAdminIndexRoute
 }
 
@@ -457,6 +478,8 @@ const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRoute
       AuthenticatedDashboardAdminPaymentsRoute,
     AuthenticatedDashboardAdminProfileRoute:
       AuthenticatedDashboardAdminProfileRoute,
+    AuthenticatedDashboardAdminSupportRoute:
+      AuthenticatedDashboardAdminSupportRoute,
     AuthenticatedDashboardAdminIndexRoute:
       AuthenticatedDashboardAdminIndexRoute,
   }
