@@ -34,7 +34,7 @@ function Home() {
   function go(prompt: string) {
     const text = prompt.trim();
     if (text) {
-      try { sessionStorage.setItem(PROMPT_KEY, text); } catch { /* ignore */ }
+      try { sessionStorage.setItem("aurevia.pendingPrompt", text); } catch { /* ignore */ }
     }
     if (authed) navigate({ to: "/dashboard/chat" });
     else navigate({ to: "/auth" });
