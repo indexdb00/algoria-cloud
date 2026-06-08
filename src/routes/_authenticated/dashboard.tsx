@@ -8,7 +8,7 @@ import { BrandMark } from "@/components/BrandMark";
 import { abstractAvatarDataUrl } from "@/lib/avatar";
 import {
   LogOut, Coins, Menu, X, ChevronUp, Plus, MessageSquare,
-  Trash2, Settings, ShieldCheck,
+  Trash2, Settings, ShieldCheck, LifeBuoy,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
