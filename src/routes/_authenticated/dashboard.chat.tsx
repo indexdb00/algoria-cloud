@@ -123,9 +123,17 @@ function UnifiedChat() {
         setConversationId(id);
         const { data: msgs } = await supabase
           .from("messages").select("role,content").eq("conversation_id", id).order("created_at", { ascending: true });
-        if (msgs) { setMessages(msgs as Msg[]); setEphemeralStart(msgs.length); }
+        if (msgs) { setMessages(msgs as Msg[]); setEphemeralStart(0); }
       } else {
         setMessages([]); setConversationId(null); setEphemeralStart(0);
+        // Auto-send pending prompt from landing page
+        try {
+          const pending = sessionStorage.getItem("aurevia.pendingPrompt");
+          if (pending) {
+            sessionStorage.removeItem("aurevia.pendingPrompt");
+            setTimeout(() => { void submit(pending); }, 200);
+          }
+        } catch { /* ignore */ }
       }
     })();
 
@@ -135,7 +143,7 @@ function UnifiedChat() {
       const id = m[1];
       setConversationId(id);
       supabase.from("messages").select("role,content").eq("conversation_id", id).order("created_at", { ascending: true })
-        .then(({ data }) => { if (data) { setMessages(data as Msg[]); setEphemeralStart(data.length); } });
+        .then(({ data }) => { if (data) { setMessages(data as Msg[]); setEphemeralStart(0); } });
     }
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);

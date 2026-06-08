@@ -7,11 +7,11 @@ const LANG_NAMES: Record<string, string> = {
 };
 
 // Aurevia model variants → underlying Lovable AI Gateway model + credit cost multiplier.
-// v1.0 = fast/simple, v1.1 Thinking = deeper reasoning (2x cost), plus = same quality as Thinking but half cost (paid plans only).
 const VARIANTS = {
   "v1": { gatewayModel: "google/gemini-3-flash-preview", costMultiplier: 1, paidOnly: false, label: "Aurevia v1.0" },
   "v1.1": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 2, paidOnly: false, label: "Aurevia Thinking v1.1" },
   "plus": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 1, paidOnly: true, label: "Aurevia Plus" },
+  "claude": { gatewayModel: "anthropic/claude-sonnet-4.5", costMultiplier: 0, paidOnly: false, label: "Claude (admin)" },
 } as const;
 
 type Variant = keyof typeof VARIANTS;
@@ -21,8 +21,8 @@ const sendSchema = z.object({
   agentSlug: z.string().min(1).max(64),
   message: z.string().min(1).max(8000),
   language: z.enum(["en", "pt", "es", "fr", "de", "it"]).optional(),
-  variant: z.enum(["v1", "v1.1", "plus"]).optional(),
-  imageDataUrl: z.string().max(8_000_000).optional(), // base64 data URL of an attached image
+  variant: z.enum(["v1", "v1.1", "plus", "claude"]).optional(),
+  imageDataUrl: z.string().max(8_000_000).optional(),
   imageMeta: z.object({
     width: z.number().int().positive().max(20000),
     height: z.number().int().positive().max(20000),
@@ -51,17 +51,19 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
       .single();
     if (agentErr || !agent) return { error: "Agent not found", reply: "", conversationId: null };
 
-    const cost = Math.max(1, Math.round(agent.cost_per_message * variantSpec.costMultiplier));
+    const cost = Math.max(0, Math.round(agent.cost_per_message * variantSpec.costMultiplier));
 
-    // Check credits
-    const { data: creditsRow } = await supabase
-      .from("credits")
-      .select("balance")
-      .eq("user_id", userId)
-      .single();
-    const balance = creditsRow?.balance ?? 0;
-    if (balance < cost) {
-      return { error: "Insufficient credits", reply: "", conversationId: null };
+    // Admin Claude variant bypasses credit check entirely (unlimited admin chat)
+    if (variant !== "claude" && cost > 0) {
+      const { data: creditsRow } = await supabase
+        .from("credits")
+        .select("balance")
+        .eq("user_id", userId)
+        .single();
+      const balance = creditsRow?.balance ?? 0;
+      if (balance < cost) {
+        return { error: "Insufficient credits", reply: "", conversationId: null };
+      }
     }
 
     // Get or create conversation
@@ -154,18 +156,24 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
       content: reply,
     });
 
-    // Deduct credits + log + bump conversation
-    await supabase
-      .from("credits")
-      .update({ balance: balance - cost, updated_at: new Date().toISOString() })
-      .eq("user_id", userId);
-    await supabase
-      .from("credit_transactions")
-      .insert({ user_id: userId, amount: -cost, reason: `agent:${agent.slug}:${variant}` });
+    // Deduct credits + log + bump conversation (skip for admin Claude variant)
+    let newBalance: number | null = null;
+    if (variant !== "claude" && cost > 0) {
+      const { data: cr } = await supabase.from("credits").select("balance").eq("user_id", userId).single();
+      const currentBalance = cr?.balance ?? 0;
+      newBalance = currentBalance - cost;
+      await supabase
+        .from("credits")
+        .update({ balance: newBalance, updated_at: new Date().toISOString() })
+        .eq("user_id", userId);
+      await supabase
+        .from("credit_transactions")
+        .insert({ user_id: userId, amount: -cost, reason: `agent:${agent.slug}:${variant}` });
+    }
     await supabase
       .from("conversations")
       .update({ updated_at: new Date().toISOString() })
       .eq("id", conversationId);
 
-    return { error: null, reply, conversationId, newBalance: balance - cost, costApplied: cost, variant: variantSpec.label };
+    return { error: null, reply, conversationId, newBalance, costApplied: cost, variant: variantSpec.label };
   });

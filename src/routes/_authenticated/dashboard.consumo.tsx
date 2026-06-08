@@ -11,6 +11,7 @@ import {
   Sparkles, TrendingUp, Plug,
 } from "lucide-react";
 import { Tutorial } from "@/components/Tutorial";
+import { ConsumoCursor } from "@/components/ConsumoCursor";
 
 export const Route = createFileRoute("/_authenticated/dashboard/consumo")({
   head: () => ({ meta: [{ title: "Consumo — Aurevia" }] }),
@@ -102,7 +103,8 @@ function ConsumoPage() {
   ]), [chats, prompts, campaigns, creditsSpent, balance, hasIntegrations, t]);
 
   return (
-    <div className="px-5 md:px-10 py-8 md:py-14 max-w-6xl">
+    <div className="px-5 md:px-10 py-8 md:py-14 max-w-6xl cursor-none">
+      <ConsumoCursor />
       <Tutorial
         id="consumo-v1"
         title={t("cons.title")}

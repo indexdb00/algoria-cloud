@@ -8,7 +8,7 @@ import { BrandMark } from "@/components/BrandMark";
 import { abstractAvatarDataUrl } from "@/lib/avatar";
 import {
   LogOut, Coins, Menu, X, ChevronUp, Plus, MessageSquare,
-  Trash2, Settings, ShieldCheck,
+  Trash2, Settings, ShieldCheck, LifeBuoy,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
@@ -240,6 +240,9 @@ function DashboardLayout() {
             <div className="absolute bottom-full left-2 right-2 mb-2 bg-brand-surface ring-1 ring-brand-border rounded-xl p-1.5 shadow-2xl shadow-black/40">
               <Link to="/dashboard/profile" className="row-soft block text-sm px-3 py-2 text-brand-text">
                 <Settings className="size-3.5 inline mr-2 opacity-70" />{t("profile.title")}
+              </Link>
+              <Link to="/dashboard/support" className="row-soft block text-sm px-3 py-2 text-brand-text">
+                <LifeBuoy className="size-3.5 inline mr-2 opacity-70" />{t("support.menu") || "Support / Help"}
               </Link>
               <Link to="/dashboard/billing" className="row-soft block text-sm px-3 py-2 text-brand-text">
                 <Coins className="size-3.5 inline mr-2 opacity-70" />{t("dash.billing")}

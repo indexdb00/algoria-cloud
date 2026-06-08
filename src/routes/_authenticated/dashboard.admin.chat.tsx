@@ -32,8 +32,8 @@ function AdminChat() {
         data: {
           conversationId: convId ?? undefined,
           agentSlug: "aurevia",
-          message: `[ADMIN MODE] ${text}\n\nContext: you are speaking with the Aurevia platform owner. Answer factually about platform health, ToS compliance audits, and operational status. Be direct and skip marketing speak.`,
-          variant: "v1.1",
+          message: `[ADMIN MODE · CLAUDE] ${text}\n\nContext: you are speaking with the Aurevia platform owner. Answer factually about platform health, ToS compliance audits, and operational status. Be direct and skip marketing speak.`,
+          variant: "claude",
         },
       });
       if (res?.conversationId) setConvId(res.conversationId);
