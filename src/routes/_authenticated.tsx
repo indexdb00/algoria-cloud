@@ -23,7 +23,7 @@ function AuthenticatedLayout() {
       } else {
         setReady(true);
         // Grant 5 daily credits (idempotent — server enforces 24h gate)
-        try { void (supabase.rpc as (fn: string) => Promise<unknown>)("grant_daily_credits"); } catch { /* ignore */ }
+        supabase.rpc("grant_daily_credits").then(() => {}, () => {});
         try {
           if (!sessionStorage.getItem("aurevia.splash.seen")) {
             setShowSplash(true);
