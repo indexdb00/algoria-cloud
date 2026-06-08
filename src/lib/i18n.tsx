@@ -344,6 +344,22 @@ const en: Dict = {
   "tut.profile.s2.body": "Tell Aurevia who you are. The agent uses this to personalize tone and recommendations.",
   "tut.profile.s3.title": "Storage tier",
   "tut.profile.s3.body": "Free workspaces keep the most recent conversations. Paid plans keep everything, forever.",
+  "home.title": "What do you want to launch today?",
+  "home.subtitle": "Talk to autonomous AI marketing agents. They run ads, score leads and report back — by prompt.",
+  "home.placeholder": "Ask Aurevia to launch a campaign, score leads, anything…",
+  "home.badge": "50 free credits on signup · 5 daily",
+  "home.private": "Private · GDPR-native",
+  "home.foot": "Free to start · No credit card · Cancel anytime",
+  "home.signup": "Get started",
+  "home.s1": "Launch a Meta Ads campaign, €25/day, DACH founders.",
+  "home.s2": "Score my last 50 leads by buying intent.",
+  "home.s3": "Give me a 3-hour performance pulse.",
+  "home.s4": "Plan a 3-week reach push for Spain + Italy, €1,800.",
+  "nav.open": "Open app",
+  "auth.google": "Continue with Google",
+  "auth.apple": "Continue with Apple",
+  "auth.or": "or",
+  "support.menu": "Support / Help",
 };
 
 
