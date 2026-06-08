@@ -7,11 +7,11 @@ const LANG_NAMES: Record<string, string> = {
 };
 
 // Aurevia model variants → underlying Lovable AI Gateway model + credit cost multiplier.
-// v1.0 = fast/simple, v1.1 Thinking = deeper reasoning (2x cost), plus = same quality as Thinking but half cost (paid plans only).
 const VARIANTS = {
   "v1": { gatewayModel: "google/gemini-3-flash-preview", costMultiplier: 1, paidOnly: false, label: "Aurevia v1.0" },
   "v1.1": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 2, paidOnly: false, label: "Aurevia Thinking v1.1" },
   "plus": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 1, paidOnly: true, label: "Aurevia Plus" },
+  "claude": { gatewayModel: "anthropic/claude-sonnet-4.5", costMultiplier: 0, paidOnly: false, label: "Claude (admin)" },
 } as const;
 
 type Variant = keyof typeof VARIANTS;
@@ -21,8 +21,8 @@ const sendSchema = z.object({
   agentSlug: z.string().min(1).max(64),
   message: z.string().min(1).max(8000),
   language: z.enum(["en", "pt", "es", "fr", "de", "it"]).optional(),
-  variant: z.enum(["v1", "v1.1", "plus"]).optional(),
-  imageDataUrl: z.string().max(8_000_000).optional(), // base64 data URL of an attached image
+  variant: z.enum(["v1", "v1.1", "plus", "claude"]).optional(),
+  imageDataUrl: z.string().max(8_000_000).optional(),
   imageMeta: z.object({
     width: z.number().int().positive().max(20000),
     height: z.number().int().positive().max(20000),
