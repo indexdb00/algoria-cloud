@@ -103,7 +103,8 @@ function ConsumoPage() {
   ]), [chats, prompts, campaigns, creditsSpent, balance, hasIntegrations, t]);
 
   return (
-    <div className="px-5 md:px-10 py-8 md:py-14 max-w-6xl">
+    <div className="px-5 md:px-10 py-8 md:py-14 max-w-6xl cursor-none">
+      <ConsumoCursor />
       <Tutorial
         id="consumo-v1"
         title={t("cons.title")}
