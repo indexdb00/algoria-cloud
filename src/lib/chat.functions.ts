@@ -51,17 +51,19 @@ export const sendAgentMessage = createServerFn({ method: "POST" })
       .single();
     if (agentErr || !agent) return { error: "Agent not found", reply: "", conversationId: null };
 
-    const cost = Math.max(1, Math.round(agent.cost_per_message * variantSpec.costMultiplier));
+    const cost = Math.max(0, Math.round(agent.cost_per_message * variantSpec.costMultiplier));
 
-    // Check credits
-    const { data: creditsRow } = await supabase
-      .from("credits")
-      .select("balance")
-      .eq("user_id", userId)
-      .single();
-    const balance = creditsRow?.balance ?? 0;
-    if (balance < cost) {
-      return { error: "Insufficient credits", reply: "", conversationId: null };
+    // Admin Claude variant bypasses credit check entirely (unlimited admin chat)
+    if (variant !== "claude" && cost > 0) {
+      const { data: creditsRow } = await supabase
+        .from("credits")
+        .select("balance")
+        .eq("user_id", userId)
+        .single();
+      const balance = creditsRow?.balance ?? 0;
+      if (balance < cost) {
+        return { error: "Insufficient credits", reply: "", conversationId: null };
+      }
     }
 
     // Get or create conversation
