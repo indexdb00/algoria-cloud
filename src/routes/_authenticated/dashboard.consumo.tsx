@@ -11,6 +11,7 @@ import {
   Sparkles, TrendingUp, Plug,
 } from "lucide-react";
 import { Tutorial } from "@/components/Tutorial";
+import { ConsumoCursor } from "@/components/ConsumoCursor";
 
 export const Route = createFileRoute("/_authenticated/dashboard/consumo")({
   head: () => ({ meta: [{ title: "Consumo — Aurevia" }] }),
