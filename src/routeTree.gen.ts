@@ -31,6 +31,7 @@ import { Route as AuthenticatedDashboardAdminSupportRouteImport } from './routes
 import { Route as AuthenticatedDashboardAdminProfileRouteImport } from './routes/_authenticated/dashboard.admin.profile'
 import { Route as AuthenticatedDashboardAdminPaymentsRouteImport } from './routes/_authenticated/dashboard.admin.payments'
 import { Route as AuthenticatedDashboardAdminChatRouteImport } from './routes/_authenticated/dashboard.admin.chat'
+import { Route as AuthenticatedDashboardAdminSupportIdRouteImport } from './routes/_authenticated/dashboard.admin.support.$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -159,6 +160,12 @@ const AuthenticatedDashboardAdminChatRoute =
     path: '/chat',
     getParentRoute: () => AuthenticatedDashboardAdminRoute,
   } as any)
+const AuthenticatedDashboardAdminSupportIdRoute =
+  AuthenticatedDashboardAdminSupportIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedDashboardAdminSupportRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -177,11 +184,12 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/dashboard/admin/profile': typeof AuthenticatedDashboardAdminProfileRoute
-  '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRoute
+  '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRouteWithChildren
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
   '/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/support/': typeof AuthenticatedDashboardSupportIndexRoute
+  '/dashboard/admin/support/$id': typeof AuthenticatedDashboardAdminSupportIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -197,11 +205,12 @@ export interface FileRoutesByTo {
   '/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/dashboard/admin/profile': typeof AuthenticatedDashboardAdminProfileRoute
-  '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRoute
+  '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRouteWithChildren
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
   '/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/support': typeof AuthenticatedDashboardSupportIndexRoute
+  '/dashboard/admin/support/$id': typeof AuthenticatedDashboardAdminSupportIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -222,11 +231,12 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/chat': typeof AuthenticatedDashboardAdminChatRoute
   '/_authenticated/dashboard/admin/payments': typeof AuthenticatedDashboardAdminPaymentsRoute
   '/_authenticated/dashboard/admin/profile': typeof AuthenticatedDashboardAdminProfileRoute
-  '/_authenticated/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRoute
+  '/_authenticated/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRouteWithChildren
   '/_authenticated/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
   '/_authenticated/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/_authenticated/dashboard/support/': typeof AuthenticatedDashboardSupportIndexRoute
+  '/_authenticated/dashboard/admin/support/$id': typeof AuthenticatedDashboardAdminSupportIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/dashboard/support/$id'
     | '/dashboard/admin/'
     | '/dashboard/support/'
+    | '/dashboard/admin/support/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/dashboard/support/$id'
     | '/dashboard/admin'
     | '/dashboard/support'
+    | '/dashboard/admin/support/$id'
   id:
     | '__root__'
     | '/'
@@ -296,6 +308,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/support/$id'
     | '/_authenticated/dashboard/admin/'
     | '/_authenticated/dashboard/support/'
+    | '/_authenticated/dashboard/admin/support/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -460,14 +473,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardAdminChatRouteImport
       parentRoute: typeof AuthenticatedDashboardAdminRoute
     }
+    '/_authenticated/dashboard/admin/support/$id': {
+      id: '/_authenticated/dashboard/admin/support/$id'
+      path: '/$id'
+      fullPath: '/dashboard/admin/support/$id'
+      preLoaderRoute: typeof AuthenticatedDashboardAdminSupportIdRouteImport
+      parentRoute: typeof AuthenticatedDashboardAdminSupportRoute
+    }
   }
 }
+
+interface AuthenticatedDashboardAdminSupportRouteChildren {
+  AuthenticatedDashboardAdminSupportIdRoute: typeof AuthenticatedDashboardAdminSupportIdRoute
+}
+
+const AuthenticatedDashboardAdminSupportRouteChildren: AuthenticatedDashboardAdminSupportRouteChildren =
+  {
+    AuthenticatedDashboardAdminSupportIdRoute:
+      AuthenticatedDashboardAdminSupportIdRoute,
+  }
+
+const AuthenticatedDashboardAdminSupportRouteWithChildren =
+  AuthenticatedDashboardAdminSupportRoute._addFileChildren(
+    AuthenticatedDashboardAdminSupportRouteChildren,
+  )
 
 interface AuthenticatedDashboardAdminRouteChildren {
   AuthenticatedDashboardAdminChatRoute: typeof AuthenticatedDashboardAdminChatRoute
   AuthenticatedDashboardAdminPaymentsRoute: typeof AuthenticatedDashboardAdminPaymentsRoute
   AuthenticatedDashboardAdminProfileRoute: typeof AuthenticatedDashboardAdminProfileRoute
-  AuthenticatedDashboardAdminSupportRoute: typeof AuthenticatedDashboardAdminSupportRoute
+  AuthenticatedDashboardAdminSupportRoute: typeof AuthenticatedDashboardAdminSupportRouteWithChildren
   AuthenticatedDashboardAdminIndexRoute: typeof AuthenticatedDashboardAdminIndexRoute
 }
 
@@ -479,7 +514,7 @@ const AuthenticatedDashboardAdminRouteChildren: AuthenticatedDashboardAdminRoute
     AuthenticatedDashboardAdminProfileRoute:
       AuthenticatedDashboardAdminProfileRoute,
     AuthenticatedDashboardAdminSupportRoute:
-      AuthenticatedDashboardAdminSupportRoute,
+      AuthenticatedDashboardAdminSupportRouteWithChildren,
     AuthenticatedDashboardAdminIndexRoute:
       AuthenticatedDashboardAdminIndexRoute,
   }
