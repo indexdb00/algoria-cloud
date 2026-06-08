@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { isAdmin } from "@/lib/admin.functions";
-import { ShieldCheck, LayoutDashboard, MessageSquare, CreditCard } from "lucide-react";
+import { ShieldCheck, LayoutDashboard, MessageSquare, CreditCard, User, LifeBuoy } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin")({
   head: () => ({ meta: [{ title: "Admin — Aurevia" }] }),
