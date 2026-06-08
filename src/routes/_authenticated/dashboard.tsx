@@ -241,6 +241,9 @@ function DashboardLayout() {
               <Link to="/dashboard/profile" className="row-soft block text-sm px-3 py-2 text-brand-text">
                 <Settings className="size-3.5 inline mr-2 opacity-70" />{t("profile.title")}
               </Link>
+              <Link to="/dashboard/support" className="row-soft block text-sm px-3 py-2 text-brand-text">
+                <LifeBuoy className="size-3.5 inline mr-2 opacity-70" />{t("support.menu") || "Support / Help"}
+              </Link>
               <Link to="/dashboard/billing" className="row-soft block text-sm px-3 py-2 text-brand-text">
                 <Coins className="size-3.5 inline mr-2 opacity-70" />{t("dash.billing")}
               </Link>
