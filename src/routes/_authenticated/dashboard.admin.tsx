@@ -35,8 +35,10 @@ function AdminLayout() {
 
   const tabs = [
     { to: "/dashboard/admin", label: "Overview", icon: LayoutDashboard, exact: true },
-    { to: "/dashboard/admin/chat", label: "Admin Chat", icon: MessageSquare },
+    { to: "/dashboard/admin/chat", label: "Claude Chat", icon: MessageSquare },
+    { to: "/dashboard/admin/support", label: "Support", icon: LifeBuoy },
     { to: "/dashboard/admin/payments", label: "Payments", icon: CreditCard },
+    { to: "/dashboard/admin/profile", label: "Profile", icon: User },
   ];
   const isActive = (to: string, exact?: boolean) => exact ? pathname === to : pathname.startsWith(to);
 
