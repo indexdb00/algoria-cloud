@@ -638,6 +638,22 @@ const pt: Dict = {
   "profile.storage.tag": "Armazenamento",
   "profile.storage.title": "Armazenamento de conversas",
   "profile.storage.note": "Workspaces gratuitos guardam as conversas mais recentes. Faça upgrade para histórico ilimitado.",
+  "home.title": "O que quer lançar hoje?",
+  "home.subtitle": "Fale com agentes de marketing IA autónomos. Eles lançam anúncios, qualificam leads e reportam — por prompt.",
+  "home.placeholder": "Peça à Aurevia para lançar uma campanha, qualificar leads, qualquer coisa…",
+  "home.badge": "50 créditos grátis no registo · 5 diários",
+  "home.private": "Privado · LGPD/GDPR",
+  "home.foot": "Grátis para começar · Sem cartão · Cancele quando quiser",
+  "home.signup": "Começar",
+  "home.s1": "Lança uma campanha Meta Ads, €25/dia, founders DACH.",
+  "home.s2": "Pontua os meus últimos 50 leads por intenção.",
+  "home.s3": "Pulso de performance de 3h.",
+  "home.s4": "Plano de 3 semanas de reach para Espanha + Itália, €1.800.",
+  "nav.open": "Abrir app",
+  "auth.google": "Continuar com Google",
+  "auth.apple": "Continuar com Apple",
+  "auth.or": "ou",
+  "support.menu": "Suporte / Ajuda",
 };
 
 
