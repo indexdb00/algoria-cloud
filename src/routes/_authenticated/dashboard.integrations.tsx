@@ -9,7 +9,7 @@ import { connectIntegration, disconnectIntegration } from "@/lib/integrations.fu
 import { Tutorial } from "@/components/Tutorial";
 
 export const Route = createFileRoute("/_authenticated/dashboard/integrations")({
-  head: () => ({ meta: [{ title: "Integrations — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Integrations — Algoria" }] }),
   component: IntegrationsPage,
 });
 
@@ -145,7 +145,7 @@ function IntegrationsPage() {
         title="Integrations tour"
         steps={[
           { title: "Pick a platform", body: "Each card is a real ad network we manage for you. Click Connect to open the credential form — nothing happens until you save." },
-          { title: "Fill your credentials", body: "Paste the API keys / tokens from the platform's developer dashboard. Aurevia encrypts them at rest and never exposes them in chat." },
+          { title: "Fill your credentials", body: "Paste the API keys / tokens from the platform's developer dashboard. Algoria encrypts them at rest and never exposes them in chat." },
           { title: "Pay 5 credits to wire it up", body: "Saving deducts 5 credits and unlocks that integration inside the chat and funnel — the agent can then launch real campaigns on it." },
         ]}
       />

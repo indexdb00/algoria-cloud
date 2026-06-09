@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { useI18n, type LangCode } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { sendAgentMessage } from "@/lib/chat.functions";
-import { BrandMark } from "@/components/BrandMark";
+
 import { Tutorial } from "@/components/Tutorial";
 import { greetingKey } from "@/lib/avatar";
 import {
@@ -14,46 +14,76 @@ import {
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/chat")({
-  head: () => ({ meta: [{ title: "Chat — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Chat — Algoria" }] }),
   component: UnifiedChat,
 });
 
-const PRESETS: Record<LangCode, { label: string; prompt: string }[]> = {
+const HINTS: Record<LangCode, string[]> = {
   en: [
-    { label: "Launch Meta Ads", prompt: "Launch a Meta Ads campaign, €25/day, European founders 28–45 interested in B2B SaaS. Use the CAMPAIGN block." },
-    { label: "Score my leads", prompt: "Score my last 50 leads by buying intent and tell me which to call first." },
-    { label: "3h performance pulse", prompt: "Give me a 3-hour performance pulse across every connected channel." },
-    { label: "Google Ads search", prompt: "Set up a Google Ads search campaign, €40/day, DACH. CAMPAIGN block." },
+    "Ask the agent to find the right algorithm for your exact audience.",
+    "Upload a creative — the agent validates it for ad policy in seconds.",
+    "Open the Funnel to watch each campaign move from prompt to conversion.",
+    "Type 'plan a 3-week reach push, $1,800' and the agent drafts a CAMPAIGN block.",
+    "Use Consumo to see credits, campaigns and reach in animated charts.",
+    "Connect Meta, Google or TikTok in Integrations — agents read live data.",
+    "Voice input works in 6 languages — tap the mic.",
+    "Plus model thinks deeper for complex audience targeting.",
+    "Every conversation is stored in the sidebar — pick one up anytime.",
   ],
   pt: [
-    { label: "Lançar Meta Ads", prompt: "Lança uma campanha Meta Ads, €25/dia, founders europeus 28–45 SaaS B2B. Formato CAMPAIGN." },
-    { label: "Pontuar leads", prompt: "Pontua os meus últimos 50 leads por intenção de compra." },
-    { label: "Pulso de 3h", prompt: "Dá-me o pulso de 3h por canal conectado." },
-    { label: "Google Search", prompt: "Cria uma campanha Google Ads de search, €40/dia, DACH. Formato CAMPAIGN." },
+    "Pede ao agente para encontrar o algoritmo certo para o teu público.",
+    "Anexa um criativo — o agente valida a política do anúncio em segundos.",
+    "Abre o Funil para ver cada campanha do prompt à conversão.",
+    "Escreve 'plano de alcance, 3 semanas, $1,800' e recebes um bloco CAMPAIGN.",
+    "Vê em Consumo créditos, campanhas e alcance em gráficos animados.",
+    "Liga Meta, Google ou TikTok em Integrações — os agentes leem dados ao vivo.",
+    "Entrada por voz em 6 idiomas — toca no microfone.",
+    "O modelo Plus pensa mais fundo para segmentações complexas.",
+    "Cada conversa fica guardada na barra lateral — retomas quando quiseres.",
   ],
   es: [
-    { label: "Lanzar Meta Ads", prompt: "Lanza una campaña Meta Ads, €25/día, founders europeos 28–45 SaaS B2B. Formato CAMPAIGN." },
-    { label: "Puntuar leads", prompt: "Puntúa mis últimos 50 leads por intención." },
-    { label: "Pulso 3h", prompt: "Dame el pulso de 3h en cada canal." },
-    { label: "Google", prompt: "Campaña Google Ads search €40/día DACH. CAMPAIGN." },
+    "Pide al agente que encuentre el algoritmo correcto para tu audiencia.",
+    "Sube un creativo — el agente valida la política del anuncio en segundos.",
+    "Abre el Funnel para ver cada campaña del prompt a la conversión.",
+    "Escribe 'plan de alcance 3 semanas, $1,800' y recibes un bloque CAMPAIGN.",
+    "Mira en Consumo créditos, campañas y alcance en gráficos animados.",
+    "Conecta Meta, Google o TikTok en Integraciones.",
+    "Entrada por voz en 6 idiomas — toca el micrófono.",
+    "El modelo Plus piensa más profundo para audiencias complejas.",
+    "Cada conversación queda guardada en la barra lateral.",
   ],
   fr: [
-    { label: "Lancer Meta Ads", prompt: "Lance une campagne Meta Ads 25€/jour fondateurs européens 28–45 SaaS B2B. CAMPAIGN." },
-    { label: "Scorer leads", prompt: "Score mes 50 derniers leads par intention." },
-    { label: "Pulse 3h", prompt: "Pulse 3h sur chaque canal connecté." },
-    { label: "Google", prompt: "Campagne Google Ads search 40€/jour DACH. CAMPAIGN." },
+    "Demande à l'agent de trouver l'algorithme exact pour ton audience.",
+    "Charge un visuel — l'agent valide la conformité en quelques secondes.",
+    "Ouvre le Funnel pour suivre chaque campagne du prompt à la conversion.",
+    "Tape 'plan de portée 3 semaines, 1800$' et reçois un bloc CAMPAIGN.",
+    "Vois Consumo : crédits, campagnes et portée en graphiques animés.",
+    "Connecte Meta, Google ou TikTok dans Intégrations.",
+    "Saisie vocale en 6 langues — appuie sur le micro.",
+    "Le modèle Plus raisonne plus profondément.",
+    "Chaque conversation est sauvegardée dans la barre latérale.",
   ],
   de: [
-    { label: "Meta Ads starten", prompt: "Starte Meta Ads Kampagne, €25/Tag, EU Founder 28–45 B2B SaaS. CAMPAIGN." },
-    { label: "Leads bewerten", prompt: "Bewerte meine letzten 50 Leads nach Kaufabsicht." },
-    { label: "3h Puls", prompt: "Gib mir den 3h Puls pro Kanal." },
-    { label: "Google", prompt: "Google Ads Search €40/Tag DACH. CAMPAIGN." },
+    "Bitte den Agenten, den richtigen Algorithmus für deine Zielgruppe zu finden.",
+    "Lade ein Creative hoch — der Agent prüft die Ad-Policy in Sekunden.",
+    "Öffne den Funnel und sieh jede Kampagne vom Prompt bis zur Conversion.",
+    "Schreib 'Reichweitenplan 3 Wochen, $1.800' und du bekommst einen CAMPAIGN-Block.",
+    "Im Consumo: Credits, Kampagnen und Reichweite in animierten Charts.",
+    "Verbinde Meta, Google oder TikTok in den Integrationen.",
+    "Spracheingabe in 6 Sprachen — Mikro antippen.",
+    "Plus denkt tiefer für komplexe Zielgruppen.",
+    "Jede Konversation wird in der Seitenleiste gespeichert.",
   ],
   it: [
-    { label: "Lancia Meta Ads", prompt: "Lancia una campagna Meta Ads, €25/giorno, founder europei 28–45 B2B SaaS. CAMPAIGN." },
-    { label: "Score lead", prompt: "Valuta i miei ultimi 50 lead per intent." },
-    { label: "Pulse 3h", prompt: "Pulse di 3h per canale." },
-    { label: "Google", prompt: "Campagna Google Ads search €40/giorno DACH. CAMPAIGN." },
+    "Chiedi all'agente di trovare l'algoritmo giusto per il tuo pubblico.",
+    "Carica un creativo — l'agente verifica la policy in pochi secondi.",
+    "Apri il Funnel per vedere ogni campagna dal prompt alla conversione.",
+    "Scrivi 'piano reach 3 settimane, $1.800' e ricevi un blocco CAMPAIGN.",
+    "Vedi in Consumo crediti, campagne e reach in grafici animati.",
+    "Collega Meta, Google o TikTok in Integrazioni.",
+    "Voce in 6 lingue — tocca il microfono.",
+    "Plus ragiona più a fondo per audience complesse.",
+    "Ogni conversazione resta salvata nella barra laterale.",
   ],
 };
 
@@ -62,9 +92,9 @@ type Variant = "v1" | "v1.1" | "plus";
 type Attachment = { dataUrl: string; width: number; height: number; aspect: string };
 
 const VARIANTS: { id: Variant; label: string; desc: string; mult: number; paidOnly: boolean }[] = [
-  { id: "v1", label: "Aurevia v1.0", desc: "Fast, balanced. 1× credit cost.", mult: 1, paidOnly: false },
-  { id: "v1.1", label: "Aurevia Thinking v1.1", desc: "Deeper reasoning. 2× credit cost.", mult: 2, paidOnly: false },
-  { id: "plus", label: "Aurevia Plus", desc: "Thinking quality at half the cost.", mult: 1, paidOnly: true },
+  { id: "v1", label: "Algoria v1.0", desc: "Fast, balanced. 1× credit cost.", mult: 1, paidOnly: false },
+  { id: "v1.1", label: "Algoria Thinking v1.1", desc: "Deeper reasoning. 2× credit cost.", mult: 2, paidOnly: false },
+  { id: "plus", label: "Algoria Plus", desc: "Premium algorithmic targeting · 3 credits · Plus plan required.", mult: 1.5, paidOnly: true },
 ];
 
 function aspectLabel(w: number, h: number): string {
@@ -91,6 +121,7 @@ function UnifiedChat() {
   const [recording, setRecording] = useState(false);
   const [showModelMenu, setShowModelMenu] = useState(false);
   const [name, setName] = useState("");
+  const [hasPlus, setHasPlus] = useState<boolean>(false);
   // ephemeral display — only show messages since this composer was opened
   const [ephemeralStart, setEphemeralStart] = useState<number>(0);
 
@@ -107,15 +138,19 @@ function UnifiedChat() {
   // load conversation from URL hash (#c=<uuid>) if present
   useEffect(() => {
     (async () => {
-      const { data: agent } = await supabase.from("agents").select("cost_per_message").eq("slug", "aurevia").maybeSingle();
+      const { data: agent } = await supabase.from("agents").select("cost_per_message").eq("slug", "algoria").maybeSingle();
       if (agent?.cost_per_message) setBaseCost(agent.cost_per_message);
 
       const { data: prof } = await supabase.from("profiles").select("display_name").maybeSingle();
       if (prof?.display_name) setName(prof.display_name);
       else {
-        const { data: u } = await supabase.auth.getUser();
+      const { data: u } = await supabase.auth.getUser();
         setName((u.user?.email ?? "").split("@")[0]);
       }
+      try {
+        const p = typeof window !== "undefined" ? localStorage.getItem("algoria.plan") : null;
+        setHasPlus(p === "plus" || p === "business" || p === "enterprise");
+      } catch { /* ignore */ }
 
       const match = typeof window !== "undefined" ? window.location.hash.match(/c=([0-9a-f-]+)/i) : null;
       if (match) {
@@ -128,9 +163,9 @@ function UnifiedChat() {
         setMessages([]); setConversationId(null); setEphemeralStart(0);
         // Auto-send pending prompt from landing page
         try {
-          const pending = sessionStorage.getItem("aurevia.pendingPrompt");
+          const pending = sessionStorage.getItem("algoria.pendingPrompt");
           if (pending) {
-            sessionStorage.removeItem("aurevia.pendingPrompt");
+            sessionStorage.removeItem("algoria.pendingPrompt");
             setTimeout(() => { void submit(pending); }, 200);
           }
         } catch { /* ignore */ }
@@ -199,7 +234,7 @@ function UnifiedChat() {
     try {
       const res = await send({ data: {
         conversationId: conversationId ?? undefined,
-        agentSlug: "aurevia",
+        agentSlug: "algoria",
         message: text || "Please analyse this creative for ad use.",
         language: lang, variant,
         imageDataUrl: att?.dataUrl,
@@ -219,14 +254,13 @@ function UnifiedChat() {
     } finally { setSending(false); }
   }
 
-  const presets = PRESETS[lang] ?? PRESETS.en;
+  const hints = HINTS[lang] ?? HINTS.en;
   const currentVariant = VARIANTS.find((v) => v.id === variant)!;
   const greet = t(`greet.${greetingKey()}`);
-  // ephemeral: only render messages added in this session
   const visible = messages.slice(ephemeralStart);
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-3.5rem)] md:h-screen">
+    <div className="flex flex-col h-[calc(100dvh-3.5rem)] md:h-screen chat-wave-bg">
       <Tutorial
         id="chat-v2"
         title={t("tut.chat.title")}
@@ -237,15 +271,6 @@ function UnifiedChat() {
           { title: t("tut.chat.s4.title"), body: t("tut.chat.s4.body") },
         ]}
       />
-
-      {/* Slim header — brand + subtitle only */}
-      <header className="h-14 md:h-16 border-b border-brand-border px-4 md:px-8 flex items-center gap-3 shrink-0">
-        <BrandMark size={28} />
-        <div className="flex-1 min-w-0">
-          <div className="font-heading text-base md:text-lg font-medium leading-none tracking-tight">Aurevia</div>
-          <div className="text-[10px] uppercase tracking-widest text-brand-muted mt-1">AI marketing co-pilot</div>
-        </div>
-      </header>
 
       {/* Scroll area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 py-8">
@@ -260,31 +285,19 @@ function UnifiedChat() {
                 <p className="text-sm text-brand-muted mt-4 max-w-md mx-auto">{t("chat.unified.desc")}</p>
               </div>
 
-              <div>
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-brand-muted mb-3">
-                  <Sparkles className="size-3 text-neon" /> {t("chat.presets")}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {presets.map((p) => (
-                    <button key={p.label} onClick={() => submit(p.prompt)}
-                      className="text-left text-xs p-3.5 rounded-xl bg-brand-surface ring-1 ring-brand-border hover:ring-neon/60 transition-all">
-                      <div className="text-[10px] uppercase tracking-widest text-neon mb-1">{p.label}</div>
-                      <div className="text-brand-muted line-clamp-2">{p.prompt}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <RotatingHints hints={hints} />
 
               <div className="grid grid-cols-2 gap-3">
-                <Link to="/dashboard/funnel" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface hover:ring-neon/40">
+                <Link to="/dashboard/funnel" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface/70 backdrop-blur hover:ring-neon/40">
                   <GitBranch className="size-4 text-neon" /><div className="text-xs">{t("chat.cta.funnel")}</div>
                 </Link>
-                <Link to="/dashboard/integrations" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface hover:ring-neon/40">
+                <Link to="/dashboard/integrations" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface/70 backdrop-blur hover:ring-neon/40">
                   <Plug className="size-4 text-neon" /><div className="text-xs">{t("chat.cta.integrations")}</div>
                 </Link>
               </div>
             </div>
           )}
+
 
           {visible.map((m, i) => (
             <Bubble key={i} role={m.role} content={m.content} />
@@ -353,13 +366,14 @@ function UnifiedChat() {
                     <div className="absolute bottom-full mb-1.5 left-0 w-72 z-50 rounded-xl bg-brand-surface ring-1 ring-brand-border shadow-2xl shadow-black/40 p-1.5">
                       {VARIANTS.map((v) => {
                         const active = v.id === variant;
+                        const locked = v.paidOnly && !hasPlus;
                         return (
-                          <button key={v.id} type="button" onClick={() => { setVariant(v.id); setShowModelMenu(false); }}
-                            className={"w-full text-left px-3 py-2.5 rounded-lg flex items-start gap-2 " + (active ? "bg-brand-bg ring-1 ring-neon/40" : "hover:bg-brand-bg/60")}>
+                          <button key={v.id} type="button" disabled={locked} onClick={() => { if (locked) { toast.error(t("plus.locked") || "Plus plan required to use Algoria Plus."); return; } setVariant(v.id); setShowModelMenu(false); }}
+                            className={"w-full text-left px-3 py-2.5 rounded-lg flex items-start gap-2 " + (active ? "bg-brand-bg ring-1 ring-neon/40" : "hover:bg-brand-bg/60") + (locked ? " opacity-60 cursor-not-allowed" : "")}>
                             <div className="flex-1">
                               <div className="text-sm font-medium flex items-center gap-1.5">
                                 {v.label}
-                                {v.paidOnly && <span className="text-[9px] uppercase tracking-widest text-neon px-1.5 py-0.5 rounded bg-neon/10 ring-1 ring-neon/30">Plus</span>}
+                                {v.paidOnly && <span className="text-[9px] uppercase tracking-widest text-neon px-1.5 py-0.5 rounded bg-neon/10 ring-1 ring-neon/30">{locked ? "🔒 Plus" : "Plus"}</span>}
                               </div>
                               <div className="text-[11px] text-brand-muted leading-snug mt-0.5">{v.desc}</div>
                             </div>
@@ -403,6 +417,27 @@ function Bubble({ role, content }: Msg) {
       }>
         <ReactMarkdown>{content}</ReactMarkdown>
       </div>
+    </div>
+  );
+}
+
+function RotatingHints({ hints }: { hints: string[] }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI((x) => (x + 1) % hints.length), 4200);
+    return () => clearInterval(id);
+  }, [hints.length]);
+  return (
+    <div className="relative min-h-[64px] flex items-center justify-center">
+      {hints.map((h, idx) => (
+        <p
+          key={idx}
+          className="absolute inset-0 flex items-center justify-center text-center text-sm md:text-base text-brand-muted px-4 transition-opacity duration-1000"
+          style={{ opacity: idx === i ? 1 : 0, pointerEvents: idx === i ? "auto" : "none" }}
+        >
+          <span className="text-neon mr-2">◆</span>{h}
+        </p>
+      ))}
     </div>
   );
 }

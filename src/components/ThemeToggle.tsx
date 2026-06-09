@@ -5,7 +5,7 @@ type Theme = "light" | "dark";
 
 function getInitial(): Theme {
   if (typeof window === "undefined") return "dark";
-  const saved = localStorage.getItem("aurevia.theme") as Theme | null;
+  const saved = localStorage.getItem("algoria.theme") as Theme | null;
   if (saved === "light" || saved === "dark") return saved;
   return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
 }
@@ -29,7 +29,7 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
     const next: Theme = theme === "dark" ? "light" : "dark";
     setTheme(next);
     apply(next);
-    try { localStorage.setItem("aurevia.theme", next); } catch { /* ignore */ }
+    try { localStorage.setItem("algoria.theme", next); } catch { /* ignore */ }
   }
 
   return (

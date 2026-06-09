@@ -8,14 +8,14 @@ export function CookieBanner() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const v = localStorage.getItem("aurevia.cookieConsent");
+    const v = localStorage.getItem("algoria.cookieConsent");
     if (!v) setVisible(true);
   }, []);
 
   if (!visible) return null;
 
   const decide = (value: "accept" | "reject") => {
-    try { localStorage.setItem("aurevia.cookieConsent", value); } catch { /* ignore */ }
+    try { localStorage.setItem("algoria.cookieConsent", value); } catch { /* ignore */ }
     setVisible(false);
   };
 

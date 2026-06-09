@@ -12,7 +12,7 @@ export function SiteNav() {
         <div className="flex items-center gap-10">
           <Link to="/" className="font-heading text-xl font-medium tracking-tight flex items-center gap-2.5">
             <BrandMark size={28} />
-            Aurevia
+            Algoria
           </Link>
           <div className="hidden md:flex gap-8">
             <a href="#agents" className="text-sm text-brand-muted hover:text-neon transition-colors">{t("nav.solutions")}</a>

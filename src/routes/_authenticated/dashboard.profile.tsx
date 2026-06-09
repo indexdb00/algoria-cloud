@@ -5,15 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { abstractAvatarDataUrl } from "@/lib/avatar";
 import { Tutorial } from "@/components/Tutorial";
-import { Save, RefreshCw, Database, ShieldCheck } from "lucide-react";
+import { Save, RefreshCw, Database, ShieldCheck, Linkedin } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
-  head: () => ({ meta: [{ title: "Profile — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Profile — Algoria" }] }),
   component: ProfilePage,
 });
 
-const BIO_KEY = "aurevia.bio";
-const AVATAR_SEED_KEY = "aurevia.avatarSeed";
+const BIO_KEY = "algoria.bio";
+const AVATAR_SEED_KEY = "algoria.avatarSeed";
 
 type Form = { display_name: string; bio: string };
 
@@ -28,7 +28,7 @@ function ProfilePage() {
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState("");
   const [form, setForm] = useState<Form>({ display_name: "", bio: "" });
-  const [avatarSeed, setAvatarSeed] = useState<string>("aurevia");
+  const [avatarSeed, setAvatarSeed] = useState<string>("algoria");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [plan] = useState<keyof typeof PLAN_STORAGE>("free");
@@ -98,7 +98,7 @@ function ProfilePage() {
             <div className="flex-1 min-w-0">
               <label className="block">
                 <span className="text-[10px] uppercase tracking-widest text-brand-muted mb-1.5 block">{t("profile.field.username")}</span>
-                <input value={form.display_name} onChange={(e) => setForm({ ...form, display_name: e.target.value })} className="input-base" placeholder="aurevia_user" />
+                <input value={form.display_name} onChange={(e) => setForm({ ...form, display_name: e.target.value })} className="input-base" placeholder="algoria_user" />
               </label>
               <button onClick={randomizeAvatar} className="mt-2 text-[11px] inline-flex items-center gap-1.5 text-brand-muted hover:text-neon">
                 <RefreshCw className="size-3" /> {t("profile.regen")}
@@ -138,7 +138,18 @@ function ProfilePage() {
             {email}
           </div>
 
-          <div className="pt-2 flex justify-end">
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const text = `${form.display_name || "Algoria user"}\n\n${form.bio || ""}\n\n— powered by Algoria, AI that finds the right algorithm for every audience.`;
+                const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin)}&summary=${encodeURIComponent(text)}`;
+                window.open(url, "_blank", "noopener,noreferrer");
+              }}
+              className="text-sm py-2.5 px-4 inline-flex items-center gap-2 rounded-lg ring-1 ring-brand-border bg-brand-surface hover:ring-[#0A66C2] hover:text-[#0A66C2] transition"
+            >
+              <Linkedin className="size-4" /> {t("profile.share.linkedin") || "Share on LinkedIn"}
+            </button>
             <button onClick={save} disabled={saving} className="btn-neon-solid text-sm py-2.5 px-5 inline-flex items-center gap-2 disabled:opacity-60">
               <Save className="size-3.5" />
               {saving ? "…" : t("profile.save")}

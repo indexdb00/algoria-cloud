@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/dashboard/billing")({
-  head: () => ({ meta: [{ title: "Billing — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Billing — Algoria" }] }),
   component: BillingPage,
 });
 

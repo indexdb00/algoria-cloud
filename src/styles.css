@@ -238,3 +238,35 @@ html.theme-light {
     50% { transform: translateY(-4px); }
   }
 }
+
+/* Neon wave chat background */
+@layer utilities {
+  .chat-wave-bg {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .chat-wave-bg::before,
+  .chat-wave-bg::after {
+    content: "";
+    position: absolute;
+    inset: -40% -10% -40% -10%;
+    z-index: -1;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 30%, rgba(56,189,248,0.18), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 80% 70%, rgba(99,102,241,0.16), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 50% 50%, rgba(14,165,233,0.10), transparent 70%);
+    filter: blur(40px);
+    animation: chatWave 18s ease-in-out infinite alternate;
+  }
+  .chat-wave-bg::after {
+    animation-duration: 26s;
+    animation-direction: alternate-reverse;
+    opacity: 0.7;
+  }
+  @keyframes chatWave {
+    0%   { transform: translate3d(-3%, -2%, 0) scale(1); }
+    50%  { transform: translate3d(2%, 3%, 0) scale(1.05); }
+    100% { transform: translate3d(4%, -3%, 0) scale(1.02); }
+  }
+}

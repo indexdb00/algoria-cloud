@@ -2,10 +2,10 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { isAdmin } from "@/lib/admin.functions";
-import { ShieldCheck, LayoutDashboard, MessageSquare, CreditCard, User, LifeBuoy } from "lucide-react";
+import { ShieldCheck, LayoutDashboard, MessageSquare, CreditCard, User, LifeBuoy, Banknote } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin")({
-  head: () => ({ meta: [{ title: "Admin — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Admin — Algoria" }] }),
   component: AdminLayout,
 });
 
@@ -38,6 +38,7 @@ function AdminLayout() {
     { to: "/dashboard/admin/chat", label: "Claude Chat", icon: MessageSquare },
     { to: "/dashboard/admin/support", label: "Support", icon: LifeBuoy },
     { to: "/dashboard/admin/payments", label: "Payments", icon: CreditCard },
+    { to: "/dashboard/admin/stripe", label: "Stripe", icon: Banknote },
     { to: "/dashboard/admin/profile", label: "Profile", icon: User },
   ];
   const isActive = (to: string, exact?: boolean) => exact ? pathname === to : pathname.startsWith(to);
@@ -50,7 +51,7 @@ function AdminLayout() {
         </div>
         <div>
           <div className="text-[10px] uppercase tracking-widest text-neon">Admin</div>
-          <h1 className="font-heading text-2xl font-medium tracking-tight">Aurevia Admin</h1>
+          <h1 className="font-heading text-2xl font-medium tracking-tight">Algoria Admin</h1>
         </div>
       </div>
 

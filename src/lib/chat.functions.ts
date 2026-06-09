@@ -6,11 +6,11 @@ const LANG_NAMES: Record<string, string> = {
   en: "English", pt: "Portuguese (pt-PT/pt-BR)", es: "Spanish", fr: "French", de: "German", it: "Italian",
 };
 
-// Aurevia model variants → underlying Lovable AI Gateway model + credit cost multiplier.
+// Algoria model variants → underlying Lovable AI Gateway model + credit cost multiplier.
 const VARIANTS = {
-  "v1": { gatewayModel: "google/gemini-3-flash-preview", costMultiplier: 1, paidOnly: false, label: "Aurevia v1.0" },
-  "v1.1": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 2, paidOnly: false, label: "Aurevia Thinking v1.1" },
-  "plus": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 1, paidOnly: true, label: "Aurevia Plus" },
+  "v1": { gatewayModel: "google/gemini-3-flash-preview", costMultiplier: 1, paidOnly: false, label: "Algoria v1.0" },
+  "v1.1": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 2, paidOnly: false, label: "Algoria Thinking v1.1" },
+  "plus": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 1, paidOnly: true, label: "Algoria Plus" },
   "claude": { gatewayModel: "anthropic/claude-sonnet-4.5", costMultiplier: 0, paidOnly: false, label: "Claude (admin)" },
 } as const;
 

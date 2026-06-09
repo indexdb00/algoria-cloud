@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BrandMark } from "@/components/BrandMark";
 
 /**
- * Post-login splash: Aurevia mark + wordmark + animated blue progress bar.
+ * Post-login splash: Algoria mark + wordmark + animated blue progress bar.
  * Auto-dismisses after ~1.4s; shown once per session via sessionStorage flag.
  */
 export function SplashLoader({ onDone }: { onDone: () => void }) {
@@ -26,7 +26,7 @@ export function SplashLoader({ onDone }: { onDone: () => void }) {
         <div className="flex items-center gap-4">
           <BrandMark size={48} className="splash-float" />
           <span className="font-heading text-3xl md:text-4xl font-medium tracking-tight">
-            Aurevia
+            Algoria
           </span>
         </div>
         <div className="splash-bar-track">
