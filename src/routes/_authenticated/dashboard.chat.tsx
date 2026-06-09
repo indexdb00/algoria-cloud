@@ -144,9 +144,13 @@ function UnifiedChat() {
       const { data: prof } = await supabase.from("profiles").select("display_name").maybeSingle();
       if (prof?.display_name) setName(prof.display_name);
       else {
-        const { data: u } = await supabase.auth.getUser();
+      const { data: u } = await supabase.auth.getUser();
         setName((u.user?.email ?? "").split("@")[0]);
       }
+      try {
+        const p = typeof window !== "undefined" ? localStorage.getItem("algoria.plan") : null;
+        setHasPlus(p === "plus" || p === "business" || p === "enterprise");
+      } catch { /* ignore */ }
 
       const match = typeof window !== "undefined" ? window.location.hash.match(/c=([0-9a-f-]+)/i) : null;
       if (match) {
