@@ -121,6 +121,7 @@ function UnifiedChat() {
   const [recording, setRecording] = useState(false);
   const [showModelMenu, setShowModelMenu] = useState(false);
   const [name, setName] = useState("");
+  const [hasPlus, setHasPlus] = useState<boolean>(false);
   // ephemeral display — only show messages since this composer was opened
   const [ephemeralStart, setEphemeralStart] = useState<number>(0);
 
@@ -361,13 +362,14 @@ function UnifiedChat() {
                     <div className="absolute bottom-full mb-1.5 left-0 w-72 z-50 rounded-xl bg-brand-surface ring-1 ring-brand-border shadow-2xl shadow-black/40 p-1.5">
                       {VARIANTS.map((v) => {
                         const active = v.id === variant;
+                        const locked = v.paidOnly && !hasPlus;
                         return (
-                          <button key={v.id} type="button" onClick={() => { setVariant(v.id); setShowModelMenu(false); }}
-                            className={"w-full text-left px-3 py-2.5 rounded-lg flex items-start gap-2 " + (active ? "bg-brand-bg ring-1 ring-neon/40" : "hover:bg-brand-bg/60")}>
+                          <button key={v.id} type="button" disabled={locked} onClick={() => { if (locked) { toast.error(t("plus.locked") || "Plus plan required to use Algoria Plus."); return; } setVariant(v.id); setShowModelMenu(false); }}
+                            className={"w-full text-left px-3 py-2.5 rounded-lg flex items-start gap-2 " + (active ? "bg-brand-bg ring-1 ring-neon/40" : "hover:bg-brand-bg/60") + (locked ? " opacity-60 cursor-not-allowed" : "")}>
                             <div className="flex-1">
                               <div className="text-sm font-medium flex items-center gap-1.5">
                                 {v.label}
-                                {v.paidOnly && <span className="text-[9px] uppercase tracking-widest text-neon px-1.5 py-0.5 rounded bg-neon/10 ring-1 ring-neon/30">Plus</span>}
+                                {v.paidOnly && <span className="text-[9px] uppercase tracking-widest text-neon px-1.5 py-0.5 rounded bg-neon/10 ring-1 ring-neon/30">{locked ? "🔒 Plus" : "Plus"}</span>}
                               </div>
                               <div className="text-[11px] text-brand-muted leading-snug mt-0.5">{v.desc}</div>
                             </div>
@@ -411,6 +413,27 @@ function Bubble({ role, content }: Msg) {
       }>
         <ReactMarkdown>{content}</ReactMarkdown>
       </div>
+    </div>
+  );
+}
+
+function RotatingHints({ hints }: { hints: string[] }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setI((x) => (x + 1) % hints.length), 4200);
+    return () => clearInterval(id);
+  }, [hints.length]);
+  return (
+    <div className="relative min-h-[64px] flex items-center justify-center">
+      {hints.map((h, idx) => (
+        <p
+          key={idx}
+          className="absolute inset-0 flex items-center justify-center text-center text-sm md:text-base text-brand-muted px-4 transition-opacity duration-1000"
+          style={{ opacity: idx === i ? 1 : 0, pointerEvents: idx === i ? "auto" : "none" }}
+        >
+          <span className="text-neon mr-2">◆</span>{h}
+        </p>
+      ))}
     </div>
   );
 }
