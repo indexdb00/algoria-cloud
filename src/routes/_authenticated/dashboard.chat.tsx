@@ -250,13 +250,12 @@ function UnifiedChat() {
   }
 
   const hints = HINTS[lang] ?? HINTS.en;
-
+  const currentVariant = VARIANTS.find((v) => v.id === variant)!;
   const greet = t(`greet.${greetingKey()}`);
-  // ephemeral: only render messages added in this session
   const visible = messages.slice(ephemeralStart);
 
   return (
-    <div className="flex flex-col h-[calc(100dvh-3.5rem)] md:h-screen">
+    <div className="flex flex-col h-[calc(100dvh-3.5rem)] md:h-screen chat-wave-bg">
       <Tutorial
         id="chat-v2"
         title={t("tut.chat.title")}
@@ -267,15 +266,6 @@ function UnifiedChat() {
           { title: t("tut.chat.s4.title"), body: t("tut.chat.s4.body") },
         ]}
       />
-
-      {/* Slim header — brand + subtitle only */}
-      <header className="h-14 md:h-16 border-b border-brand-border px-4 md:px-8 flex items-center gap-3 shrink-0">
-        <BrandMark size={28} />
-        <div className="flex-1 min-w-0">
-          <div className="font-heading text-base md:text-lg font-medium leading-none tracking-tight">Algoria</div>
-          <div className="text-[10px] uppercase tracking-widest text-brand-muted mt-1">AI marketing co-pilot</div>
-        </div>
-      </header>
 
       {/* Scroll area */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 py-8">
@@ -290,31 +280,19 @@ function UnifiedChat() {
                 <p className="text-sm text-brand-muted mt-4 max-w-md mx-auto">{t("chat.unified.desc")}</p>
               </div>
 
-              <div>
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-brand-muted mb-3">
-                  <Sparkles className="size-3 text-neon" /> {t("chat.presets")}
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {presets.map((p) => (
-                    <button key={p.label} onClick={() => submit(p.prompt)}
-                      className="text-left text-xs p-3.5 rounded-xl bg-brand-surface ring-1 ring-brand-border hover:ring-neon/60 transition-all">
-                      <div className="text-[10px] uppercase tracking-widest text-neon mb-1">{p.label}</div>
-                      <div className="text-brand-muted line-clamp-2">{p.prompt}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <RotatingHints hints={hints} />
 
               <div className="grid grid-cols-2 gap-3">
-                <Link to="/dashboard/funnel" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface hover:ring-neon/40">
+                <Link to="/dashboard/funnel" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface/70 backdrop-blur hover:ring-neon/40">
                   <GitBranch className="size-4 text-neon" /><div className="text-xs">{t("chat.cta.funnel")}</div>
                 </Link>
-                <Link to="/dashboard/integrations" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface hover:ring-neon/40">
+                <Link to="/dashboard/integrations" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface/70 backdrop-blur hover:ring-neon/40">
                   <Plug className="size-4 text-neon" /><div className="text-xs">{t("chat.cta.integrations")}</div>
                 </Link>
               </div>
             </div>
           )}
+
 
           {visible.map((m, i) => (
             <Bubble key={i} role={m.role} content={m.content} />
