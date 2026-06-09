@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { useI18n, type LangCode } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { sendAgentMessage } from "@/lib/chat.functions";
-import { BrandMark } from "@/components/BrandMark";
+
 import { Tutorial } from "@/components/Tutorial";
 import { greetingKey } from "@/lib/avatar";
 import {
