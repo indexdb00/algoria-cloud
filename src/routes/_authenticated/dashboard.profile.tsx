@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { abstractAvatarDataUrl } from "@/lib/avatar";
 import { Tutorial } from "@/components/Tutorial";
-import { Save, RefreshCw, Database, ShieldCheck } from "lucide-react";
+import { Save, RefreshCw, Database, ShieldCheck, Linkedin } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
   head: () => ({ meta: [{ title: "Profile — Algoria" }] }),
@@ -138,7 +138,18 @@ function ProfilePage() {
             {email}
           </div>
 
-          <div className="pt-2 flex justify-end">
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const text = `${form.display_name || "Algoria user"}\n\n${form.bio || ""}\n\n— powered by Algoria, AI that finds the right algorithm for every audience.`;
+                const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin)}&summary=${encodeURIComponent(text)}`;
+                window.open(url, "_blank", "noopener,noreferrer");
+              }}
+              className="text-sm py-2.5 px-4 inline-flex items-center gap-2 rounded-lg ring-1 ring-brand-border bg-brand-surface hover:ring-[#0A66C2] hover:text-[#0A66C2] transition"
+            >
+              <Linkedin className="size-4" /> {t("profile.share.linkedin") || "Share on LinkedIn"}
+            </button>
             <button onClick={save} disabled={saving} className="btn-neon-solid text-sm py-2.5 px-5 inline-flex items-center gap-2 disabled:opacity-60">
               <Save className="size-3.5" />
               {saving ? "…" : t("profile.save")}
