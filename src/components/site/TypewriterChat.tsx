@@ -51,7 +51,7 @@ export function TypewriterChat({ prompts }: { prompts: string[] }) {
         <span className="size-2.5 rounded-full bg-amber-400/70" />
         <span className="size-2.5 rounded-full bg-neon shadow-[0_0_8px_var(--neon)]" />
         <div className="ml-3 text-[10px] uppercase tracking-widest text-brand-muted flex items-center gap-1.5">
-          <Activity className="size-3 text-neon animate-pulse" /> Aurevia · live
+          <Activity className="size-3 text-neon animate-pulse" /> Algoria · live
         </div>
       </div>
 
@@ -90,7 +90,7 @@ export function TypewriterChat({ prompts }: { prompts: string[] }) {
         {/* composer */}
         <div className="mt-auto pt-3 flex items-center gap-2 border-t border-brand-border/60">
           <div className="flex-1 h-9 rounded-xl bg-brand-bg ring-1 ring-brand-border px-3 flex items-center text-xs text-brand-muted">
-            Ask Aurevia…
+            Ask Algoria…
           </div>
           <button className="size-9 rounded-xl btn-neon-solid flex items-center justify-center" aria-hidden>
             <Send className="size-3.5" />

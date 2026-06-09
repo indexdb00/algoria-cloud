@@ -14,7 +14,7 @@ import {
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/dashboard/chat")({
-  head: () => ({ meta: [{ title: "Chat — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Chat — Algoria" }] }),
   component: UnifiedChat,
 });
 
@@ -62,9 +62,9 @@ type Variant = "v1" | "v1.1" | "plus";
 type Attachment = { dataUrl: string; width: number; height: number; aspect: string };
 
 const VARIANTS: { id: Variant; label: string; desc: string; mult: number; paidOnly: boolean }[] = [
-  { id: "v1", label: "Aurevia v1.0", desc: "Fast, balanced. 1× credit cost.", mult: 1, paidOnly: false },
-  { id: "v1.1", label: "Aurevia Thinking v1.1", desc: "Deeper reasoning. 2× credit cost.", mult: 2, paidOnly: false },
-  { id: "plus", label: "Aurevia Plus", desc: "Thinking quality at half the cost.", mult: 1, paidOnly: true },
+  { id: "v1", label: "Algoria v1.0", desc: "Fast, balanced. 1× credit cost.", mult: 1, paidOnly: false },
+  { id: "v1.1", label: "Algoria Thinking v1.1", desc: "Deeper reasoning. 2× credit cost.", mult: 2, paidOnly: false },
+  { id: "plus", label: "Algoria Plus", desc: "Thinking quality at half the cost.", mult: 1, paidOnly: true },
 ];
 
 function aspectLabel(w: number, h: number): string {
@@ -107,7 +107,7 @@ function UnifiedChat() {
   // load conversation from URL hash (#c=<uuid>) if present
   useEffect(() => {
     (async () => {
-      const { data: agent } = await supabase.from("agents").select("cost_per_message").eq("slug", "aurevia").maybeSingle();
+      const { data: agent } = await supabase.from("agents").select("cost_per_message").eq("slug", "algoria").maybeSingle();
       if (agent?.cost_per_message) setBaseCost(agent.cost_per_message);
 
       const { data: prof } = await supabase.from("profiles").select("display_name").maybeSingle();
@@ -128,9 +128,9 @@ function UnifiedChat() {
         setMessages([]); setConversationId(null); setEphemeralStart(0);
         // Auto-send pending prompt from landing page
         try {
-          const pending = sessionStorage.getItem("aurevia.pendingPrompt");
+          const pending = sessionStorage.getItem("algoria.pendingPrompt");
           if (pending) {
-            sessionStorage.removeItem("aurevia.pendingPrompt");
+            sessionStorage.removeItem("algoria.pendingPrompt");
             setTimeout(() => { void submit(pending); }, 200);
           }
         } catch { /* ignore */ }
@@ -199,7 +199,7 @@ function UnifiedChat() {
     try {
       const res = await send({ data: {
         conversationId: conversationId ?? undefined,
-        agentSlug: "aurevia",
+        agentSlug: "algoria",
         message: text || "Please analyse this creative for ad use.",
         language: lang, variant,
         imageDataUrl: att?.dataUrl,
@@ -242,7 +242,7 @@ function UnifiedChat() {
       <header className="h-14 md:h-16 border-b border-brand-border px-4 md:px-8 flex items-center gap-3 shrink-0">
         <BrandMark size={28} />
         <div className="flex-1 min-w-0">
-          <div className="font-heading text-base md:text-lg font-medium leading-none tracking-tight">Aurevia</div>
+          <div className="font-heading text-base md:text-lg font-medium leading-none tracking-tight">Algoria</div>
           <div className="text-[10px] uppercase tracking-widest text-brand-muted mt-1">AI marketing co-pilot</div>
         </div>
       </header>

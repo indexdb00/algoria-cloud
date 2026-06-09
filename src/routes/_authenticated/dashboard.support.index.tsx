@@ -55,7 +55,7 @@ function SupportIndex() {
             <HelpCircle className="size-3" /> Support
           </div>
           <h1 className="font-heading text-3xl font-medium tracking-tight">Help center</h1>
-          <p className="text-sm text-brand-muted mt-2">Chat directly with the Aurevia team. Each request gets a protocol number.</p>
+          <p className="text-sm text-brand-muted mt-2">Chat directly with the Algoria team. Each request gets a protocol number.</p>
         </div>
         <button onClick={() => setShowNew(true)} className="btn-neon-solid text-sm px-4 py-2 inline-flex items-center gap-2 rounded-lg">
           <Plus className="size-4" /> New ticket

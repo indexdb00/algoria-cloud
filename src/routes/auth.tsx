@@ -8,7 +8,7 @@ import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { BrandMark } from "@/components/BrandMark";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — Aurevia" }, { name: "description", content: "Sign in or create your Aurevia account." }] }),
+  head: () => ({ meta: [{ title: "Sign in — Algoria" }, { name: "description", content: "Sign in or create your Algoria account." }] }),
   component: AuthPage,
 });
 
@@ -74,7 +74,7 @@ function AuthPage() {
         <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <BrandMark size={26} />
-            <span className="font-heading text-xl font-semibold tracking-tight">Aurevia</span>
+            <span className="font-heading text-xl font-semibold tracking-tight">Algoria</span>
           </Link>
           <LanguageSwitcher />
         </div>

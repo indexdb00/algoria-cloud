@@ -31,8 +31,8 @@ function AdminChat() {
       const res = await send({
         data: {
           conversationId: convId ?? undefined,
-          agentSlug: "aurevia",
-          message: `[ADMIN MODE · CLAUDE] ${text}\n\nContext: you are speaking with the Aurevia platform owner. Answer factually about platform health, ToS compliance audits, and operational status. Be direct and skip marketing speak.`,
+          agentSlug: "algoria",
+          message: `[ADMIN MODE · CLAUDE] ${text}\n\nContext: you are speaking with the Algoria platform owner. Answer factually about platform health, ToS compliance audits, and operational status. Be direct and skip marketing speak.`,
           variant: "claude",
         },
       });

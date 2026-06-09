@@ -9,7 +9,7 @@ export type TutorialStep = { title: string; body: string };
  * Uses BrandMark + Fraunces titles, slim neon progress bar, gradient buttons.
  */
 export function Tutorial({ id, steps, title }: { id: string; steps: TutorialStep[]; title?: string }) {
-  const key = `aurevia.tour.${id}`;
+  const key = `algoria.tour.${id}`;
   const [open, setOpen] = useState(false);
   const [i, setI] = useState(0);
 
@@ -54,7 +54,7 @@ export function Tutorial({ id, steps, title }: { id: string; steps: TutorialStep
           <BrandMark size={36} />
           <div className="flex-1 min-w-0">
             <div className="text-[10px] uppercase tracking-[0.25em] text-neon mb-1">
-              {title ?? "Aurevia"}
+              {title ?? "Algoria"}
             </div>
             <h3 className="font-heading text-2xl font-medium leading-tight tracking-tight">
               {step.title}

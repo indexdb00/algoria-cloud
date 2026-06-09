@@ -9,7 +9,7 @@ import { connectIntegration, disconnectIntegration } from "@/lib/integrations.fu
 import { Tutorial } from "@/components/Tutorial";
 
 export const Route = createFileRoute("/_authenticated/dashboard/whatsapp")({
-  head: () => ({ meta: [{ title: "WhatsApp — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "WhatsApp — Algoria" }] }),
   component: WhatsAppPage,
 });
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ShieldCheck, FileText, X } from "lucide-react";
 
-const LS_KEY = "aurevia.lgpdAccepted.v1";
+const LS_KEY = "algoria.lgpdAccepted.v1";
 
 export function lgpdAccepted(): boolean {
   if (typeof window === "undefined") return true;
@@ -49,22 +49,22 @@ export function LgpdModal({ forceOpen = false, onClose }: { forceOpen?: boolean;
           <h3 className="font-heading">1. Data we collect</h3>
           <p>Account data (email, display name, language), ad platform tokens you connect (encrypted at rest, scoped, revocable anytime), prompts and assistant replies stored to provide the service, and usage telemetry (credits, requests, latency). All data is hosted within the EU and never sold or used to train third-party foundation models.</p>
           <h3 className="font-heading">2. Your rights (GDPR / LGPD)</h3>
-          <p>Right to access, rectify, export and erase your data; right to revoke consent; right to lodge a complaint with your supervisory authority (CNIL, AEPD, ANPD, etc.). Requests at <a className="text-neon" href="mailto:privacy@aurevia.eu">privacy@aurevia.eu</a> — responded within 30 days.</p>
+          <p>Right to access, rectify, export and erase your data; right to revoke consent; right to lodge a complaint with your supervisory authority (CNIL, AEPD, ANPD, etc.). Requests at <a className="text-neon" href="mailto:privacy@algoria.eu">privacy@algoria.eu</a> — responded within 30 days.</p>
           <h3 className="font-heading">3. Acceptable use & fraud</h3>
-          <p>You agree NOT to use Aurevia to bypass or defraud the policies of any connected ad platform (Meta, Google, TikTok, BidMachine, GA4), NOT to inflate metrics artificially, NOT to run prohibited categories (illegal goods, hate, adult content targeting minors, financial fraud) and NOT to share account credentials. Aurevia may suspend accounts that violate these terms and report to the affected platforms.</p>
+          <p>You agree NOT to use Algoria to bypass or defraud the policies of any connected ad platform (Meta, Google, TikTok, BidMachine, GA4), NOT to inflate metrics artificially, NOT to run prohibited categories (illegal goods, hate, adult content targeting minors, financial fraud) and NOT to share account credentials. Algoria may suspend accounts that violate these terms and report to the affected platforms.</p>
           <h3 className="font-heading">4. Credits & billing</h3>
           <p>Free tier: 100 welcome credits on first registration. Recurring free allowance: 50 credits/month. Paid plans add additional monthly credits that do not expire while the plan is active. Credits are non-refundable except where required by law (EU 14-day right of withdrawal applies to first paid purchase).</p>
           <h3 className="font-heading">5. Data retention</h3>
           <p>Conversations and campaign metadata are retained while your account is active and for up to 24 months after deletion (for legal and accounting obligations). Encrypted ad-platform tokens are deleted within 24h of disconnection.</p>
           <h3 className="font-heading">6. Liability</h3>
-          <p>Aurevia provides AI-assisted automation. You remain the controller of every campaign launched and accept responsibility for budgets, targeting choices and creative compliance with local advertising law.</p>
+          <p>Algoria provides AI-assisted automation. You remain the controller of every campaign launched and accept responsibility for budgets, targeting choices and creative compliance with local advertising law.</p>
           <p className="text-xs text-brand-muted">A full PDF copy of these Terms is available in <strong>Settings → Legal</strong> at any time.</p>
         </div>
 
         <footer className="p-5 border-t border-brand-border flex flex-col-reverse md:flex-row items-stretch md:items-center gap-3 md:justify-between">
           <a
-            href="data:text/plain;charset=utf-8,Aurevia%20Terms%20of%20Use%20and%20Data%20Protection%20Policy%20(GDPR%2FLGPD).%20Full%20text%20available%20in%20Settings%20%E2%86%92%20Legal."
-            download="aurevia-terms.txt"
+            href="data:text/plain;charset=utf-8,Algoria%20Terms%20of%20Use%20and%20Data%20Protection%20Policy%20(GDPR%2FLGPD).%20Full%20text%20available%20in%20Settings%20%E2%86%92%20Legal."
+            download="algoria-terms.txt"
             className="btn-dark text-xs py-2 px-3 inline-flex items-center justify-center gap-1.5"
           >
             <FileText className="size-3.5" /> Download PDF copy

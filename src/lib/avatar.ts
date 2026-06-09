@@ -6,7 +6,7 @@ function hash(s: string): number {
 }
 
 export function abstractAvatarDataUrl(seed: string, size = 96): string {
-  const h = hash(seed || "aurevia");
+  const h = hash(seed || "algoria");
   const hueA = h % 360;
   const hueB = (hueA + 40 + (h % 60)) % 360;
   const shape = h % 4;

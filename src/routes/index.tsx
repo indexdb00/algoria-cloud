@@ -10,9 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aurevia — AI marketing co-pilot" },
+      { title: "Algoria — AI marketing co-pilot" },
       { name: "description", content: "Launch campaigns by prompt with autonomous AI marketing agents. Free 50 credits to start." },
-      { property: "og:title", content: "Aurevia — AI marketing co-pilot" },
+      { property: "og:title", content: "Algoria — AI marketing co-pilot" },
       { property: "og:description", content: "Talk to AI agents that run your ads, leads and brand." },
     ],
   }),
@@ -34,7 +34,7 @@ function Home() {
   function go(prompt: string) {
     const text = prompt.trim();
     if (text) {
-      try { sessionStorage.setItem("aurevia.pendingPrompt", text); } catch { /* ignore */ }
+      try { sessionStorage.setItem("algoria.pendingPrompt", text); } catch { /* ignore */ }
     }
     if (authed) navigate({ to: "/dashboard/chat" });
     else navigate({ to: "/auth" });
@@ -54,7 +54,7 @@ function Home() {
         <div className="mx-auto max-w-7xl px-5 md:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
             <BrandMark size={26} />
-            <span className="font-heading text-base font-medium tracking-tight">Aurevia</span>
+            <span className="font-heading text-base font-medium tracking-tight">Algoria</span>
           </Link>
           <div className="flex items-center gap-2">
             <LanguageSwitcher compact />
@@ -110,7 +110,7 @@ function Home() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(input); } }}
                 rows={3}
-                placeholder={t("home.placeholder") || "Ask Aurevia to launch a campaign, score leads, anything…"}
+                placeholder={t("home.placeholder") || "Ask Algoria to launch a campaign, score leads, anything…"}
                 className="w-full bg-transparent rounded-3xl px-5 py-4 pb-14 text-sm md:text-base resize-none focus:outline-none placeholder:text-brand-muted/70"
               />
               <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">

@@ -5,7 +5,7 @@ import { isAdmin } from "@/lib/admin.functions";
 import { ShieldCheck, LayoutDashboard, MessageSquare, CreditCard, User, LifeBuoy } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/admin")({
-  head: () => ({ meta: [{ title: "Admin — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Admin — Algoria" }] }),
   component: AdminLayout,
 });
 
@@ -50,7 +50,7 @@ function AdminLayout() {
         </div>
         <div>
           <div className="text-[10px] uppercase tracking-widest text-neon">Admin</div>
-          <h1 className="font-heading text-2xl font-medium tracking-tight">Aurevia Admin</h1>
+          <h1 className="font-heading text-2xl font-medium tracking-tight">Algoria Admin</h1>
         </div>
       </div>
 

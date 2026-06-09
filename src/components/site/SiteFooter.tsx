@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex flex-col md:flex-row justify-between items-start gap-12">
           <div className="max-w-[30ch]">
-            <span className="font-heading text-lg font-semibold tracking-tight block mb-4">Aurevia</span>
+            <span className="font-heading text-lg font-semibold tracking-tight block mb-4">Algoria</span>
             <p className="text-xs text-brand-muted leading-relaxed">{t("footer.tagline")}</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-16">

@@ -8,12 +8,12 @@ import { Tutorial } from "@/components/Tutorial";
 import { Save, RefreshCw, Database, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
-  head: () => ({ meta: [{ title: "Profile — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Profile — Algoria" }] }),
   component: ProfilePage,
 });
 
-const BIO_KEY = "aurevia.bio";
-const AVATAR_SEED_KEY = "aurevia.avatarSeed";
+const BIO_KEY = "algoria.bio";
+const AVATAR_SEED_KEY = "algoria.avatarSeed";
 
 type Form = { display_name: string; bio: string };
 
@@ -28,7 +28,7 @@ function ProfilePage() {
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState("");
   const [form, setForm] = useState<Form>({ display_name: "", bio: "" });
-  const [avatarSeed, setAvatarSeed] = useState<string>("aurevia");
+  const [avatarSeed, setAvatarSeed] = useState<string>("algoria");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [plan] = useState<keyof typeof PLAN_STORAGE>("free");
@@ -98,7 +98,7 @@ function ProfilePage() {
             <div className="flex-1 min-w-0">
               <label className="block">
                 <span className="text-[10px] uppercase tracking-widest text-brand-muted mb-1.5 block">{t("profile.field.username")}</span>
-                <input value={form.display_name} onChange={(e) => setForm({ ...form, display_name: e.target.value })} className="input-base" placeholder="aurevia_user" />
+                <input value={form.display_name} onChange={(e) => setForm({ ...form, display_name: e.target.value })} className="input-base" placeholder="algoria_user" />
               </label>
               <button onClick={randomizeAvatar} className="mt-2 text-[11px] inline-flex items-center gap-1.5 text-brand-muted hover:text-neon">
                 <RefreshCw className="size-3" /> {t("profile.regen")}

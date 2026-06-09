@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard/funnel")({
-  head: () => ({ meta: [{ title: "Funnels — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Funnels — Algoria" }] }),
   component: Funnels,
 });
 
@@ -86,7 +86,7 @@ function Funnels() {
       const { data: convs } = await supabase
         .from("conversations")
         .select("id")
-        .eq("agent_slug", "aurevia")
+        .eq("agent_slug", "algoria")
         .order("updated_at", { ascending: false })
         .limit(5);
       if (!convs || convs.length === 0) { setLoading(false); return; }
@@ -121,9 +121,9 @@ function Funnels() {
         id="funnel-v2"
         title="The Funnels view"
         steps={[
-          { title: "Your chat as a flowchart", body: "Every campaign you describe to Aurevia in chat appears here grouped by platform — Meta, Google, TikTok, BidMachine, GA4." },
-          { title: "What each card shows", body: "Audience, budget, creative format and KPI target — plus the next actions Aurevia recommends to ship it." },
-          { title: "How to create more flows", body: "Go back to chat and ask Aurevia to launch a campaign with the CAMPAIGN block. It will appear here automatically." },
+          { title: "Your chat as a flowchart", body: "Every campaign you describe to Algoria in chat appears here grouped by platform — Meta, Google, TikTok, BidMachine, GA4." },
+          { title: "What each card shows", body: "Audience, budget, creative format and KPI target — plus the next actions Algoria recommends to ship it." },
+          { title: "How to create more flows", body: "Go back to chat and ask Algoria to launch a campaign with the CAMPAIGN block. It will appear here automatically." },
         ]}
       />
       <header className="border-b border-brand-border px-5 md:px-10 py-6 flex items-start justify-between gap-4 flex-wrap">

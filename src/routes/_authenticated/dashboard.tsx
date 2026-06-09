@@ -15,7 +15,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { isAdmin } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Aurevia" }] }),
+  head: () => ({ meta: [{ title: "Dashboard — Algoria" }] }),
   component: DashboardLayout,
 });
 
@@ -123,7 +123,7 @@ function DashboardLayout() {
   ];
 
   const isActive = (to: string) => pathname.startsWith(to);
-  const avatar = abstractAvatarDataUrl(userId || email || "aurevia");
+  const avatar = abstractAvatarDataUrl(userId || email || "algoria");
 
   return (
     <div className="min-h-screen bg-brand-bg flex">
@@ -139,7 +139,7 @@ function DashboardLayout() {
           </button>
           <Link to="/" className="font-heading text-base font-medium tracking-tight flex items-center gap-2">
             <BrandMark size={22} />
-            Aurevia
+            Algoria
           </Link>
         </div>
         <Link to="/dashboard/billing" className="flex items-center gap-1.5 px-2.5 py-1 rounded-md ring-1 ring-brand-border bg-brand-surface">
@@ -169,7 +169,7 @@ function DashboardLayout() {
         <div className="px-3 pt-4 pb-3 flex items-center gap-2.5 border-b border-brand-border">
           <BrandMark size={26} />
           <div className="min-w-0">
-            <div className="font-heading text-base font-medium tracking-tight leading-none">Aurevia</div>
+            <div className="font-heading text-base font-medium tracking-tight leading-none">Algoria</div>
             <div className="text-[10px] uppercase tracking-widest text-brand-muted mt-1">AI marketing OS</div>
           </div>
         </div>

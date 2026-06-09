@@ -25,9 +25,9 @@ function AuthenticatedLayout() {
         // Grant 5 daily credits (idempotent — server enforces 24h gate)
         supabase.rpc("grant_daily_credits").then(() => {}, () => {});
         try {
-          if (!sessionStorage.getItem("aurevia.splash.seen")) {
+          if (!sessionStorage.getItem("algoria.splash.seen")) {
             setShowSplash(true);
-            sessionStorage.setItem("aurevia.splash.seen", "1");
+            sessionStorage.setItem("algoria.splash.seen", "1");
           }
         } catch { /* ignore */ }
       }
