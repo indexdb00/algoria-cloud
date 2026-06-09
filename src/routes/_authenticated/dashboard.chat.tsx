@@ -249,8 +249,8 @@ function UnifiedChat() {
     } finally { setSending(false); }
   }
 
-  const presets = PRESETS[lang] ?? PRESETS.en;
-  const currentVariant = VARIANTS.find((v) => v.id === variant)!;
+  const hints = HINTS[lang] ?? HINTS.en;
+
   const greet = t(`greet.${greetingKey()}`);
   // ephemeral: only render messages added in this session
   const visible = messages.slice(ephemeralStart);
