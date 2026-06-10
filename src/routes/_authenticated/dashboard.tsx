@@ -118,7 +118,7 @@ function DashboardLayout() {
     { to: "/dashboard/funnel", label: t("dash.funnels") },
     { to: "/dashboard/consumo", label: t("dash.consumo") },
     { to: "/dashboard/whatsapp", label: "WhatsApp" },
-    { to: "/dashboard/integrations", label: t("dash.integrations") },
+    { to: "/dashboard/apps", label: "Apps" },
     { to: "/dashboard/billing", label: t("dash.billing") },
   ];
 

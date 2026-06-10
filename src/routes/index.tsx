@@ -1,25 +1,23 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Sparkles, ArrowUp, Globe } from "lucide-react";
+import { ArrowUp, Sparkles } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { supabase } from "@/integrations/supabase/client";
+import { PlanCarousel } from "@/components/PlanCarousel";
+import { IntegrationStrip } from "@/components/IntegrationStrip";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Algoria — AI marketing co-pilot" },
-      { name: "description", content: "Launch campaigns by prompt with autonomous AI marketing agents. Free 50 credits to start." },
-      { property: "og:title", content: "Algoria — AI marketing co-pilot" },
-      { property: "og:description", content: "Talk to AI agents that run your ads, leads and brand." },
+      { title: "Algoria — Find the right algorithm for every audience" },
+      { name: "description", content: "Algoria uses AI to find the precise algorithm that reaches your target audience with maximum efficiency." },
     ],
   }),
   component: Home,
 });
-
-
 
 function Home() {
   const { t } = useI18n();
@@ -40,16 +38,14 @@ function Home() {
     else navigate({ to: "/auth" });
   }
 
-  const suggestions = [
-    t("home.s1") || "Launch a Meta Ads campaign, €25/day, DACH founders.",
-    t("home.s2") || "Score my last 50 leads by buying intent.",
-    t("home.s3") || "Give me a 3-hour performance pulse.",
-    t("home.s4") || "Plan a 3-week reach push for Spain + Italy, €1,800.",
+  const pitches = [
+    { title: t("home.pitch1.t") || "The right algorithm", desc: t("home.pitch1.d") || "Pinpoint the exact reach for your audience." },
+    { title: t("home.pitch2.t") || "Autonomous agents", desc: t("home.pitch2.d") || "AI that launches, optimizes and reports back." },
+    { title: t("home.pitch3.t") || "Results in minutes", desc: t("home.pitch3.d") || "From prompt to performance, end to end." },
   ];
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col">
-      {/* Top-right minimal header */}
+    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col chat-wave-bg">
       <header className="absolute top-0 inset-x-0 z-20">
         <div className="mx-auto max-w-7xl px-5 md:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
@@ -76,47 +72,34 @@ function Home() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-5 py-24 relative">
-        {/* Decorative neon glow */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[700px] rounded-full pointer-events-none"
-          style={{
-            background: "radial-gradient(circle, color-mix(in oklab, var(--neon) 18%, transparent), transparent 70%)",
-            filter: "blur(50px)",
-          }}
-        />
-
+      <main className="flex-1 flex flex-col items-center justify-center px-5 pt-28 pb-16 relative gap-14">
         <div className="relative w-full max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full ring-1 ring-neon/30 bg-neon/5 text-[11px] text-neon mb-7">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full neon-border bg-neon/5 text-[11px] neon-text mb-7">
             <Sparkles className="size-3" />
-            {t("home.badge") || "50 free credits on signup · 5 daily"}
+            {t("home.badge") || "100 free credits on signup · 5 daily"}
           </div>
 
           <h1 className="font-heading text-4xl md:text-6xl font-medium leading-[1.05] tracking-tight text-balance mb-5">
             {t("home.title") || "What do you want to launch today?"}
           </h1>
           <p className="text-sm md:text-base text-brand-muted max-w-xl mx-auto mb-9">
-            {t("home.subtitle") || "Talk to autonomous AI marketing agents. They run ads, score leads and report back — by prompt."}
+            {t("home.subtitle") || "Find the right algorithm for every audience — with autonomous AI agents."}
           </p>
 
-          {/* Chat-style input */}
           <form
             onSubmit={(e) => { e.preventDefault(); go(input); }}
             className="relative max-w-2xl mx-auto"
           >
-            <div className="relative rounded-3xl ring-1 ring-brand-border bg-brand-surface focus-within:ring-neon/60 transition-all shadow-[0_30px_80px_-30px_rgba(0,0,0,0.5)]">
+            <div className="relative rounded-3xl neon-border bg-brand-surface focus-within:shadow-[0_0_0_2px_var(--neon)] transition-all">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(input); } }}
                 rows={3}
-                placeholder={t("home.placeholder") || "Ask Algoria to launch a campaign, score leads, anything…"}
+                placeholder={t("home.placeholder") || "Ask Algoria anything…"}
                 className="w-full bg-transparent rounded-3xl px-5 py-4 pb-14 text-sm md:text-base resize-none focus:outline-none placeholder:text-brand-muted/70"
               />
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                <span className="text-[10px] text-brand-muted inline-flex items-center gap-1.5">
-                  <Globe className="size-3" /> {t("home.private") || "Private · GDPR-native"}
-                </span>
+              <div className="absolute bottom-3 right-3">
                 <button
                   type="submit"
                   className="size-10 rounded-full btn-neon-solid flex items-center justify-center"
@@ -127,24 +110,29 @@ function Home() {
               </div>
             </div>
           </form>
-
-          {/* Suggestion chips */}
-          <div className="mt-6 flex flex-wrap gap-2 justify-center max-w-2xl mx-auto">
-            {suggestions.map((s) => (
-              <button
-                key={s}
-                onClick={() => go(s)}
-                className="text-xs px-3 py-1.5 rounded-full ring-1 ring-brand-border bg-brand-surface hover:ring-neon/40 hover:text-neon transition text-brand-muted"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-
-          <div className="mt-12 text-[11px] uppercase tracking-widest text-brand-muted">
-            {t("home.foot") || "Free to start · No credit card · Cancel anytime"}
-          </div>
         </div>
+
+        {/* Pitches */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl w-full">
+          {pitches.map((p) => (
+            <div key={p.title} className="p-4 rounded-2xl bg-brand-surface/70 ring-1 ring-brand-border hover:neon-border transition">
+              <div className="font-heading text-sm font-medium mb-1 neon-text">{p.title}</div>
+              <div className="text-xs text-brand-muted leading-relaxed">{p.desc}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Plans carousel */}
+        <div className="w-full">
+          <div className="text-center mb-4">
+            <div className="text-[10px] uppercase tracking-widest neon-text mb-1">{t("home.plansTag") || "Plans"}</div>
+            <div className="font-heading text-2xl font-medium tracking-tight">{t("home.plansTitle") || "Simple credit-based pricing"}</div>
+          </div>
+          <PlanCarousel />
+        </div>
+
+        {/* Integrations */}
+        <IntegrationStrip />
       </main>
 
       <CookieBanner />
