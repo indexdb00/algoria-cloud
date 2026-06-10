@@ -1,65 +1,65 @@
-# Plano de implementação
+# Plano de Alterações — Algoria
 
-Email admin confirmado: **index.db00@gmail.com** (será inserido em `user_roles` como `admin`).
+## 1. Pré-login (Landing do Chat)
+- Editar `src/routes/index.tsx`: manter o input de chat limpo (remover chips de sugestões automáticas que poluem) e adicionar abaixo uma seção de apresentação com:
+  - Carrossel de planos (Starter / Pro / Business) usando `embla-carousel-react` (já incluso no shadcn carousel).
+  - Faixa de ícones de integrações (WhatsApp, Google Meet, Teams, Discord, Twitch) usando ícones oficiais via `simple-icons` CDN ou SVG inline.
+  - 3 chamadas curtas da plataforma ("Encontre o algoritmo certo", "Agentes autônomos", "Resultados em minutos").
 
-## 1. Landing → Chat-first (estilo Lovable)
-- Substituir `src/routes/index.tsx`: remover a landing page atual. Nova home = grande input de chat centralizado ("O que você quer criar hoje?"), header minimalista no topo direito com **Login** / **Cadastrar** + seletor de idioma.
-- Ao digitar e enviar (ou clicar em "testar"), abre modal/redirect para `/auth` preservando o prompt (`sessionStorage`), e após login envia automaticamente no chat real.
-- Manter `SiteFooter` discreto com links de Termos/LGPD/Cookies.
+## 2. Logo abstrato azul
+- Gerar novo ícone `algoria-mark-v2.png` (abstrato geométrico azul minimalista) via imagegen premium, transparente.
+- Substituir referência em `src/components/BrandMark.tsx` e favicon em `src/routes/__root.tsx`.
 
-## 2. Créditos & Planos (base Lovable)
-- Cadastro: **50 créditos de boas-vindas + 5 diários** (cron/trigger ao login). Atualizar `handle_new_user` (50) e criar função `grant_daily_credits()` chamada no primeiro login do dia.
-- Planos (Stripe):
-  - **Starter** — $5/€5 → 100 créditos/mês
-  - **Pro** — $20/€20 → 500 créditos/mês
-  - **Business** — $50/€50 → 1500 créditos/mês
-  - **Enterprise** — sob consulta
-- Atualizar `dashboard.billing.tsx` com nova grade + PIX automático (BR).
+## 3. Neon padronizado
+- Editar `src/styles.css`:
+  - Reforçar `--neon` glow tokens (`--neon-glow-sm`, `-md`, `-lg`).
+  - Atualizar `.btn-neon-solid`, adicionar `.neon-border`, `.neon-text`, `.neon-chart` utilities.
+  - Bordas com `box-shadow: 0 0 12px var(--neon)` consistente.
 
-## 3. Autenticação
-- Adicionar **Google** (via `supabase--configure_social_auth`) e **Apple/iCloud** na página `/auth`.
-- Botões "Continuar com Google" e "Continuar com Apple" acima do form email/senha.
+## 4. Admin Panel (SPA + sidebar)
+- Refatorar `src/routes/_authenticated/dashboard.admin.tsx`:
+  - Substituir tabs horizontais por **sidebar lateral** própria (componente local, não shadcn Sidebar global, para evitar conflito com layout autenticado).
+  - Container `min-h-screen` ocupando viewport completa, sem o shell padrão do dashboard. Para isso, mover rotas admin para fora de `_authenticated/dashboard.*` — criar layout `_authenticated/admin.tsx` separado (rotas `/admin`, `/admin/chat`, etc.). Mas para preservar URLs existentes e evitar quebras, alternativa mais segura: dentro de `dashboard.admin.tsx` aplicar `fixed inset-0 z-40 bg-brand-bg` cobrindo o shell do dashboard.
+  - Gráficos com `recharts` estilizados em neon (stroke `var(--neon)`, glow filter SVG).
+- Créditos iniciais: alterar trigger `handle_new_user` de 50 → **100** via migration.
 
-## 4. Stripe (planos)
-- Rodar `payments--recommend_payment_provider` → `payments--enable_stripe_payments`.
-- Criar produtos via `batch_create_product` após enable.
+## 5. Página Apps (renomear Integrações)
+- Criar `src/routes/_authenticated/dashboard.apps.tsx` (não deletar `dashboard.integrations.tsx` ainda para manter compat; pode redirecionar).
+- Atualizar menu lateral em `src/routes/_authenticated/dashboard.tsx`: label "Integrações" → "Apps", `to: "/dashboard/apps"`.
+- Cards: WhatsApp, Google Meet, Microsoft Teams, Discord, Twitch — ícone SVG oficial (cores da marca), nome, botão "Conectar" (placeholder navegando para config futura).
 
-## 5. Admin overhaul
-- **Perfil admin**: nova aba `/dashboard/admin/profile` para alterar nome, email (`supabase.auth.updateUser`), senha.
-- **Claude na chat admin**: trocar modelo em `dashboard.admin.chat.tsx` para `anthropic/claude-sonnet-4.5` via Lovable AI Gateway (já suportado).
-- **Suporte (tickets)**: nova aba `/dashboard/admin/support` com lista de tickets, abrir conversa, ver dados do usuário + campanhas.
+## 6. Cookies + Idioma
+- Editar `src/lib/i18n.tsx`: ao trocar idioma, gravar cookie `algoria_lang=<code>; path=/; max-age=31536000; SameSite=Lax` além do localStorage. Ler cookie no boot SSR-safe.
+- Página de Termos: localizar (provavelmente em `src/routes/` ou criar `terms.tsx`). Renderizar texto via `t("terms.body.xxx")` por idioma. Adicionar strings PT/EN/ES/FR ao `i18n.tsx`.
 
-## 6. Sistema de Suporte (usuário ↔ admin)
-- Nova tabela `support_tickets` (protocolo auto-gerado tipo `AUR-2026-000123`, status, assunto) e `support_messages` (chat).
-- Botão **"Suporte / Ajuda"** no menu do perfil (sidebar footer) → rota `/dashboard/support` com lista dos tickets do usuário + botão "Novo chamado".
-- Página `/dashboard/support/$id`: chat com admin, exibe número de protocolo no topo.
-- Admin em `/dashboard/admin/support`: lista todos os tickets (status, usuário, último update), clica → vê conversa + painel lateral com dados do user (perfil) e campanhas (conversations recentes).
+## 7. Vercel / Deploy
+- Auditar:
+  - `vite.config.ts` usa preset Cloudflare; Vercel exige preset `vercel`. Adicionar `nitro: { preset: process.env.VERCEL ? 'vercel' : 'cloudflare-module' }` via override no `tanstackStart` config.
+  - Garantir que `process.env.*` server-side seja lido **dentro** de handlers (já é o padrão).
+  - Confirmar que não há imports `node:child_process` ou similares.
+  - Adicionar `vercel.json` com framework `vite` e build command `bun run build`.
+  - Variáveis: documentar `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `VITE_*` na config.
 
-## 7. Consumo com cursor
-- Em `dashboard.consumo.tsx`, adicionar overlay de **cursor customizado** (círculo neon que segue o mouse + trail) ativo só nessa página, e tooltip dos gráficos seguindo o cursor.
+## Arquivos a criar
+- `src/components/PlanCarousel.tsx`
+- `src/components/IntegrationStrip.tsx`
+- `src/routes/_authenticated/dashboard.apps.tsx`
+- `src/components/admin/AdminSidebar.tsx`
+- `vercel.json`
+- `src/assets/algoria-mark-v2.png.asset.json` (via imagegen + lovable-assets)
+- Migration SQL: credits 50→100
 
-## 8. Histórico de mensagens
-- Já existe sidebar com conversas. Garantir que ao clicar numa conversa antiga, `dashboard.chat.tsx` carrega todas mensagens via `messages` table (já implementado — revisar e corrigir scroll/ordem se necessário).
+## Arquivos a editar
+- `src/routes/index.tsx`
+- `src/components/BrandMark.tsx`
+- `src/routes/__root.tsx`
+- `src/styles.css`
+- `src/routes/_authenticated/dashboard.admin.tsx` (+ subrotas para usar sidebar)
+- `src/routes/_authenticated/dashboard.tsx` (renomear menu)
+- `src/lib/i18n.tsx` (cookie sync + traduções termos)
+- `vite.config.ts`
 
-## 9. Tutorial i18n
-- `Tutorial.tsx` já usa `useI18n()`. Garantir que TODAS as strings dos steps passem por `t()` e adicionar chaves faltantes em todos 6 idiomas.
+## Custo estimado
+**Este plano consome ~8 créditos** dada a amplitude (7 frentes, ~15 arquivos, migration, imagegen premium, alterações no router admin).
 
-## 10. Migração DB
-```sql
--- support_tickets + support_messages com RLS
--- user vê os seus; admin (has_role) vê todos
--- protocolo gerado por sequence + trigger
--- grant_daily_credits() function
--- atualizar handle_new_user para 50 créditos
--- inserir admin role para index.db00@gmail.com
-```
-
-## Arquivos (≈18)
-**Criar**: `src/routes/support.*`, `dashboard.support.*`, `dashboard.admin.profile.tsx`, `dashboard.admin.support.tsx`, `src/components/ConsumoCursor.tsx`, `src/lib/support.functions.ts`.
-**Editar**: `index.tsx` (nova home chat), `auth.tsx` (Google/Apple), `dashboard.billing.tsx` (novos planos), `dashboard.admin.chat.tsx` (Claude), `dashboard.admin.tsx` (nova tab), `dashboard.tsx` (botão suporte), `Tutorial.tsx`, `i18n.tsx`.
-**Migração**: 1 SQL com tabelas, funções, role admin.
-
-## Custo
-Trabalho extenso (~12+ arquivos + migração + Stripe + OAuth). Cobrarei **5 créditos** conforme solicitado.
-
-Posso prosseguir?
+Confirma para eu executar?
