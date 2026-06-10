@@ -924,23 +924,46 @@ interface I18nCtx {
 
 const I18nContext = createContext<I18nCtx | null>(null);
 
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function writeCookie(name: string, value: string) {
+  if (typeof document === "undefined") return;
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
+}
+
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<LangCode>("en");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem("algoria.lang") as LangCode | null;
+    const cookie = readCookie("algoria_lang") as LangCode | null;
+    const stored = (cookie || window.localStorage.getItem("algoria.lang")) as LangCode | null;
     if (stored && translations[stored]) {
       setLangState(stored);
+      // Sync both stores so they never diverge.
+      window.localStorage.setItem("algoria.lang", stored);
+      writeCookie("algoria_lang", stored);
+      document.documentElement.lang = stored;
     } else {
       const nav = window.navigator.language.slice(0, 2) as LangCode;
-      if (translations[nav]) setLangState(nav);
+      if (translations[nav]) {
+        setLangState(nav);
+        document.documentElement.lang = nav;
+      }
     }
   }, []);
 
   const setLang = (l: LangCode) => {
     setLangState(l);
-    if (typeof window !== "undefined") window.localStorage.setItem("algoria.lang", l);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("algoria.lang", l);
+      writeCookie("algoria_lang", l);
+      document.documentElement.lang = l;
+    }
   };
 
   const t = (key: string) => translations[lang][key] ?? translations.en[key] ?? key;
