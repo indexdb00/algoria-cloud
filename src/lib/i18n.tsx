@@ -908,12 +908,70 @@ const _overrides: Partial<Record<LangCode, Dict>> = {
   },
 };
 
+const _terms: Record<LangCode, Dict> = {
+  en: {
+    "terms.kicker": "Legal", "terms.title": "Terms of Use & Data Policy",
+    "terms.updated": "Last updated: June 2026",
+    "terms.s1.title": "1. Acceptance", "terms.s1.body": "By using Algoria you agree to these terms. If you don't agree, please don't use the platform.",
+    "terms.s2.title": "2. Acceptable use", "terms.s2.body": "You agree not to bypass ad-platform policies, inflate metrics, run prohibited categories (illegal goods, hate, fraud, content targeting minors), or share account credentials.",
+    "terms.s3.title": "3. Data & privacy", "terms.s3.body": "Your data is encrypted, hosted on EU servers, never sold, and used only to operate the service and verify your account, in line with GDPR and LGPD.",
+    "terms.s4.title": "4. Credits & payments", "terms.s4.body": "Credits are pay-as-you-go and consumed by agent actions. Subscriptions renew automatically until cancelled. No refunds on consumed credits.",
+    "terms.s5.title": "5. Liability", "terms.s5.body": "Algoria is provided as-is. We are not liable for ad-spend losses, account suspensions caused by your campaigns, or third-party platform changes.",
+  },
+  pt: {
+    "terms.kicker": "Legal", "terms.title": "Termos de Uso e Política de Dados",
+    "terms.updated": "Última atualização: Junho de 2026",
+    "terms.s1.title": "1. Aceitação", "terms.s1.body": "Ao usar a Algoria você concorda com estes termos. Se não concorda, por favor não use a plataforma.",
+    "terms.s2.title": "2. Uso aceitável", "terms.s2.body": "Você concorda em não burlar políticas de plataformas de anúncios, inflar métricas, rodar categorias proibidas (bens ilegais, ódio, fraude, conteúdo direcionado a menores) nem compartilhar credenciais de conta.",
+    "terms.s3.title": "3. Dados e privacidade", "terms.s3.body": "Seus dados são criptografados, hospedados em servidores na UE, nunca vendidos e usados apenas para operar o serviço e verificar sua conta, em conformidade com GDPR e LGPD.",
+    "terms.s4.title": "4. Créditos e pagamentos", "terms.s4.body": "Créditos são pré-pagos e consumidos por ações dos agentes. Assinaturas renovam automaticamente até serem canceladas. Sem reembolso de créditos consumidos.",
+    "terms.s5.title": "5. Responsabilidade", "terms.s5.body": "A Algoria é fornecida no estado em que se encontra. Não somos responsáveis por perdas de verba, suspensões de contas causadas por suas campanhas ou mudanças de plataformas de terceiros.",
+  },
+  es: {
+    "terms.kicker": "Legal", "terms.title": "Términos de uso y política de datos",
+    "terms.updated": "Última actualización: Junio de 2026",
+    "terms.s1.title": "1. Aceptación", "terms.s1.body": "Al usar Algoria aceptas estos términos. Si no estás de acuerdo, no uses la plataforma.",
+    "terms.s2.title": "2. Uso aceptable", "terms.s2.body": "Aceptas no eludir las políticas de las plataformas publicitarias, inflar métricas, ejecutar categorías prohibidas (bienes ilegales, odio, fraude, contenido dirigido a menores) ni compartir credenciales.",
+    "terms.s3.title": "3. Datos y privacidad", "terms.s3.body": "Tus datos están cifrados, alojados en servidores de la UE, nunca se venden y se usan únicamente para operar el servicio y verificar tu cuenta, conforme al RGPD y LGPD.",
+    "terms.s4.title": "4. Créditos y pagos", "terms.s4.body": "Los créditos son de pago por uso y se consumen con las acciones de los agentes. Las suscripciones se renuevan automáticamente hasta su cancelación. Sin reembolsos por créditos consumidos.",
+    "terms.s5.title": "5. Responsabilidad", "terms.s5.body": "Algoria se ofrece tal cual. No somos responsables de pérdidas de inversión publicitaria, suspensiones causadas por tus campañas ni cambios en plataformas de terceros.",
+  },
+  fr: {
+    "terms.kicker": "Légal", "terms.title": "Conditions d'utilisation et politique de données",
+    "terms.updated": "Dernière mise à jour : juin 2026",
+    "terms.s1.title": "1. Acceptation", "terms.s1.body": "En utilisant Algoria, vous acceptez ces conditions. Si vous n'êtes pas d'accord, n'utilisez pas la plateforme.",
+    "terms.s2.title": "2. Utilisation acceptable", "terms.s2.body": "Vous acceptez de ne pas contourner les politiques des plateformes publicitaires, gonfler les métriques, exécuter des catégories interdites (biens illégaux, haine, fraude, contenu visant des mineurs) ni partager d'identifiants.",
+    "terms.s3.title": "3. Données et confidentialité", "terms.s3.body": "Vos données sont chiffrées, hébergées dans l'UE, jamais vendues et utilisées uniquement pour exploiter le service et vérifier votre compte, conformément au RGPD et au LGPD.",
+    "terms.s4.title": "4. Crédits et paiements", "terms.s4.body": "Les crédits sont prépayés et consommés par les actions des agents. Les abonnements se renouvellent automatiquement jusqu'à annulation. Aucun remboursement des crédits consommés.",
+    "terms.s5.title": "5. Responsabilité", "terms.s5.body": "Algoria est fourni en l'état. Nous ne sommes pas responsables des pertes de budget publicitaire, suspensions liées à vos campagnes ou changements de plateformes tierces.",
+  },
+  de: {
+    "terms.kicker": "Rechtliches", "terms.title": "Nutzungsbedingungen & Datenrichtlinie",
+    "terms.updated": "Letzte Aktualisierung: Juni 2026",
+    "terms.s1.title": "1. Annahme", "terms.s1.body": "Mit der Nutzung von Algoria akzeptieren Sie diese Bedingungen. Wenn Sie nicht zustimmen, nutzen Sie die Plattform bitte nicht.",
+    "terms.s2.title": "2. Akzeptable Nutzung", "terms.s2.body": "Sie verpflichten sich, keine Werbeplattform-Richtlinien zu umgehen, Metriken zu manipulieren, verbotene Kategorien (illegale Waren, Hass, Betrug, an Minderjährige gerichtete Inhalte) zu betreiben oder Zugangsdaten zu teilen.",
+    "terms.s3.title": "3. Daten & Datenschutz", "terms.s3.body": "Ihre Daten sind verschlüsselt, werden in der EU gehostet, niemals verkauft und nur zum Betrieb des Dienstes und zur Verifizierung Ihres Kontos verwendet — gemäß DSGVO und LGPD.",
+    "terms.s4.title": "4. Credits & Zahlungen", "terms.s4.body": "Credits werden im Pay-as-you-go-Verfahren erworben und durch Agent-Aktionen verbraucht. Abonnements verlängern sich automatisch bis zur Kündigung. Verbrauchte Credits werden nicht erstattet.",
+    "terms.s5.title": "5. Haftung", "terms.s5.body": "Algoria wird wie besehen bereitgestellt. Wir haften nicht für Verluste an Werbeausgaben, Kontosperrungen durch Ihre Kampagnen oder Änderungen externer Plattformen.",
+  },
+  it: {
+    "terms.kicker": "Legale", "terms.title": "Termini di utilizzo e politica sui dati",
+    "terms.updated": "Ultimo aggiornamento: giugno 2026",
+    "terms.s1.title": "1. Accettazione", "terms.s1.body": "Utilizzando Algoria accetti questi termini. Se non sei d'accordo, ti preghiamo di non usare la piattaforma.",
+    "terms.s2.title": "2. Uso accettabile", "terms.s2.body": "Accetti di non aggirare le policy delle piattaforme pubblicitarie, gonfiare le metriche, eseguire categorie vietate (beni illegali, odio, frode, contenuti rivolti a minori) né condividere credenziali.",
+    "terms.s3.title": "3. Dati e privacy", "terms.s3.body": "I tuoi dati sono cifrati, ospitati nell'UE, mai venduti e usati solo per operare il servizio e verificare il tuo account, in linea con GDPR e LGPD.",
+    "terms.s4.title": "4. Crediti e pagamenti", "terms.s4.body": "I crediti sono prepagati e consumati dalle azioni degli agenti. Gli abbonamenti si rinnovano automaticamente fino alla cancellazione. Nessun rimborso sui crediti consumati.",
+    "terms.s5.title": "5. Responsabilità", "terms.s5.body": "Algoria è fornita così com'è. Non siamo responsabili per perdite di spesa pubblicitaria, sospensioni causate dalle tue campagne o cambiamenti di piattaforme terze.",
+  },
+};
+
 const translations: Record<LangCode, Dict> = {
-  en, pt,
-  es: { ...es, ..._overrides.es! },
-  fr: { ...fr, ..._overrides.fr! },
-  de: { ...de, ..._overrides.de! },
-  it: { ...it, ..._overrides.it! },
+  en: { ...en, ..._terms.en },
+  pt: { ...pt, ..._terms.pt },
+  es: { ...es, ..._overrides.es!, ..._terms.es },
+  fr: { ...fr, ..._overrides.fr!, ..._terms.fr },
+  de: { ...de, ..._overrides.de!, ..._terms.de },
+  it: { ...it, ..._overrides.it!, ..._terms.it },
 };
 
 interface I18nCtx {
