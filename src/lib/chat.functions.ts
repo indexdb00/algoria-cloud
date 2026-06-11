@@ -7,7 +7,7 @@ const LANG_NAMES: Record<string, string> = {
   en: "English", pt: "Portuguese (pt-PT/pt-BR)", es: "Spanish", fr: "French", de: "German", it: "Italian",
 };
 
-// Algoria model variants → underlying Lovable AI Gateway model + credit cost multiplier.
+// Algoria model variants
 const VARIANTS = {
   "v1": { gatewayModel: "google/gemini-3-flash-preview", costMultiplier: 1, paidOnly: false, label: "Algoria v1.0" },
   "v1.1": { gatewayModel: "google/gemini-2.5-pro", costMultiplier: 2, paidOnly: false, label: "Algoria Thinking v1.1" },
@@ -34,7 +34,168 @@ const sendSchema = z.object({
 export const sendAgentMessage = createServerFn({ method: "POST" })
   .validator((input: unknown) => sendSchema.parse(input))
   .handler(async ({ input }) => {
+    const data = input;
+    
+    // Create Supabase client inside handler
+    const supabase = await createClient();
+    
+    // Get current user
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError || !user) {
+      console.error("Auth error:", userError);
+      return { error: "Unauthorized. Please sign in.", reply: "", conversationId: null };
+    }
+
+    const userId = user.id;
+    const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
+    
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY not set");
+      return { error: "AI service not configured. LOVABLE_API_KEY missing.", reply: "", conversationId: null };
+    }
+
+    const variant: Variant = (data.variant ?? "v1") as Variant;
+    const variantSpec = VARIANTS[variant];
+
+    // Load agent
+    const { data: agent, error: agentErr } = await supabase
+      .from("agents")
+      .select("slug,name,system_prompt,cost_per_message")
+      .eq("slug", data.agentSlug)
+      .single();
+      
+    if (agentErr || !agent) {
+      console.error("Agent error:", agentErr);
+      return { error: "Agent not found", reply: "", conversationId: null };
+    }
+
+    const cost = Math.max(0, Math.round(agent.cost_per_message * variantSpec.costMultiplier));
+
+    // Admin Claude variant bypasses credit check
+    if (variant !== "claude" && cost > 0) {
+      const { data: creditsRow } = await supabase
+        .from("credits")
+        .select("balance")
+        .eq("user_id", userId)
+        .single();
+      const balance = creditsRow?.balance ?? 0;
+      if (balance < cost) {
+        return { error: "Insufficient credits", reply: "", conversationId: null };
+      }
+    }
+
+    // Get or create conversation
+    let conversationId = data.conversationId ?? null;
+    if (!conversationId) {
+      const { data: conv, error: convErr } = await supabase
+        .from("conversations")
+        .insert({ user_id: userId, agent_slug: agent.slug, title: data.message.slice(0, 60) })
+        .select("id")
+        .single();
+      if (convErr || !conv) {
+        console.error("Conversation error:", convErr);
+        return { error: "Could not create conversation", reply: "", conversationId: null };
+      }
+      conversationId = conv.id;
+    }
+
+    // Load prior messages
+    const { data: history } = await supabase
+      .from("messages")
+      .select("role,content")
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: true })
+      .limit(20);
+
+    // Save user message
+    const persistedUser = data.imageMeta
+      ? `${data.message}\n\n_[image attached · ${data.imageMeta.width}×${data.imageMeta.height} · ${data.imageMeta.aspect}]_`
+      : data.message;
+      
+    await supabase.from("messages").insert({
+      conversation_id: conversationId,
+      user_id: userId,
+      role: "user",
+      content: persistedUser,
+    });
+
+    // Build system prompt
+    const langName = LANG_NAMES[data.language ?? "en"] ?? "English";
+    const langDirective = `IMPORTANT: Always reply in ${langName}. Use natural, idiomatic ${langName}. Keep brand names, KPIs (ROAS, CPL, CAC, CTR) and technical platform names (Meta Ads, Google Ads, TikTok Ads, BidMachine, GA4, Business Suite) untranslated. Format with concise markdown.`;
+
+    const messages = [
+      { role: "system", content: agent.system_prompt + "\n\n" + langDirective },
+      ...(history ?? []).map((m) => ({ role: m.role, content: m.content })),
+      { role: "user", content: data.message },
+    ];
+
+    // Call AI
+    let reply = "";
     try {
+      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: variantSpec.gatewayModel,
+          messages,
+        }),
+      });
+      
+      if (res.status === 429) {
+        return { error: "Rate limit exceeded. Please try again shortly.", reply: "", conversationId };
+      }
+      if (res.status === 402) {
+        return { error: "AI workspace credits exhausted. Please add funds.", reply: "", conversationId };
+      }
+      if (!res.ok) {
+        const txt = await res.text();
+        console.error("AI gateway error", res.status, txt);
+        return { error: "AI service error", reply: "", conversationId };
+      }
+      
+      const json = await res.json();
+      reply = json?.choices?.[0]?.message?.content ?? "";
+    } catch (e) {
+      console.error("AI call failed", e);
+      return { error: "AI service unavailable", reply: "", conversationId };
+    }
+
+    if (!reply) reply = "(no response)";
+
+    // Save assistant message
+    await supabase.from("messages").insert({
+      conversation_id: conversationId,
+      user_id: userId,
+      role: "assistant",
+      content: reply,
+    });
+
+    // Deduct credits
+    let newBalance: number | null = null;
+    if (variant !== "claude" && cost > 0) {
+      const { data: cr } = await supabase.from("credits").select("balance").eq("user_id", userId).single();
+      const currentBalance = cr?.balance ?? 0;
+      newBalance = currentBalance - cost;
+      await supabase
+        .from("credits")
+        .update({ balance: newBalance, updated_at: new Date().toISOString() })
+        .eq("user_id", userId);
+      await supabase
+        .from("credit_transactions")
+        .insert({ user_id: userId, amount: -cost, reason: `agent:${agent.slug}:${variant}` });
+    }
+    
+    await supabase
+      .from("conversations")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", conversationId);
+
+    return { error: null, reply, conversationId, newBalance, costApplied: cost, variant: variantSpec.label };
+  });    try {
       // Create Supabase client
       const supabase = await createClient();
       
