@@ -143,7 +143,7 @@ function Home() {
                   {t("nav.signin")}
                 </Link>
                 <Link to="/auth" className="btn-neon-solid text-xs px-3 py-1.5 rounded-lg">
-                  {t("home.signup") || "Começar"}
+                  {copy.signup}
                 </Link>
               </>
             )}
@@ -155,7 +155,7 @@ function Home() {
         {/* Rotating chat-style headline */}
         <div className="w-full max-w-2xl text-center">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-brand-border bg-brand-surface/60 text-[10px] text-brand-muted mb-5">
-            <Sparkles className="size-3 text-neon" /> {t("home.badge") || "100 créditos grátis no cadastro"}
+            <Sparkles className="size-3 text-neon" /> {copy.badge}
           </div>
           <div className="h-[3.5rem] md:h-[4.5rem] flex items-center justify-center mb-2 overflow-hidden">
             <h1
@@ -189,7 +189,7 @@ function Home() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(input); } }}
               rows={2}
-              placeholder={t("home.placeholder") || "Pergunte ao Algoria…"}
+              placeholder={copy.placeholder}
               className="w-full bg-transparent rounded-2xl px-4 py-3 pr-14 text-sm resize-none focus:outline-none placeholder:text-brand-muted/70"
             />
             <button
@@ -205,7 +205,7 @@ function Home() {
         {/* Apps strip */}
         <div className="w-full max-w-xl">
           <div className="text-[10px] uppercase tracking-widest text-brand-muted text-center mb-2">
-            {t("home.apps") || "Apps integrados"}
+            {copy.apps}
           </div>
           <div className="flex items-center justify-center gap-2 flex-wrap">
             {APPS.map((a) => {
