@@ -25,21 +25,75 @@ const APPS = [
   { name: "Twitch", icon: Tv, color: "#9146FF" },
 ];
 
+const PHRASES: Record<string, string[]> = {
+  pt: [
+    "Gere mais receita com IA.",
+    "Encontre o algoritmo certo para o seu público.",
+    "Leia a sua audiência em segundos.",
+    "Lance campanhas autônomas e otimizadas.",
+    "Integre WhatsApp, Meet, Teams e muito mais.",
+    "Transforme prompts em performance real.",
+  ],
+  en: [
+    "Generate more revenue with AI.",
+    "Find the right algorithm for your audience.",
+    "Read your audience in seconds.",
+    "Launch autonomous, optimized campaigns.",
+    "Integrate WhatsApp, Meet, Teams and more.",
+    "Turn prompts into real performance.",
+  ],
+  es: [
+    "Genera más ingresos con IA.",
+    "Encuentra el algoritmo correcto para tu público.",
+    "Lee a tu audiencia en segundos.",
+    "Lanza campañas autónomas y optimizadas.",
+    "Integra WhatsApp, Meet, Teams y más.",
+    "Convierte prompts en rendimiento real.",
+  ],
+  fr: [
+    "Générez plus de revenus avec l'IA.",
+    "Trouvez le bon algorithme pour votre audience.",
+    "Lisez votre audience en quelques secondes.",
+    "Lancez des campagnes autonomes et optimisées.",
+    "Intégrez WhatsApp, Meet, Teams et plus.",
+    "Transformez vos prompts en performance réelle.",
+  ],
+  de: [
+    "Erzielen Sie mehr Umsatz mit KI.",
+    "Finden Sie den richtigen Algorithmus für Ihr Publikum.",
+    "Lesen Sie Ihr Publikum in Sekunden.",
+    "Starten Sie autonome, optimierte Kampagnen.",
+    "Integrieren Sie WhatsApp, Meet, Teams und mehr.",
+    "Verwandeln Sie Prompts in echte Performance.",
+  ],
+  it: [
+    "Genera più ricavi con l'IA.",
+    "Trova l'algoritmo giusto per il tuo pubblico.",
+    "Leggi la tua audience in pochi secondi.",
+    "Lancia campagne autonome e ottimizzate.",
+    "Integra WhatsApp, Meet, Teams e altro.",
+    "Trasforma i prompt in performance reale.",
+  ],
+};
+
+const COPY: Record<string, { badge: string; placeholder: string; apps: string; signup: string }> = {
+  pt: { badge: "100 créditos grátis no cadastro", placeholder: "Pergunte ao Algoria…", apps: "Apps integrados", signup: "Começar" },
+  en: { badge: "100 free credits on signup", placeholder: "Ask Algoria anything…", apps: "Integrated apps", signup: "Get started" },
+  es: { badge: "100 créditos gratis al registrarte", placeholder: "Pregunta a Algoria…", apps: "Apps integradas", signup: "Empezar" },
+  fr: { badge: "100 crédits gratuits à l'inscription", placeholder: "Demandez à Algoria…", apps: "Apps intégrées", signup: "Commencer" },
+  de: { badge: "100 Gratis-Credits bei Anmeldung", placeholder: "Frag Algoria…", apps: "Integrierte Apps", signup: "Loslegen" },
+  it: { badge: "100 crediti gratis alla registrazione", placeholder: "Chiedi ad Algoria…", apps: "App integrate", signup: "Inizia" },
+};
+
 function Home() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [authed, setAuthed] = useState(false);
   const [phraseIdx, setPhraseIdx] = useState(0);
 
-  const phrases = [
-    t("home.phrase.1") || "Gere mais receita com IA.",
-    t("home.phrase.2") || "Encontre o algoritmo certo para seu público.",
-    t("home.phrase.3") || "Leia sua audiência em segundos.",
-    t("home.phrase.4") || "Lance campanhas autônomas e otimizadas.",
-    t("home.phrase.5") || "Integre WhatsApp, Meet, Teams e mais.",
-    t("home.phrase.6") || "Transforme prompts em performance real.",
-  ];
+  const phrases = PHRASES[lang] ?? PHRASES.en;
+  const copy = COPY[lang] ?? COPY.en;
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setAuthed(!!data.session));
@@ -89,7 +143,7 @@ function Home() {
                   {t("nav.signin")}
                 </Link>
                 <Link to="/auth" className="btn-neon-solid text-xs px-3 py-1.5 rounded-lg">
-                  {t("home.signup") || "Começar"}
+                  {copy.signup}
                 </Link>
               </>
             )}
@@ -101,7 +155,7 @@ function Home() {
         {/* Rotating chat-style headline */}
         <div className="w-full max-w-2xl text-center">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-brand-border bg-brand-surface/60 text-[10px] text-brand-muted mb-5">
-            <Sparkles className="size-3 text-neon" /> {t("home.badge") || "100 créditos grátis no cadastro"}
+            <Sparkles className="size-3 text-neon" /> {copy.badge}
           </div>
           <div className="h-[3.5rem] md:h-[4.5rem] flex items-center justify-center mb-2 overflow-hidden">
             <h1
@@ -135,7 +189,7 @@ function Home() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(input); } }}
               rows={2}
-              placeholder={t("home.placeholder") || "Pergunte ao Algoria…"}
+              placeholder={copy.placeholder}
               className="w-full bg-transparent rounded-2xl px-4 py-3 pr-14 text-sm resize-none focus:outline-none placeholder:text-brand-muted/70"
             />
             <button
@@ -151,7 +205,7 @@ function Home() {
         {/* Apps strip */}
         <div className="w-full max-w-xl">
           <div className="text-[10px] uppercase tracking-widest text-brand-muted text-center mb-2">
-            {t("home.apps") || "Apps integrados"}
+            {copy.apps}
           </div>
           <div className="flex items-center justify-center gap-2 flex-wrap">
             {APPS.map((a) => {
