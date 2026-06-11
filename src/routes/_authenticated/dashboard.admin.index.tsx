@@ -45,8 +45,9 @@ function AdminOverview() {
   return (
     <div className="px-5 md:px-10 py-8 md:py-10 max-w-6xl">
       <div className="mb-6">
-        <div className="text-[10px] uppercase tracking-widest neon-text mb-1">Overview</div>
-        <h1 className="font-heading text-2xl font-medium tracking-tight">Algoria control center</h1>
+        <div className="text-[10px] uppercase tracking-widest text-neon mb-1">Dev · Overview</div>
+        <h1 className="text-2xl font-medium tracking-tight">Painel de controle</h1>
+        <p className="text-xs text-brand-muted mt-1">Métricas em tempo real, usuários, mensagens e créditos.</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">

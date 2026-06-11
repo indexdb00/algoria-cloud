@@ -28,6 +28,7 @@ import { Route as AuthenticatedDashboardAdminRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardSupportIndexRouteImport } from './routes/_authenticated/dashboard.support.index'
 import { Route as AuthenticatedDashboardAdminIndexRouteImport } from './routes/_authenticated/dashboard.admin.index'
 import { Route as AuthenticatedDashboardSupportIdRouteImport } from './routes/_authenticated/dashboard.support.$id'
+import { Route as AuthenticatedDashboardAppsIdRouteImport } from './routes/_authenticated/dashboard.apps.$id'
 import { Route as AuthenticatedDashboardAgentsSlugRouteImport } from './routes/_authenticated/dashboard.agents.$slug'
 import { Route as AuthenticatedDashboardAdminSupportRouteImport } from './routes/_authenticated/dashboard.admin.support'
 import { Route as AuthenticatedDashboardAdminStripeRouteImport } from './routes/_authenticated/dashboard.admin.stripe'
@@ -144,6 +145,12 @@ const AuthenticatedDashboardSupportIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedDashboardSupportRoute,
   } as any)
+const AuthenticatedDashboardAppsIdRoute =
+  AuthenticatedDashboardAppsIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedDashboardAppsRoute,
+  } as any)
 const AuthenticatedDashboardAgentsSlugRoute =
   AuthenticatedDashboardAgentsSlugRouteImport.update({
     id: '/agents/$slug',
@@ -193,7 +200,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
-  '/dashboard/apps': typeof AuthenticatedDashboardAppsRoute
+  '/dashboard/apps': typeof AuthenticatedDashboardAppsRouteWithChildren
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/chat': typeof AuthenticatedDashboardChatRoute
   '/dashboard/consumo': typeof AuthenticatedDashboardConsumoRoute
@@ -209,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/stripe': typeof AuthenticatedDashboardAdminStripeRoute
   '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRouteWithChildren
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
+  '/dashboard/apps/$id': typeof AuthenticatedDashboardAppsIdRoute
   '/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/support/': typeof AuthenticatedDashboardSupportIndexRoute
@@ -218,7 +226,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/terms': typeof TermsRoute
-  '/dashboard/apps': typeof AuthenticatedDashboardAppsRoute
+  '/dashboard/apps': typeof AuthenticatedDashboardAppsRouteWithChildren
   '/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/dashboard/chat': typeof AuthenticatedDashboardChatRoute
   '/dashboard/consumo': typeof AuthenticatedDashboardConsumoRoute
@@ -233,6 +241,7 @@ export interface FileRoutesByTo {
   '/dashboard/admin/stripe': typeof AuthenticatedDashboardAdminStripeRoute
   '/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRouteWithChildren
   '/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
+  '/dashboard/apps/$id': typeof AuthenticatedDashboardAppsIdRoute
   '/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/dashboard/admin': typeof AuthenticatedDashboardAdminIndexRoute
   '/dashboard/support': typeof AuthenticatedDashboardSupportIndexRoute
@@ -246,7 +255,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteWithChildren
   '/_authenticated/dashboard/admin': typeof AuthenticatedDashboardAdminRouteWithChildren
-  '/_authenticated/dashboard/apps': typeof AuthenticatedDashboardAppsRoute
+  '/_authenticated/dashboard/apps': typeof AuthenticatedDashboardAppsRouteWithChildren
   '/_authenticated/dashboard/billing': typeof AuthenticatedDashboardBillingRoute
   '/_authenticated/dashboard/chat': typeof AuthenticatedDashboardChatRoute
   '/_authenticated/dashboard/consumo': typeof AuthenticatedDashboardConsumoRoute
@@ -262,6 +271,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/admin/stripe': typeof AuthenticatedDashboardAdminStripeRoute
   '/_authenticated/dashboard/admin/support': typeof AuthenticatedDashboardAdminSupportRouteWithChildren
   '/_authenticated/dashboard/agents/$slug': typeof AuthenticatedDashboardAgentsSlugRoute
+  '/_authenticated/dashboard/apps/$id': typeof AuthenticatedDashboardAppsIdRoute
   '/_authenticated/dashboard/support/$id': typeof AuthenticatedDashboardSupportIdRoute
   '/_authenticated/dashboard/admin/': typeof AuthenticatedDashboardAdminIndexRoute
   '/_authenticated/dashboard/support/': typeof AuthenticatedDashboardSupportIndexRoute
@@ -291,6 +301,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/stripe'
     | '/dashboard/admin/support'
     | '/dashboard/agents/$slug'
+    | '/dashboard/apps/$id'
     | '/dashboard/support/$id'
     | '/dashboard/admin/'
     | '/dashboard/support/'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/dashboard/admin/stripe'
     | '/dashboard/admin/support'
     | '/dashboard/agents/$slug'
+    | '/dashboard/apps/$id'
     | '/dashboard/support/$id'
     | '/dashboard/admin'
     | '/dashboard/support'
@@ -343,6 +355,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/admin/stripe'
     | '/_authenticated/dashboard/admin/support'
     | '/_authenticated/dashboard/agents/$slug'
+    | '/_authenticated/dashboard/apps/$id'
     | '/_authenticated/dashboard/support/$id'
     | '/_authenticated/dashboard/admin/'
     | '/_authenticated/dashboard/support/'
@@ -491,6 +504,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardSupportIdRouteImport
       parentRoute: typeof AuthenticatedDashboardSupportRoute
     }
+    '/_authenticated/dashboard/apps/$id': {
+      id: '/_authenticated/dashboard/apps/$id'
+      path: '/$id'
+      fullPath: '/dashboard/apps/$id'
+      preLoaderRoute: typeof AuthenticatedDashboardAppsIdRouteImport
+      parentRoute: typeof AuthenticatedDashboardAppsRoute
+    }
     '/_authenticated/dashboard/agents/$slug': {
       id: '/_authenticated/dashboard/agents/$slug'
       path: '/agents/$slug'
@@ -587,6 +607,20 @@ const AuthenticatedDashboardAdminRouteWithChildren =
     AuthenticatedDashboardAdminRouteChildren,
   )
 
+interface AuthenticatedDashboardAppsRouteChildren {
+  AuthenticatedDashboardAppsIdRoute: typeof AuthenticatedDashboardAppsIdRoute
+}
+
+const AuthenticatedDashboardAppsRouteChildren: AuthenticatedDashboardAppsRouteChildren =
+  {
+    AuthenticatedDashboardAppsIdRoute: AuthenticatedDashboardAppsIdRoute,
+  }
+
+const AuthenticatedDashboardAppsRouteWithChildren =
+  AuthenticatedDashboardAppsRoute._addFileChildren(
+    AuthenticatedDashboardAppsRouteChildren,
+  )
+
 interface AuthenticatedDashboardSupportRouteChildren {
   AuthenticatedDashboardSupportIdRoute: typeof AuthenticatedDashboardSupportIdRoute
   AuthenticatedDashboardSupportIndexRoute: typeof AuthenticatedDashboardSupportIndexRoute
@@ -606,7 +640,7 @@ const AuthenticatedDashboardSupportRouteWithChildren =
 
 interface AuthenticatedDashboardRouteChildren {
   AuthenticatedDashboardAdminRoute: typeof AuthenticatedDashboardAdminRouteWithChildren
-  AuthenticatedDashboardAppsRoute: typeof AuthenticatedDashboardAppsRoute
+  AuthenticatedDashboardAppsRoute: typeof AuthenticatedDashboardAppsRouteWithChildren
   AuthenticatedDashboardBillingRoute: typeof AuthenticatedDashboardBillingRoute
   AuthenticatedDashboardChatRoute: typeof AuthenticatedDashboardChatRoute
   AuthenticatedDashboardConsumoRoute: typeof AuthenticatedDashboardConsumoRoute
@@ -623,7 +657,8 @@ const AuthenticatedDashboardRouteChildren: AuthenticatedDashboardRouteChildren =
   {
     AuthenticatedDashboardAdminRoute:
       AuthenticatedDashboardAdminRouteWithChildren,
-    AuthenticatedDashboardAppsRoute: AuthenticatedDashboardAppsRoute,
+    AuthenticatedDashboardAppsRoute:
+      AuthenticatedDashboardAppsRouteWithChildren,
     AuthenticatedDashboardBillingRoute: AuthenticatedDashboardBillingRoute,
     AuthenticatedDashboardChatRoute: AuthenticatedDashboardChatRoute,
     AuthenticatedDashboardConsumoRoute: AuthenticatedDashboardConsumoRoute,

@@ -73,12 +73,12 @@ function AdminLayout() {
         }
       >
         <div className="px-5 h-16 flex items-center gap-3 border-b border-brand-border">
-          <div className="size-9 rounded-xl neon-card flex items-center justify-center">
+          <div className="size-9 rounded-xl bg-neon/15 ring-1 ring-neon/40 flex items-center justify-center">
             <ShieldCheck className="size-4 text-neon" />
           </div>
           <div>
-            <div className="text-[10px] uppercase tracking-widest neon-text leading-none">Admin</div>
-            <div className="font-heading text-sm font-medium tracking-tight">Algoria</div>
+            <div className="text-[10px] uppercase tracking-widest text-neon leading-none">Dev</div>
+            <div className="text-sm font-medium tracking-tight">algoria</div>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
@@ -128,7 +128,7 @@ function AdminLayout() {
           </button>
           <div className="flex items-center gap-2">
             <BrandMark size={20} />
-            <span className="font-heading text-sm font-medium">Admin</span>
+            <span className="text-sm font-medium">Dev</span>
           </div>
           <div className="w-9" />
         </header>
