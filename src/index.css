@@ -1,0 +1,8 @@
+/*
+ * Algoria — main stylesheet entry.
+ * The real tokens, base layer and component utilities live in ./styles.css
+ * (loaded directly by src/routes/__root.tsx via Vite's `?url` import so the
+ * Tailwind v4 source detection works). This file re-exports them for
+ * developers browsing the repo who expect the conventional `index.css` name.
+ */
+@import "./styles.css";

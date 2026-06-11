@@ -58,13 +58,13 @@
 :root {
   --radius: 0.75rem;
 
-  --brand-bg: oklch(0.16 0.025 250);
-  --brand-text: oklch(0.97 0.01 240);
-  --brand-muted: oklch(0.65 0.02 240);
-  --brand-surface: oklch(0.21 0.025 250);
-  --brand-border: oklch(0.30 0.035 250);
-  --neon: oklch(0.74 0.16 245);       /* light blue */
-  --neon-soft: oklch(0.60 0.14 245);
+  --brand-bg: oklch(0.11 0.012 270);
+  --brand-text: oklch(0.97 0.01 270);
+  --brand-muted: oklch(0.60 0.02 270);
+  --brand-surface: oklch(0.15 0.018 270);
+  --brand-border: oklch(0.24 0.025 270);
+  --neon: oklch(0.66 0.22 278);       /* indigo accent */
+  --neon-soft: oklch(0.55 0.18 278);
   --brand-accent: var(--neon);
 
   --background: var(--brand-bg);
@@ -120,8 +120,8 @@ html.theme-light {
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
     background-image:
-      radial-gradient(900px 500px at 90% -10%, color-mix(in oklab, var(--neon) 14%, transparent), transparent 60%),
-      radial-gradient(700px 400px at -10% 110%, color-mix(in oklab, var(--neon) 9%, transparent), transparent 60%);
+      radial-gradient(900px 500px at 90% -10%, color-mix(in oklab, var(--neon) 8%, transparent), transparent 60%),
+      radial-gradient(700px 400px at -10% 110%, color-mix(in oklab, var(--neon) 5%, transparent), transparent 60%);
     background-attachment: fixed;
   }
   h1, h2, h3, h4 { font-family: var(--font-heading); letter-spacing: -0.02em; }

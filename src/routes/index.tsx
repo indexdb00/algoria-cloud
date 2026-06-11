@@ -1,33 +1,54 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowUp, Sparkles } from "lucide-react";
+import { ArrowUp, MessageCircle, Video, Users, Hash, Tv, Sparkles } from "lucide-react";
 import { BrandMark } from "@/components/BrandMark";
 import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
 import { useI18n } from "@/lib/i18n";
 import { CookieBanner } from "@/components/site/CookieBanner";
 import { supabase } from "@/integrations/supabase/client";
-import { PlanCarousel } from "@/components/PlanCarousel";
-import { IntegrationStrip } from "@/components/IntegrationStrip";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Algoria — Find the right algorithm for every audience" },
-      { name: "description", content: "Algoria uses AI to find the precise algorithm that reaches your target audience with maximum efficiency." },
+      { title: "Algoria — Algoritmo certo para cada audiência" },
+      { name: "description", content: "Algoria encontra o algoritmo exato para alcançar seu público com inteligência e eficiência." },
     ],
   }),
   component: Home,
 });
+
+const APPS = [
+  { name: "WhatsApp", icon: MessageCircle, color: "#25D366" },
+  { name: "Meet", icon: Video, color: "#00897B" },
+  { name: "Teams", icon: Users, color: "#6264A7" },
+  { name: "Discord", icon: Hash, color: "#5865F2" },
+  { name: "Twitch", icon: Tv, color: "#9146FF" },
+];
 
 function Home() {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [authed, setAuthed] = useState(false);
+  const [phraseIdx, setPhraseIdx] = useState(0);
+
+  const phrases = [
+    t("home.phrase.1") || "Gere mais receita com IA.",
+    t("home.phrase.2") || "Encontre o algoritmo certo para seu público.",
+    t("home.phrase.3") || "Leia sua audiência em segundos.",
+    t("home.phrase.4") || "Lance campanhas autônomas e otimizadas.",
+    t("home.phrase.5") || "Integre WhatsApp, Meet, Teams e mais.",
+    t("home.phrase.6") || "Transforme prompts em performance real.",
+  ];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setAuthed(!!data.session));
   }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => setPhraseIdx((i) => (i + 1) % phrases.length), 2800);
+    return () => clearInterval(id);
+  }, [phrases.length]);
 
   function go(prompt: string) {
     const text = prompt.trim();
@@ -38,33 +59,37 @@ function Home() {
     else navigate({ to: "/auth" });
   }
 
-  const pitches = [
-    { title: t("home.pitch1.t") || "The right algorithm", desc: t("home.pitch1.d") || "Pinpoint the exact reach for your audience." },
-    { title: t("home.pitch2.t") || "Autonomous agents", desc: t("home.pitch2.d") || "AI that launches, optimizes and reports back." },
-    { title: t("home.pitch3.t") || "Results in minutes", desc: t("home.pitch3.d") || "From prompt to performance, end to end." },
-  ];
-
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col chat-wave-bg">
-      <header className="absolute top-0 inset-x-0 z-20">
-        <div className="mx-auto max-w-7xl px-5 md:px-8 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <BrandMark size={26} />
-            <span className="font-heading text-base font-medium tracking-tight">Algoria</span>
+    <div className="h-[100dvh] overflow-hidden bg-brand-bg text-brand-text flex flex-col">
+      {/* subtle ambient glow */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(600px 360px at 50% 30%, color-mix(in oklab, var(--neon) 14%, transparent), transparent 70%)",
+        }}
+      />
+
+      <header className="relative z-20 shrink-0">
+        <div className="mx-auto max-w-7xl px-5 md:px-8 h-14 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <BrandMark size={24} />
+            <span className="text-sm font-medium tracking-tight">algoria</span>
           </Link>
           <div className="flex items-center gap-2">
             <LanguageSwitcher compact />
             {authed ? (
-              <Link to="/dashboard/chat" className="btn-neon-solid text-xs px-3.5 py-2 rounded-lg">
-                {t("nav.open") || "Open app"}
+              <Link to="/dashboard/chat" className="btn-neon-solid text-xs px-3 py-1.5 rounded-lg">
+                {t("nav.open") || "Abrir app"}
               </Link>
             ) : (
               <>
-                <Link to="/auth" className="text-xs px-3 py-2 text-brand-muted hover:text-brand-text transition">
+                <Link to="/auth" className="text-xs px-2.5 py-1.5 text-brand-muted hover:text-brand-text transition">
                   {t("nav.signin")}
                 </Link>
-                <Link to="/auth" className="btn-neon-solid text-xs px-3.5 py-2 rounded-lg">
-                  {t("home.signup") || "Get started"}
+                <Link to="/auth" className="btn-neon-solid text-xs px-3 py-1.5 rounded-lg">
+                  {t("home.signup") || "Começar"}
                 </Link>
               </>
             )}
@@ -72,67 +97,78 @@ function Home() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-5 pt-28 pb-16 relative gap-14">
-        <div className="relative w-full max-w-3xl text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full neon-border bg-neon/5 text-[11px] neon-text mb-7">
-            <Sparkles className="size-3" />
-            {t("home.badge") || "100 free credits on signup · 5 daily"}
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-5 gap-6 min-h-0">
+        {/* Rotating chat-style headline */}
+        <div className="w-full max-w-2xl text-center">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-brand-border bg-brand-surface/60 text-[10px] text-brand-muted mb-5">
+            <Sparkles className="size-3 text-neon" /> {t("home.badge") || "100 créditos grátis no cadastro"}
           </div>
-
-          <h1 className="font-heading text-4xl md:text-6xl font-medium leading-[1.05] tracking-tight text-balance mb-5">
-            {t("home.title") || "What do you want to launch today?"}
-          </h1>
-          <p className="text-sm md:text-base text-brand-muted max-w-xl mx-auto mb-9">
-            {t("home.subtitle") || "Find the right algorithm for every audience — with autonomous AI agents."}
-          </p>
-
-          <form
-            onSubmit={(e) => { e.preventDefault(); go(input); }}
-            className="relative max-w-2xl mx-auto"
-          >
-            <div className="relative rounded-3xl neon-border bg-brand-surface focus-within:shadow-[0_0_0_2px_var(--neon)] transition-all">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(input); } }}
-                rows={3}
-                placeholder={t("home.placeholder") || "Ask Algoria anything…"}
-                className="w-full bg-transparent rounded-3xl px-5 py-4 pb-14 text-sm md:text-base resize-none focus:outline-none placeholder:text-brand-muted/70"
+          <div className="h-[3.5rem] md:h-[4.5rem] flex items-center justify-center mb-2 overflow-hidden">
+            <h1
+              key={phraseIdx}
+              className="text-2xl md:text-4xl font-medium tracking-tight text-balance animate-fade-in"
+            >
+              {phrases[phraseIdx]}
+            </h1>
+          </div>
+          <div className="flex justify-center gap-1.5 mb-5">
+            {phrases.map((_, i) => (
+              <span
+                key={i}
+                className={
+                  "h-1 rounded-full transition-all " +
+                  (i === phraseIdx ? "w-6 bg-neon" : "w-1 bg-brand-border")
+                }
               />
-              <div className="absolute bottom-3 right-3">
-                <button
-                  type="submit"
-                  className="size-10 rounded-full btn-neon-solid flex items-center justify-center"
-                  aria-label="Send"
-                >
-                  <ArrowUp className="size-4" />
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-
-        {/* Pitches */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl w-full">
-          {pitches.map((p) => (
-            <div key={p.title} className="p-4 rounded-2xl bg-brand-surface/70 ring-1 ring-brand-border hover:neon-border transition">
-              <div className="font-heading text-sm font-medium mb-1 neon-text">{p.title}</div>
-              <div className="text-xs text-brand-muted leading-relaxed">{p.desc}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Plans carousel */}
-        <div className="w-full">
-          <div className="text-center mb-4">
-            <div className="text-[10px] uppercase tracking-widest neon-text mb-1">{t("home.plansTag") || "Plans"}</div>
-            <div className="font-heading text-2xl font-medium tracking-tight">{t("home.plansTitle") || "Simple credit-based pricing"}</div>
+            ))}
           </div>
-          <PlanCarousel />
         </div>
 
-        {/* Integrations */}
-        <IntegrationStrip />
+        {/* Composer */}
+        <form
+          onSubmit={(e) => { e.preventDefault(); go(input); }}
+          className="w-full max-w-xl"
+        >
+          <div className="relative rounded-2xl border border-brand-border bg-brand-surface/80 backdrop-blur focus-within:border-neon focus-within:shadow-[0_0_0_1px_var(--neon)] transition-all">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(input); } }}
+              rows={2}
+              placeholder={t("home.placeholder") || "Pergunte ao Algoria…"}
+              className="w-full bg-transparent rounded-2xl px-4 py-3 pr-14 text-sm resize-none focus:outline-none placeholder:text-brand-muted/70"
+            />
+            <button
+              type="submit"
+              className="absolute bottom-2.5 right-2.5 size-9 rounded-full btn-neon-solid flex items-center justify-center"
+              aria-label="Send"
+            >
+              <ArrowUp className="size-4" />
+            </button>
+          </div>
+        </form>
+
+        {/* Apps strip */}
+        <div className="w-full max-w-xl">
+          <div className="text-[10px] uppercase tracking-widest text-brand-muted text-center mb-2">
+            {t("home.apps") || "Apps integrados"}
+          </div>
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            {APPS.map((a) => {
+              const Icon = a.icon;
+              return (
+                <div
+                  key={a.name}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-brand-surface/70 border border-brand-border text-[11px] text-brand-muted"
+                  title={a.name}
+                >
+                  <Icon className="size-3.5" style={{ color: a.color }} />
+                  <span>{a.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </main>
 
       <CookieBanner />
