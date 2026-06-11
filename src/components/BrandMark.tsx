@@ -7,8 +7,8 @@ export function BrandMark({ size = 28, className = "" }: { size?: number; classN
       alt="Algoria"
       width={size}
       height={size}
-      className={"shrink-0 select-none " + className}
-      style={{ width: size, height: size }}
+      className={"shrink-0 select-none rounded-md " + className}
+      style={{ width: size, height: size, objectFit: "contain" }}
       draggable={false}
     />
   );

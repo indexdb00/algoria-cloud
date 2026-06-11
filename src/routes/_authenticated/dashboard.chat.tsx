@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -9,7 +9,7 @@ import { sendAgentMessage } from "@/lib/chat.functions";
 import { Tutorial } from "@/components/Tutorial";
 import { greetingKey } from "@/lib/avatar";
 import {
-  Send, Sparkles, GitBranch, Plug, Zap, Paperclip, Camera, Mic, MicOff, X, ChevronDown, Check,
+  Send, Zap, Paperclip, Camera, Mic, MicOff, X, ChevronDown, Check,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -276,25 +276,14 @@ function UnifiedChat() {
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 md:px-8 py-8">
         <div className="max-w-3xl mx-auto space-y-5">
           {visible.length === 0 && !sending && (
-            <div className="space-y-10 fade-up">
-              <div className="text-center py-10 md:py-16">
-                <div className="text-[10px] uppercase tracking-widest text-neon mb-3">{currentVariant.label}</div>
-                <h2 className="font-heading text-4xl md:text-5xl font-medium tracking-tight">
+            <div className="space-y-6 fade-up">
+              <div className="text-center py-8">
+                <h2 className="text-xl md:text-2xl font-medium tracking-tight text-brand-muted">
                   {greet}{name ? ", " : ""}<span className="text-neon">{name}</span>.
                 </h2>
-                <p className="text-sm text-brand-muted mt-4 max-w-md mx-auto">{t("chat.unified.desc")}</p>
               </div>
 
               <RotatingHints hints={hints} />
-
-              <div className="grid grid-cols-2 gap-3">
-                <Link to="/dashboard/funnel" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface/70 backdrop-blur hover:ring-neon/40">
-                  <GitBranch className="size-4 text-neon" /><div className="text-xs">{t("chat.cta.funnel")}</div>
-                </Link>
-                <Link to="/dashboard/integrations" className="flex items-center gap-2 p-3 rounded-xl ring-1 ring-brand-border bg-brand-surface/70 backdrop-blur hover:ring-neon/40">
-                  <Plug className="size-4 text-neon" /><div className="text-xs">{t("chat.cta.integrations")}</div>
-                </Link>
-              </div>
             </div>
           )}
 
