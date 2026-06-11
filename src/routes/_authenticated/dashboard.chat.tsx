@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -9,7 +9,7 @@ import { sendAgentMessage } from "@/lib/chat.functions";
 import { Tutorial } from "@/components/Tutorial";
 import { greetingKey } from "@/lib/avatar";
 import {
-  Send, Sparkles, GitBranch, Plug, Zap, Paperclip, Camera, Mic, MicOff, X, ChevronDown, Check,
+  Send, Sparkles, Zap, Paperclip, Camera, Mic, MicOff, X, ChevronDown, Check,
 } from "lucide-react";
 import { toast } from "sonner";
 
